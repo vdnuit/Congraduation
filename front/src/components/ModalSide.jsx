@@ -9,7 +9,7 @@ import ModalOkay from './ModalOkay';
 const Container = styled.div`
     width: 300px;
     height: 200px;
-    z-index: 999;
+    z-index: 500;
 
     position: absolute;
     top: 50%;
@@ -31,6 +31,7 @@ function ModalSide({ setModalOpen }) {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
     const closeModal = () => {
+        console.log(okay);
         setModalOpen(false);
     };
     const onLogOut = () => {
@@ -43,11 +44,7 @@ function ModalSide({ setModalOpen }) {
         setModalOpen(false);
     };
     const onDelete = () => {
-        setOkayOpen((current) => !current);
-
-        console.log(okayOpen);
-        console.log(okay);
-        setModalOpen(false);
+        setOkayOpen(!okayOpen);
     };
     const onCreate = () => {
         navigate(`/signup/*`);
