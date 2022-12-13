@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-    id:{
+    snsId:{
         type: String,
         required: [true, "You must type in your user id"],
     },
-    pw:{
-        type: String,
-        required: [true, "You must type in your password"],
-    },
-    nickname:{
+    nick:{
         type: String,
         required: [true, "You must type in your nickname"]
-    }
+    },
+    provider:{
+        type: String,
+    },
 });
 
 module.exports = mongoose.model('User', userSchema);

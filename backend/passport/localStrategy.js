@@ -1,3 +1,4 @@
+// local
 const User = require('../models/user');
 const LocalStrategy = require('passport-local').Strategy; //객체
 const bcrypt = require('bcrypt');
