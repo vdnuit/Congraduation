@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import HamburgerImg from '../assets/hamburger.png';
 import ModalSide from './ModalSide';
 
-const Container = styled.div``;
+const Container = styled.div`
+    width: 100%;
+    background-color: #072a60;
+`;
 const Logo = styled.h1``;
 const Hamburger = styled.img``;
 
