@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
 import { ownerNameAtom } from '../Atom';
+import ColorSelect from '../components/ColorSelect';
 
 function Write() {
-    const [colors, setColors] = useState(0);
+    const [note, setNote] = useState();
+    const [icon, setIcon] = useState();
     const { register, watch } = useForm();
     console.log(watch());
     const ownerName = useRecoilValue(ownerNameAtom);
@@ -50,40 +52,17 @@ function Write() {
     }
     const [index, setIndex] = useState(randomNum(0, questions.length));
 
-    const colorSelect = (current) => {
-        setColors(current);
+    const SubmitEvent = () => {
+        setNote(watch);
+        note.question = questions[index];
+        note.icon = icon;
+        console.log(note);
     };
     return (
         <div>
             {console.log(questions)}
             <h3>쪽지 색</h3>
-            <button
-                type="button"
-                onClick={() => {
-                    colorSelect(0);
-                }}
-            >
-                0
-            </button>
-            <button
-                type="button"
-                onClick={() => {
-                    colorSelect(1);
-                }}
-            >
-                1
-            </button>
-            <button
-                type="button"
-                onClick={() => {
-                    colorSelect(2);
-                }}
-            >
-                2
-            </button>
-            {colors === 0 && <div>0</div>}
-            {colors === 1 && <div>1</div>}
-            {colors === 2 && <div>2</div>}
+            <ColorSelect setIcon={setIcon} />
             <h3>랜덤 주제</h3>
             <p>{questions[index]}</p>
             <button
@@ -94,7 +73,6 @@ function Write() {
             >
                 셔플
             </button>
-
             <form>
                 <h2>TO. {ownerName}</h2>
                 <input
@@ -104,7 +82,14 @@ function Write() {
                 <h2>From.</h2>
                 <input {...register('writer')} placeholder="닉네임을 입력하세요" />
 
-                <button type="button">Add</button>
+                <button
+                    type="button"
+                    onClick={() => {
+                        SubmitEvent();
+                    }}
+                >
+                    작성 완료
+                </button>
             </form>
         </div>
     );

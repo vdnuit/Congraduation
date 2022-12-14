@@ -16,7 +16,7 @@ export const temporaryTreeAtom = atom({
         {
             message: '졸업 축하해!',
             writer: '박혜린',
-            icon: '',
+            icon: 'https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon0.png?raw=true',
             question: '강서현님이 좋아하는 것은?'
         }
     ]
