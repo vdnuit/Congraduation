@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import ModalCheck from './ModalCheck';
@@ -16,6 +17,9 @@ function Footer() {
             <button type="button" onClick={showCheck}>
                 checkChecktest
             </button>
+            <Link to={{ pathname: `/write/*` }}>
+                <div>Write</div>
+            </Link>
             {checkOpen && <ModalCheck setCheckOpen={setCheckOpen} text="모달창 체크입니다." />}{' '}
         </Container>
     );

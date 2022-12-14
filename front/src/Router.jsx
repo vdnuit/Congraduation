@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Main from './pages/Main';
 import SignUp from './pages/SignUp';
 import LogIn from './pages/LogIn';
+import Write from './pages/Write';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -14,6 +15,7 @@ function Router() {
                 <Route path="/" element={<Main />} />
                 <Route path="/signup/*" element={<SignUp />} />
                 <Route path="/login/*" element={<LogIn />} />
+                <Route path="/write/*" element={<Write />} />
             </Routes>
             <Footer />
         </BrowserRouter>
