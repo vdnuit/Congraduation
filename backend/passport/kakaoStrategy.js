@@ -15,7 +15,11 @@ module.exports = () => {
                     where: {snsId: profile.id, provider: 'kakao'},
                 });
                 if (exUser) { // user exist
-                    done(null, exUser);
+                    const tokenUser = {
+                        user: exUser,
+                        accessToken: accessToken || '',
+                    }
+                    done(null, tokenUser);
                 }
                 else{ // user not exist
                     const newUser = await User.create({
@@ -23,7 +27,11 @@ module.exports = () => {
                         snsId: profile.id,
                         provider: 'kakao',
                     });
-                    done(null, exUser);
+                    const tokenUser = {
+                        user: newUser,
+                        accessToken: accessToken || '',
+                    }
+                    done(null, tokenUser);
                 }
             } catch(err){
                 console.log(err);

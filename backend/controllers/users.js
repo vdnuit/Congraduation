@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 // const signup = async(req, res) => {
 //     const {id, pw, nickname} = req.body;
@@ -27,7 +27,7 @@ const bcrypt = require('bcrypt');
 const getUser = async(req, res) => {
     const users = await User.find({});
     res.status(200).json(users);
-}
+};
 
 module.exports = {
     // signup,

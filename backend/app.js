@@ -11,8 +11,9 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/users');
 const errorHandler = require('./middleware/error-handler');
 const notFoundError = require('./middleware/not-found');
+const {isLoggedIn, isNotLoggedIn} = require('./middleware/isLogin');
 
-// session
+// express-session
     // 아래 passport메서드가 이 세션에 의존하기 때문에 앞에 선언해야 함
 app.use(session({
     resave: false,
@@ -25,17 +26,17 @@ app.use(session({
 }));
 app.use(express.json()); // body-parser
 
-app.use('/', routes); // 모듈명을 명시하지 않으면 routes/index.js를 로드
 // app.use('/auth', authRouter); // authenticate
 // app.use('/api/v1/users', userRouter);
 
 // passport
 app.use(passport.initialize()); //session을 초기화 (req에 passport 설정을 심음)
-app.use(passport.session()); //deserializeUser 호출
+app.use(passport.session()); //deserializeUser 호출 -> 세션으로부터 req.user에 정보 로드
+
+app.use('/', routes); // 모듈명을 명시하지 않으면 routes/index.js를 로드
 
 app.use(errorHandler); // server error
 app.use(notFoundError); // page not found
-
 
 const run = async() => {
     try{

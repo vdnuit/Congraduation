@@ -12,6 +12,9 @@ const userSchema = mongoose.Schema({
     provider:{
         type: String,
     },
+    messages:
+        [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
+    
 });
 
 module.exports = mongoose.model('User', userSchema);

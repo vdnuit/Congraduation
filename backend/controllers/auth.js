@@ -1,5 +1,5 @@
 const passport = require('passport');
-
+const axios = require('axios');
 // const login = async (req, res) => {
 //     passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
 //         if(authError){
@@ -19,12 +19,27 @@ const passport = require('passport');
 //     });
 // };
 
-const kakaoLogin = () => {
-    passport.authenticate('kakao');
+const kakaoLogout = async (req, res) => {
+    try {
+        const ACCESS_TOKEN = req.user.accessToken;
+        let logout = await axios({
+            method:'post',
+            url:'https://kapi.kakao.com/v1/user/unlink',
+            headers:{
+              'Authorization': `Bearer ${ACCESS_TOKEN}`
+            }
+          });
+    }
+    catch(err){
+        console.log(err);
+        res.json(err);
+    }
+    req.logout();
+    req.session.destroy();
+    res.redirect('/api/v1/users');
 }
-
 
 module.exports = {
     // login,
-    kakaoLogin,
+    kakaoLogout,
 };
