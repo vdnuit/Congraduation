@@ -1,16 +1,21 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
 import { ownerNameAtom } from '../Atom';
 import ColorSelect from '../components/ColorSelect';
 
 function Write() {
-    const [note, setNote] = useState();
     const [icon, setIcon] = useState();
     const { register, watch } = useForm();
-    console.log(watch());
+    const IconChecked = (current) => {
+        setIcon(current);
+    };
     const ownerName = useRecoilValue(ownerNameAtom);
+    useEffect(() => {
+        console.log(icon);
+    }, [icon]);
+    // const [temporaryTree, setTree] = useRecoilValue(temporaryTreeAtom);
     const questions = [
         `${ownerName}님이 좋아하는 것은?`,
         `${ownerName}님과 함께한 가장 즐거웠던 추억은?`,
@@ -53,16 +58,16 @@ function Write() {
     const [index, setIndex] = useState(randomNum(0, questions.length));
 
     const SubmitEvent = () => {
-        setNote(watch);
-        note.question = questions[index];
-        note.icon = icon;
-        console.log(note);
+        const dict = { ...watch(), question: questions[index], icon };
+
+        console.log(dict);
+        // setTree(temporaryTree.map((e) => [...e, dict]));
     };
+
     return (
         <div>
-            {console.log(questions)}
             <h3>쪽지 색</h3>
-            <ColorSelect setIcon={setIcon} />
+            <ColorSelect IconChecked={IconChecked} />
             <h3>랜덤 주제</h3>
             <p>{questions[index]}</p>
             <button

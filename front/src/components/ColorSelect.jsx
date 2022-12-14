@@ -1,57 +1,29 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useForm } from 'react-hook-form';
 
 import { PropTypes } from 'prop-types';
 
-function ColorSelect(setIcon) {
-    const [value, setValue] = useState();
+function ColorSelect({ IconChecked }) {
+    const [value, setValue] = useState({ color: undefined });
     const { register, watch } = useForm();
-    console.log(watch());
+    useEffect(() => {
+        console.log(value);
+        IconChecked(value.color);
+    }, [value]);
     const onChange = () => {
         setValue(watch);
-        console.log(value);
     };
     return (
         <div>
-            <form>
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="0"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="1"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="2"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="3"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="4"
-                    onChange={onChange}
-                />
-                <input
+            <form onChange={onChange}>
+                <input {...register('color')} type="radio" name="color" value="0" />
+                <input {...register('color')} type="radio" name="color" value="1" />
+                <input {...register('color')} type="radio" name="color" value="2" />
+                <input {...register('color')} type="radio" name="color" value="3" />
+                <input {...register('color')} type="radio" name="color" value="4" />
+                {/* <input
                     {...register('color')}
                     type="radio"
                     name="color"
@@ -120,22 +92,12 @@ function ColorSelect(setIcon) {
                     name="color"
                     value="14"
                     onChange={onChange}
-                />
-                <button
-                    type="button"
-                    onClick={() => {
-                        const dict = watch;
-                        console.log(dict.color);
-                        setIcon('a');
-                    }}
-                >
-                    작성 완료
-                </button>
+                /> */}
             </form>
         </div>
     );
 }
 ColorSelect.propTypes = {
-    setIcon: PropTypes.func.isRequired
+    IconChecked: PropTypes.func.isRequired
 };
 export default ColorSelect;
