@@ -56,7 +56,7 @@ export const StyledLink = styled(Link)`
 
         text-align: center;
         padding: 0.9rem;
-        margin: 1rem 2rem;
+        margin: 1rem 5rem;
         color: #ffffff;
     }
 `;

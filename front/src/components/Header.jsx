@@ -7,6 +7,8 @@ import ModalSide from './ModalSide';
 const Container = styled.div`
     width: 100%;
     background-color: #072a60;
+    max-width: 500px;
+    height: 62px;
 `;
 const Logo = styled.h1``;
 const Hamburger = styled.img``;
