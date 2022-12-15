@@ -10,18 +10,17 @@ module.exports = () => {
             callbackURL: "/auth/kakao/callback", // Redirect URI
         },
         async (accessToken, refreshToken, profile, done) => { // (2) Verify Function, proceed after accessing redirect URI
-            console.log("haha");
             try {
                 const exUser = await User.findOne({ // find user
-                    where: {userId: profile.id, provider: 'kakao'},
+                    where: {snsId: profile.id, provider: 'kakao'},
                 });
                 if (exUser) { // user exist
                     done(null, exUser);
                 }
                 else{ // user not exist
                     const newUser = await User.create({
-                        userId: profile.id,
                         nick: profile.displayName,
+                        snsId: profile.id,
                         provider: 'kakao',
                     });
                     done(null, exUser);

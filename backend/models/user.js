@@ -1,28 +1,20 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-    userId: {
+    snsId:{
         type: String,
         required: [true, "You must type in your user id"],
-        unique: true
     },
-    password: {
+    nick:{
         type: String,
-    },
-    nick: {
-        type: String,
-        required: [true, "You must type in your nickname"],
-        unique: true
+        required: [true, "You must type in your nickname"]
     },
     provider:{
         type: String,
     },
-    message: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Message'
-        }
-    ]
+    messages:
+        [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
+    
 });
 
 module.exports = mongoose.model('User', userSchema);
