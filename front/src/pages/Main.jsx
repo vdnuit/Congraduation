@@ -4,6 +4,7 @@ import React from 'react';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
 import CapImg from '../assets/capImg.png';
+import SnowImg from '../assets/snowbackground.png';
 
 const Container = styled.div`
     max-width: 500px;
@@ -50,17 +51,26 @@ export const StyledLink = styled(Link)`
         font-family: 'Jua';
         font-style: normal;
         font-weight: 400;
-        font-size: 24px;
+        font-size: 20px;
         line-height: 30px;
         /* identical to box height */
 
         text-align: center;
-        padding: 0.9rem;
-        margin: 1rem 5rem;
+        padding: 0.6rem;
+        margin: 1rem 3rem;
         color: #ffffff;
     }
 `;
-
+const Snow = styled.img`
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    pointer-events: none;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+`;
 function Main() {
     return (
         <Container>
@@ -78,6 +88,7 @@ function Main() {
                     <h2>트리로 이동</h2>
                 </StyledLink>
             </Box>
+            <Snow src={SnowImg} alt="눈 내리는 배경" />
         </Container>
     );
 }

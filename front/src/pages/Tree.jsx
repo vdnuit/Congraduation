@@ -19,8 +19,9 @@ const Dday = styled.p`
     line-height: 25px;
 
     color: #f7f7f7;
-    margin: 16px;
-    margin-bottom: 63vh;
+    margin: 20px;
+
+    margin-bottom: 55vh;
 `;
 const TreeBackground = styled.img`
     position: absolute;
@@ -41,13 +42,13 @@ export const StyledLink = styled(Link)`
         font-family: 'Jua';
         font-style: normal;
         font-weight: 400;
-        font-size: 24px;
+        font-size: 20px;
         line-height: 30px;
         /* identical to box height */
 
         text-align: center;
-        padding: 0.9rem;
-        margin: 1rem 5rem;
+        padding: 0.6rem;
+        margin: 1rem 3rem;
         color: #ffffff;
     }
     h3 {
@@ -57,16 +58,17 @@ export const StyledLink = styled(Link)`
         font-family: 'Jua';
         font-style: normal;
         font-weight: 400;
-        font-size: 24px;
+        font-size: 20px;
         line-height: 30px;
         /* identical to box height */
 
         text-align: center;
-        padding: 0.9rem;
-        margin: 0rem 5rem;
+        padding: 0.6rem;
+        margin: 0rem 3rem;
         color: #7c7c7c;
     }
 `;
+
 function Tree() {
     // const ownerName = useRecoilValue(ownerNameAtom);
     return (
