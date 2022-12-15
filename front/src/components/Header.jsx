@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import HamburgerImg from '../assets/hamburger.png';
 import ModalSide from './ModalSide';
 import CapDecoImg from '../assets/capdeco.png';
@@ -23,8 +23,9 @@ const Logo = styled.img`
 const Hamburger = styled.img`
     width: 20px;
     height: 4px;
-    margin-top: 30px;
-    margin-right: 25px;
+    position: absolute;
+    top: 30px;
+    right: 20px;
 `;
 const CapDeco = styled.img`
     position: absolute;
@@ -38,17 +39,41 @@ const CapDeco = styled.img`
 `;
 function Header() {
     const [modalOpen, setModalOpen] = useState(false);
+    const node = useRef();
+
+    useEffect(() => {
+        const clickOutside = (e) => {
+            if (modalOpen && node.current && !node.current.contains(e.target)) {
+                setModalOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', clickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', clickOutside);
+        };
+    }, [modalOpen]);
     const showModal = () => {
         setModalOpen(true);
     };
 
     return (
         <Container>
-            <Link to={{ pathname: `/` }}>
-                <Logo src={LogoImg} alt="Congraduation" />
-            </Link>
-            <Hamburger onClick={showModal} alt="hamburger" src={HamburgerImg} />
-            {modalOpen && <ModalSide setModalOpen={setModalOpen} />} <CapDeco src={CapDecoImg} />
+            <div ref={node}>
+                <div
+                    className="flex shrink-0 pointer"
+                    onClick={() => setModalOpen((pre) => !pre)}
+                    aria-hidden="true"
+                />
+
+                <Link to={{ pathname: `/` }}>
+                    <Logo src={LogoImg} alt="Congraduation" />
+                </Link>
+                <Hamburger onClick={showModal} alt="hamburger" src={HamburgerImg} />
+                {modalOpen ? <ModalSide setModalOpen={setModalOpen} /> : null}
+                <CapDeco src={CapDecoImg} />
+            </div>
         </Container>
     );
 }

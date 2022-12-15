@@ -7,23 +7,32 @@ import { isLoginAtom } from '../Atom';
 import ModalOkay from './ModalOkay';
 
 const Container = styled.div`
-    width: 300px;
-    height: 200px;
+    width: 197px;
+    height: 96px;
+
+    background: #ffffff;
+    box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.2);
     z-index: 500;
 
     position: absolute;
-    top: 100%;
-    left: 100%;
-    transform: translate(-50%, -50%);
-
-    background-color: gray;
-`;
-const Close = styled.button`
-    position: absolute;
+    top: 60px;
     right: 10px;
-    top: 10px;
+    paddsing-top: 10px;
+    padding-left: 5px;
 `;
-const Button = styled.button``;
+const Button = styled.button`
+    border: 0;
+    outline: 0;
+    margin: 8px;
+    background-color: white;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+
+    color: #252525;
+`;
 
 function ModalSide({ setModalOpen }) {
     const [okayOpen, setOkayOpen] = useState(false);
@@ -36,33 +45,30 @@ function ModalSide({ setModalOpen }) {
     };
     const onLogOut = () => {
         navigate(`/`);
-        setModalOpen(false);
+        closeModal(false);
         setIsLogin(false);
     };
     const onLogIn = () => {
         navigate(`/login/*`);
-        setModalOpen(false);
+        closeModal(false);
     };
     const onDelete = () => {
         setOkayOpen(!okayOpen);
     };
     const onCreate = () => {
         navigate(`/signup/*`);
-        setModalOpen(false);
+        closeModal(false);
     };
     return (
         <Container>
-            <Close type="button" onClick={closeModal}>
-                X
-            </Close>
             {isLogin ? (
-                <Button onClick={onLogOut}>Log-out</Button>
+                <Button onClick={onLogOut}>로그아웃</Button>
             ) : (
-                <Button onClick={onLogIn}>Log-in</Button>
+                <Button onClick={onLogIn}>로그인</Button>
             )}
             {isLogin ? (
                 <>
-                    <Button onClick={onDelete}>Delete Account</Button>
+                    <Button onClick={onDelete}>계정삭제</Button>
                     {okayOpen && (
                         <ModalOkay
                             setOkayOpen={setOkayOpen}
@@ -72,7 +78,7 @@ function ModalSide({ setModalOpen }) {
                     )}
                 </>
             ) : (
-                <Button onClick={onCreate}>Create Account</Button>
+                <Button onClick={onCreate}>계정 만들기</Button>
             )}
         </Container>
     );
