@@ -16,11 +16,7 @@ module.exports = () => {
                     where: {userId: profile.id, provider: 'kakao'},
                 });
                 if (exUser) { // user exist
-                    const tokenUser = {
-                        user: exUser,
-                        accessToken: accessToken || '',
-                    }
-                    done(null, tokenUser);
+                    done(null, exUser);
                 }
                 else{ // user not exist
                     const newUser = await User.create({
@@ -28,11 +24,7 @@ module.exports = () => {
                         nick: profile.displayName,
                         provider: 'kakao',
                     });
-                    const tokenUser = {
-                        user: newUser,
-                        accessToken: accessToken || '',
-                    }
-                    done(null, tokenUser);
+                    done(null, exUser);
                 }
             } catch(err){
                 console.log(err);
