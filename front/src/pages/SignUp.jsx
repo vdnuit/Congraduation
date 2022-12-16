@@ -4,28 +4,27 @@ import styled from 'styled-components';
 import { StyledLink } from "./Main";
 
 const Container = styled.div`
+    width: 100%;
     max-width: 500px;
-    height: 93.3vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #F5F5F5;
+
+
 `;
 
-
 const Form = styled.form`
-    position: absolute;
-    top: 184px;
-    width: 343px;
+    width: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 `
 
 const Span = styled.span`
-    width: 70px;
-    height: 19px;
+    width: 14%;
+    height: 1em;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 600;
@@ -34,30 +33,30 @@ const Span = styled.span`
 `
 
 const Error = styled.span`
-    width: 100px;
-    height: 15px;
+    width: 20%;
+    height: 1em;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 300;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 19px;
-    color: FF6C0F;
+    color: #FF6C0F;
 `
 
 const Input = styled.input`
-    width: 343px;
-    height: 56px;
+    width: 100%;
+    height: 4rem;
     box-sizing: border-box;
     background: #FFFFFF;
     border: 1px solid #C8C8C8;
     border-radius: 10px;
-    margin-bottom: 20px;
-    margin-top: 5px;
-    padding-left: 10px;
+    margin-bottom: 1.2rem;
+    margin-top: 0.3rem;
+    padding-left: 0.6rem;
 `
 
 const Div = styled.div`
-    margin-top: 48px;
+    margin-top: 15%;
 `
 
 const Warn = styled.div`
@@ -68,6 +67,8 @@ const Warn = styled.div`
     font-size: 16px;
     line-height: 19px;
     color: #FF6C0F;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
     `
 
 function SignUp() {
@@ -78,6 +79,7 @@ function SignUp() {
     }
     return(
         <Container>
+            <Warn>계정은 다시 찾기 어려우니, 아이디와 비밀번호를 기억해주세요!</Warn>
             <Form onSubmit={handleSubmit(onValid)}>
                 <div><Span>아이디</Span><Error>{errors?.ID?.message}</Error></div>
                 <Input {...register("ID", {required:true, pattern: {value: /^[a-z]+[a-z0-9]{5,19}$/g, message:"아이디는 6자 이상 20자 이하여야 합니다."}})} placeholder="아이디를 입력하세요"/>
@@ -94,7 +96,6 @@ function SignUp() {
                     </StyledLink>
                 </Div>
             </Form>
-            <Warn>계정은 다시 찾기 어려우니, 아이디와 비밀번호를 기억해주세요!</Warn>
         </Container>
     );
 }
