@@ -6,8 +6,9 @@ import Leaf from '../components/Leaf';
 import { StyledLink } from './Main';
 
 const Container = styled.div`
+    width: 100%;
     max-width: 500px;
-    height: 93.3vh;
+    height: 93vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -17,8 +18,8 @@ const Container = styled.div`
 
 const Count = styled.div`
     position: absolute;
-    width: 100px;
-    height: 20px;
+    width: 25%;
+    height: 2.5%;
     left: 30px;
     top: 88px;
 
@@ -32,11 +33,10 @@ const Count = styled.div`
 `
 
 const Empty = styled.div`
-    position: absolute;
-    width: 241px;
-    height: 102px;
-    left: 129.5px;
-    top: 350px;
+    width: 70%;
+    height: 12.5%;
+    margin-left: 3%;
+    margin-top: 10%;
     display:flex;
     flex-direction: column;
     justify-content: center;
@@ -44,7 +44,7 @@ const Empty = styled.div`
 `
 
 const Announce = styled.div`
-    width: 200px;
+    width: 85%;
     font-family: 'Jua';
     font-style: normal;
     font-weight: 400;
@@ -60,24 +60,32 @@ const Announce = styled.div`
 `
 
 const Div = styled.div`
-    width: 303px;
+    width: 80%;
+`
+
+const StyledGrid = styled.div`
+    width: 100%;
+    max-width: 500px;
+    height: 93vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: #F5F5F5;
 `
 
 const Grid = styled.div`
-    position: absolute;
-    top: 115px;
     display: grid;
     grid-template-rows: repeat(auto-fill, 1fr);
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin-top: 18px;
+    gap: 8%;
+    margin-top: 13%;
+    margin-left: 9%;
 `
 
 function List(){
     const count = useRecoilValue(countAtom);
-    const leaves = useRecoilValue(temporaryTreeAtom)
+    const leaves = useRecoilValue(temporaryTreeAtom);
     if(count===0){
         return (
             <Container>
@@ -93,12 +101,12 @@ function List(){
             </Container>
         )
     } return (
-        <Container>
+        <StyledGrid>
             <Count>받은 쪽지 수 {count}</Count>
             <Grid>
                 {leaves.map((leaf)=> (<Leaf key={leaf.id} id={leaf.id} icon={leaf.icon}/>))}
             </Grid>
-        </Container>
+        </StyledGrid>
     )
 }
 
