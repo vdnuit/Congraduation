@@ -107,6 +107,7 @@ export const StyledButton = styled.button`
     padding: 0.6rem;
     margin: 1rem 3rem;
     color: #ffffff;
+    margin-bottom: 10vh;
 `;
 function Write() {
     const [icon, setIcon] = useState();
