@@ -6,28 +6,27 @@ import { StyledLink } from './Tree';
 import { isLoginAtom } from '../Atom';
 
 const Container = styled.div`
+    width: 100%;
     max-width: 500px;
-    height: 93.3vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #F5F5F5;
+    height: 93vh;
 `;
 
 
 const Form = styled.form`
-    position: absolute;
-    top: 184px;
-    width: 343px;
+    width: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 `
 
 const Span = styled.span`
-    width: 70px;
-    height: 19px;
+    width: 14%;
+    height: 1em;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 600;
@@ -36,8 +35,8 @@ const Span = styled.span`
 `
 
 const Error = styled.span`
-    width: 100px;
-    height: 15px;
+    width: 20%;
+    height: 1em;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 300;
@@ -47,19 +46,19 @@ const Error = styled.span`
 `
 
 const Input = styled.input`
-    width: 343px;
-    height: 56px;
+    width: 100%;
+    height: 4rem;
     box-sizing: border-box;
     background: #FFFFFF;
     border: 1px solid #C8C8C8;
     border-radius: 10px;
-    margin-bottom: 20px;
-    margin-top: 5px;
-    padding-left: 10px;
+    margin-bottom: 1.2rem;
+    margin-top: 0.3rem;
+    padding-left: 0.6rem;
 `
 
 const Div = styled.div`
-    margin-top: 48px;
+    margin-top: 3rem;
 `
 
 function LogIn() {
