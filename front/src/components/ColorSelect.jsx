@@ -23,76 +23,16 @@ function ColorSelect({ IconChecked }) {
                 <input {...register('color')} type="radio" name="color" value="2" />
                 <input {...register('color')} type="radio" name="color" value="3" />
                 <input {...register('color')} type="radio" name="color" value="4" />
-                {/* <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="5"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="6"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="7"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="8"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="9"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="10"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="11"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="12"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="13"
-                    onChange={onChange}
-                />
-                <input
-                    {...register('color')}
-                    type="radio"
-                    name="color"
-                    value="14"
-                    onChange={onChange}
-                /> */}
+                <input {...register('color')} type="radio" name="color" value="5" />
+                <input {...register('color')} type="radio" name="color" value="6" />
+                <input {...register('color')} type="radio" name="color" value="7" />
+                <input {...register('color')} type="radio" name="color" value="8" />
+                <input {...register('color')} type="radio" name="color" value="9" />
+                <input {...register('color')} type="radio" name="color" value="10" />
+                <input {...register('color')} type="radio" name="color" value="11" />
+                <input {...register('color')} type="radio" name="color" value="12" />
+                <input {...register('color')} type="radio" name="color" value="13" />
+                <input {...register('color')} type="radio" name="color" value="14" />
             </form>
         </div>
     );

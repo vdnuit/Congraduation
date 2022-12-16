@@ -14,12 +14,11 @@ const Container = styled.div`
 `;
 const TreeBackground = styled.img`
     position: absolute;
-    top: 0px;
+    top: 62px;
     left: 0px;
 
     z-index: -1;
     width: 100%;
-    height: 100%;
     max-width: 500px;
 `;
 const Box = styled.div`
@@ -30,7 +29,8 @@ const Box = styled.div`
     border-radius: 10px;
     margin: 8% 5%;
     width: 90%;
-    height: 80vh;
+    height: 180vw;
+    max-height: 800px;
     text-align: center;
 `;
 const Cap = styled.img`

@@ -17,7 +17,7 @@ const Container = styled.div`
     position: absolute;
     top: 60px;
     right: 10px;
-    paddsing-top: 10px;
+    padding-top: 10px;
     padding-left: 5px;
 `;
 const Button = styled.button`

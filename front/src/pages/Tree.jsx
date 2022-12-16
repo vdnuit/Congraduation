@@ -20,21 +20,26 @@ const Dday = styled.p`
 
     color: #f7f7f7;
     margin: 20px;
-
-    margin-bottom: 55vh;
 `;
 const TreeBackground = styled.img`
     position: absolute;
-    top: 0px;
+    top: 62px;
     left: 0px;
 
     z-index: -1;
     width: 100%;
-    height: 100%;
+    max-width: 500px;
+`;
+const Buttons = styled.div`
+    position: fixed;
+    bottom: 20px;
+    text-align: center;
+    width: 100%;
     max-width: 500px;
 `;
 export const StyledLink = styled(Link)`
     text-decoration: none;
+
     h2 {
         background: #072a60;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
@@ -77,12 +82,14 @@ function Tree() {
             <Dday>쪽지 오픈 D-7</Dday>
             {/* <p>{ownerName} 님의 나무에 n개의 편지가 달려있습니다.</p> */}
             <TreeComponent />
-            <StyledLink to={{ pathname: `/write/*` }}>
-                <h2>쪽지 남기기</h2>
-            </StyledLink>
-            <StyledLink to={{ pathname: `/signup/*` }}>
-                <h3>나도 계정 만들기</h3>
-            </StyledLink>
+            <Buttons>
+                <StyledLink to={{ pathname: `/write/*` }}>
+                    <h2>쪽지 남기기</h2>
+                </StyledLink>
+                <StyledLink to={{ pathname: `/signup/*` }}>
+                    <h3>나도 계정 만들기</h3>
+                </StyledLink>
+            </Buttons>
         </Container>
     );
 }
