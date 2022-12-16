@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
 const Box = styled.div`
-    width: 120px;
-    height: 120px;
+    width: 98px;
+    height: 98px;
     display: flex;
     flex-direction: column;
     justify-contents: center;
@@ -20,9 +20,9 @@ const Box = styled.div`
 `
 
 const Img = styled.img`
-    width: 80px;
-    height: 80px;
-    margin-top: 20px;
+    width: 64px;
+    height: 64px;
+    margin-top: 16px;
 `;
 
 function Leaf({id, icon}) {
