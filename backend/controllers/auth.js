@@ -1,24 +1,35 @@
 const passport = require('passport');
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
 
 // 로컬 유저 로그인
-const signin = async (req, res) => {
-    passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
-        if(authError){
-            console.error(authError);
-            return next(authError);
-        }
-        if(!user){
-            return res.redirect(`/?loginError${info.message}`);
-        }
-        return req.login(user, (loginError) => {
-            if(loginError){
-                console.error(loginError);
-                return next(loginError);
+const signin = (req, res, next) => {
+    try{
+        console.log("wow");
+        passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
+            console.log("haha");
+            if(authError){
+                console.error(authError);
+                return next(authError);
             }
-            return res.redirect('/'); // 리스폰스를 세션에 넘겨줌
-        });
-    });
+            if(!user){
+                return res.redirect(`/?loginError${info.message}`);
+            }
+            console.log("Login!");
+            req.login(user, {session: false}, (loginError) => {
+                if(loginError){
+                    console.error(loginError);
+                    return next(loginError);
+                }
+                const token = jwt.sign({id: user.id}, 'jwt-secret-key');
+                res.json({token});
+            });
+        })(req,res,next);
+    }
+    catch(err){
+        console.log(err);
+        next(err);
+    }
 };
 
 const kakaoLogout = async (req, res) => {

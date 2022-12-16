@@ -11,6 +11,7 @@ module.exports = () => {
         },
         async (accessToken, refreshToken, profile, done) => { // (2) Verify Function, proceed after accessing redirect URI
             try {
+                console.log("trial on kakao verification");
                 const exUser = await User.findOne({ // find user
                     userId: profile.id, provider: 'kakao'
                 });

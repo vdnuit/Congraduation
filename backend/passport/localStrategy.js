@@ -5,29 +5,31 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 
 module.exports = () => {
+    console.log("wo");
     passport.use(
         new LocalStrategy({ // (1) Strategy
             usernameField: 'id',
             passwordField: 'password'
         },
         async(id, password, done) => { // (2) Verify Function
+            console.log("local");
             try{
-                const user = await User.findOne({_id: id});
+                const user = await User.findOne({userId: id});
                 if(!user){
-                    done(null, false, {reason: '존재하지 않는 사용자입니다.'});
+                    return done(null, false, {reason: '존재하지 않는 사용자입니다.'});
                     //done은 passport.authenticate()의 콜백으로 3개의 인자 err, 수행결과(정보), 추가정보를 넘김
-                    return;
                 }
+                console.log("trial good");
                 const compareResult = await bcrypt.compare(password, user.password);
                 if(compareResult){
-                    done(null, user); //유저 객체 전송
-                    return;
+                    console.log("result good");
+                    return done(null, user); //유저 객체 전송
                 }
-                done(null, false, {reason:'올바르지 않은 비밀번호입니다.'});
+                return done(null, false, {reason:'올바르지 않은 비밀번호입니다.'});
             }
             catch(err){
                 console.error(err);
-                done(err);
+                return done(err);
             }
         })
     )

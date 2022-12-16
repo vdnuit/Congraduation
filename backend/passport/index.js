@@ -1,6 +1,8 @@
 const User = require('../models/user');
 const passport = require('passport');
 const kakao = require('./kakaoStrategy');
+const local = require('./localStrategy');
+const jwt = require('./jwtStrategy');
 
 module.exports = () => { // middleware function
     // req.login()이 호출함
@@ -16,6 +18,7 @@ module.exports = () => { // middleware function
         .then(result => done(null, {user: result, accessToken: user.accessToken})) // req.user에 저장
         .catch(err => done(err));
     });
-
+    local();
     kakao();
+    jwt();
 };
