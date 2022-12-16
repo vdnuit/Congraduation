@@ -7,23 +7,33 @@ module.exports = () => {
     passport.use(
         new KakaoStrategy({ // (1) Strategy
             clientID: process.env.KAKAO_ID, // REST API Key
-            callbackURL: "/auth/kakao/callback", // Redirect URI
+            callbackURL: "/api/v1/auth/kakao/callback", // Redirect URI
         },
         async (accessToken, refreshToken, profile, done) => { // (2) Verify Function, proceed after accessing redirect URI
             try {
                 const exUser = await User.findOne({ // find user
-                    where: {snsId: profile.id, provider: 'kakao'},
+                    userId: profile.id, provider: 'kakao'
                 });
                 if (exUser) { // user exist
-                    done(null, exUser);
+                    console.log("kakao: existing user");
+                    const tokenUser = {
+                        user: exUser,
+                        accessToken: accessToken || '',
+                    }
+                    done(null, tokenUser);
                 }
                 else{ // user not exist
+                    console.log("kakao: non-existing user");
                     const newUser = await User.create({
+                        userId: profile.id,
                         nick: profile.displayName,
-                        snsId: profile.id,
                         provider: 'kakao',
                     });
-                    done(null, exUser);
+                    const tokenUser = {
+                        user: newUser,
+                        accessToken: accessToken || '',
+                    }
+                    done(null, tokenUser);
                 }
             } catch(err){
                 console.log(err);

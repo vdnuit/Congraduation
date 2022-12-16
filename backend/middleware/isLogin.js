@@ -17,11 +17,11 @@ const isNotLoggedIn = (req, res, next) => {
     }
     else{
         const message = encodeURIComponent('로그인한 상태입니다.');
-        res.redirect(`/?error=${message}`);
+        res.send(`/?error=${message}`);
     }
 };
 
-exports.module = {
+module.exports = {
     isLoggedIn,
     isNotLoggedIn
 }
