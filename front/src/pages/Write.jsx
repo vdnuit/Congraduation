@@ -52,7 +52,6 @@ const GreyBox = styled.div`
         font-size: 13px;
         line-height: 19px;
         text-align: center;
-
         color: #252525;
     }
     input {
@@ -64,8 +63,33 @@ const GreyBox = styled.div`
         line-height: 17px;
 
         color: #000000;
+        width: 100%;
+    }
+    textarea {
+        border: none;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+
+        color: #000000;
+        width: 100%;
+        height: 10rem;
     }
 `;
+export const Shuffle = styled.div`
+    display: flex;
+    justify-content: space-between;
+    button {
+        border: none;
+        background-color: #f7f7f7;
+        width: 30px;
+        height: 30px;
+        margin: 10px 10px -10px 0px;
+    }
+`;
+
 export const StyledButton = styled.button`
     text-decoration: none;
 
@@ -78,7 +102,6 @@ export const StyledButton = styled.button`
     font-weight: 400;
     font-size: 20px;
     line-height: 30px;
-    /* identical to box height */
 
     text-align: center;
     padding: 0.6rem;
@@ -158,15 +181,18 @@ function Write() {
             <GreyBox>
                 <ColorSelect IconChecked={IconChecked} />
             </GreyBox>
-            <h3>랜덤 주제</h3>
-            <button
-                type="button"
-                onClick={() => {
-                    setIndex(randomNum(0, questions.length));
-                }}
-            >
-                <img src={ShuffleImg} alt="셔플버튼" />
-            </button>
+            <Shuffle>
+                <h3>랜덤 주제</h3>
+                <button
+                    type="button"
+                    onClick={() => {
+                        setIndex(randomNum(0, questions.length));
+                    }}
+                >
+                    <img src={ShuffleImg} alt="셔플버튼" />
+                </button>
+            </Shuffle>
+
             <GreyBox>
                 <p>{questions[index]}</p>
             </GreyBox>
@@ -174,7 +200,7 @@ function Write() {
             <form>
                 <h2>TO. {ownerName}</h2>
                 <GreyBox>
-                    <input
+                    <textarea
                         {...register('message')}
                         placeholder="졸업을 축하하는 말과 함께 질문에 대한 답변과 그 이유를 입력해주세요."
                     />
