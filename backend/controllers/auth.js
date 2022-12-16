@@ -7,7 +7,7 @@ const signin = (req, res, next) => {
     try{
         console.log("wow");
         passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
-            console.log("haha");
+            console.log(user);
             if(authError){
                 console.error(authError);
                 return next(authError);
@@ -21,10 +21,11 @@ const signin = (req, res, next) => {
                     console.error(loginError);
                     return next(loginError);
                 }
-                const token = jwt.sign({id: user.id}, 'jwt-secret-key');
-                res.json({token});
+                const token = jwt.sign({id: user.id}, process.env.JSON_WEB_TOKEN);
+                console.log(token);
+                res.cookie("jsonWebToken", token, {httpOnly: true}).json({message: "token!"});
             });
-        })(req,res,next);
+        })(req,res,next); //?
     }
     catch(err){
         console.log(err);

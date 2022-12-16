@@ -8,6 +8,7 @@ module.exports = () => { // middleware function
     // req.login()이 호출함
     passport.serializeUser((data, done) => {
         console.log("serialize");
+        console.log(data);
         done(null, {id: data.user.id, accessToken: data.accessToken}); // req.session에 user.id 저장
     });
 

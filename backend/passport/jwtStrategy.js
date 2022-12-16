@@ -5,10 +5,11 @@ module.exports = () => {
     passport.use(
         'jwt',
         new JWTStrategy({
-            jwtFromRequest: ExtractJwt.fromHeader('authorization'), secretOrKey: 'jwt-secret-key'
+            jwtFromRequest: ExtractJwt.fromHeader('authorization'), secretOrKey: process.env.JSON_WEB_TOKEN // authorization header로부터 jwt 가져옴, 복호화하기 위한 암호키
         },
-        async (jwtPayload, done) => {
+        async (jwtPayload, done) => { // 토큰의 페이로드에서 가져온 정보를 갖고 DB 접근하여 유저 찾음
             try{
+                console.log("jwt!");
                 const user = await User.findOne({userId: jwtPayload.id});
                 if(user)
                     return done(null, user);
