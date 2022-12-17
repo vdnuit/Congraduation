@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+// import { useRecoilValue } from 'recoil';
 import TreeNight from '../assets/treenight.png';
-import { ownerNameAtom,isLoginAtom, countAtom, dateAtom } from '../Atom';
+// import { ownerNameAtom } from '../Atom';
+import TreeComponent from '../components/TreeComponent';
 
 const Container = styled.div`
     max-width: 500px;
@@ -11,7 +12,6 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: center;
 `;
-const TreeComponent = styled.div``;
 const Dday = styled.p`
     font-family: 'Jua';
     font-style: normal;
@@ -21,22 +21,26 @@ const Dday = styled.p`
 
     color: #f7f7f7;
     margin: 20px;
-
-    margin-bottom: 55vh;
 `;
 const TreeBackground = styled.img`
     position: absolute;
-    top: 0px;
+    top: 62px;
     left: 0px;
 
     z-index: -1;
     width: 100%;
-    height: 100%;
     max-width: 500px;
 `;
-
+const Buttons = styled.div`
+    position: fixed;
+    bottom: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+`;
 export const StyledLink = styled(Link)`
     text-decoration: none;
+
     h2 {
         background: #072a60;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
@@ -72,53 +76,30 @@ export const StyledLink = styled(Link)`
 `;
 
 function Tree() {
-    const ownerName = useRecoilValue(ownerNameAtom);
-    const isLogin = useRecoilValue(isLoginAtom);
-    const count = useRecoilValue(countAtom);
-    const date = useRecoilValue(dateAtom);
-    if(isLogin===true && date > 0){
-        return (
-            <Container>
-                <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-                <Dday>쪽지 오픈 D-{date}</Dday>
-                <TreeComponent />
-                <StyledLink>
-                    <h3>공유하기</h3>
-                </StyledLink>
-            </Container>
-        );
-    }
-    if (isLogin===true && date < 0) {
-        return (
-            <Container>
-                <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-                <Dday>{ownerName} 님의 나무에 {count}개의 편지가 달려있습니다.</Dday>
-                <TreeComponent />
-                <StyledLink to={{ pathname: `/list/*` }}>
-                    <h2>받은 쪽지 목록</h2>
-                </StyledLink>
-                <StyledLink>
-                    <h3>공유하기</h3>
-                </StyledLink>
-            </Container>
-        );
-    }
-    if (isLogin===false) {
-        return (
-            <Container>
-                <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-                <Dday>{ownerName} 님의 나무에 {count}개의 편지가 달려있습니다.</Dday>
-                <TreeComponent />
+    // const ownerName = useRecoilValue(ownerNameAtom);
+    return (
+        <Container>
+            <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
+            <Dday>쪽지 오픈 D-7</Dday>
+            {/* <p>{ownerName} 님의 나무에 n개의 편지가 달려있습니다.</p> */}
+            <TreeComponent />
+            <Buttons>
                 <StyledLink to={{ pathname: `/write/*` }}>
                     <h2>쪽지 남기기</h2>
                 </StyledLink>
                 <StyledLink to={{ pathname: `/signup/*` }}>
                     <h3>나도 계정 만들기</h3>
                 </StyledLink>
-            </Container>
-        );
-    }
+            </Buttons>
+        </Container>
+    );
 }
 
+const browserPoint = (event)=>{
+    console.log(`브라우저 좌표 : (${event.pageX}, ${event.pageY})`);
+}
+window.addEventListener('click',e=>{
+    browserPoint(e);
+});
 
 export default Tree;
