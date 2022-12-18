@@ -4,15 +4,17 @@ const passport = require('passport');
 const passportConfig = require('../passport');
 const {signin, kakaoLogout} = require('../controllers/auth');
 const { isLoggedIn, isNotLoggedIn } = require('../middleware/isLogin');
+const jwtAuth = require('../middleware/auth');
 
 passportConfig();
 authRouter.route('/login').post(signin);
 authRouter.route('/kakao').get(passport.authenticate('kakao'));
 authRouter.route('/kakao/callback').get(passport.authenticate('kakao', {failureRedirect: '/'}), (req, res) => {res.redirect('/');}); // redirect URI (Access token) [fail, success]
 
-authRouter.post('/test', passport.authenticate('jwt', { session: false }),
+authRouter.post('/test', jwtAuth,
 	async (req, res, next) => {
 	  try {
+        console.log("hoho");
 	    res.json({ result: true });
 	  } catch (error) {
         console.log("heh");
