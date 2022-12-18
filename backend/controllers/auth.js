@@ -21,9 +21,9 @@ const signin = (req, res, next) => {
                     console.error(loginError);
                     return next(loginError);
                 }
-                const token = jwt.sign({id: user.id}, process.env.JSON_WEB_TOKEN);
+                const token = jwt.sign({id: user.userId}, process.env.JSON_WEB_TOKEN);
                 console.log(token);
-                res.cookie("jsonWebToken", token, {httpOnly: true}).json({message: "token!"});
+                res.cookie("token", token, {httpOnly: true}).json({message: "token!"});
             });
         })(req,res,next); //?
     }
