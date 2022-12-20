@@ -3,31 +3,43 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 
 const getMessages = async (req, res) => {
-    const messages = await Message.find({});
-    res.send(messages);
+    const messages = await Message.find({}).exec((err, data) => {
+        if(err){
+            console.log(err);
+            res.json({error: err});
+        }
+        else{
+            res.send(data);
+        }
+    });
 };
 
-const getMessage = async(req, res) => {
-    const message = await Message.find({});
-    res.send(message);
+const getMessagesByUserId = async(req, res) => {
+    const messages = await User.findOne({_id: req.params.id}).populate('message').exec((err, data) => {
+        if(err){
+            console.log(err);
+            res.json({error: err});
+        }
+        else{
+            res.send(data.message);
+        }
+    });
 };
 
 const createMessage = async(req, res) => {
     try{
-        console.log(req.body);
-        const {senderId, content, topic, color} = req.body;
-        const message = {_id: new mongoose.Types.ObjectId(), senderId, content, topic, color};
+        console.log(req.userObjectId);
+        const {senderNickName, content, topic, color} = req.body;
+        const senderId = req.userObjectId;
+        const message = {_id: new mongoose.Types.ObjectId(), senderId, senderNickName, content, topic, color};
+        console.log(message);
         Message.create(message);
-        console.log("here we are");
-        console.log(message._id);
-        User.findOneAndUpdate({_id: senderId}, {$push: {message: message._id}}, (err, success) => {
+        await User.findOneAndUpdate({_id: senderId}, {$push: {message: message._id}}).exec((err, success) => {
             if(err)
-            console.log(err);
+                res.json({error: err});
             else
-            console.log(success);
-            console.log("wowoow");
+                res.json({msg: "Successfully created."});
         });
-        res.json({msg: "Successfully created."});
     }
     catch(err){
         console.error(err);
@@ -37,5 +49,6 @@ const createMessage = async(req, res) => {
 
 module.exports = {
     getMessages,
+    getMessagesByUserId,
     createMessage
 };

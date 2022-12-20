@@ -19,11 +19,10 @@ module.exports = () => {
         },
         async (jwtPayload, done) => { // 토큰의 페이로드에서 가져온 정보를 갖고 DB 접근하여 유저 찾음
             try{
-                console.log("jwt!");
-                console.log(jwtPayload);
-                const user = await User.findOne({userId: jwtPayload.id});
-                if(user)
+                const user = await User.findOne({_id: jwtPayload.id});
+                if(user){
                     return done(null, user);
+                }
                 done(null, false, {reason: '올바르지 않은 인증 정보입니다.'});
             }
             catch(err){

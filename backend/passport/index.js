@@ -9,7 +9,13 @@ module.exports = () => { // middleware function
     passport.serializeUser((data, done) => {
         console.log("serialize");
         console.log(data);
-        done(null, {id: data.user.id, accessToken: data.accessToken}); // req.session에 user.id 저장
+        if(data.accessToken){
+            done(null, {id: data.user.id, accessToken: data.accessToken}); // req.session에 user.id 저장
+        }
+        else{ // local
+            console.log(data);
+            done(null, {id: data._id});
+        }
     });
 
     // passport.session()이 호출함

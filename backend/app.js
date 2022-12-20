@@ -14,6 +14,7 @@ const notFoundError = require('./middleware/not-found');
 const { kakaoLogout } = require('./controllers/auth');
 const cookieParser = require('cookie-parser');
 
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 // session
     // 아래 passport메서드가 이 세션에 의존하기 때문에 앞에 선언해야 함

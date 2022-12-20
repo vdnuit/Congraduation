@@ -1,8 +1,17 @@
 const passport = require("passport");
+const jwt = require('jsonwebtoken');
 
 const jwtAuth = (req, res, next) => {
-    passport.authenticate('jwt', {session: false}) // session true 하면 req.login() => serializeUser 단계를 거침
-    next();
-}
+    jwt.verify(req.cookies['token'], process.env.JSON_WEB_TOKEN, (err, decoded) => {
+        if(err){
+            next(err);
+        }
+        else{
+            console.log(decoded.id);
+            req.userObjectId = decoded.id;
+            next();
+        }
+    })
+};
 
 module.exports = jwtAuth;
