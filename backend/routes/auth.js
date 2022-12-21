@@ -7,10 +7,11 @@ const { isLoggedIn, isNotLoggedIn } = require('../middleware/isLogin');
 const jwtAuth = require('../middleware/auth');
 
 passportConfig();
-authRouter.route('/login').post(signin);
-authRouter.route('/logout').get(signout);
-authRouter.route('/kakao').get(passport.authenticate('kakao'));
-authRouter.route('/kakao/callback').get(passport.authenticate('kakao', {failureRedirect: '/'}), (req, res) => {res.redirect('/');}); // redirect URI (Access token) [fail, success]
+authRouter.post('/login', isNotLoggedIn, signin);
+authRouter.get('/logout', isLoggedIn, signout);
+authRouter.get('/kakao', isNotLoggedIn, passport.authenticate('kakao'));
+authRouter.get('/kakao/callback', isNotLoggedIn, passport.authenticate('kakao', {failureRedirect: '/'}), (req, res) => {res.redirect('/');}); // redirect URI (Access token) [fail, success]
+authRouter.get('/kakao/logout', isLoggedIn, kakaoLogout); //
 
 authRouter.post('/test', jwtAuth,
 	async (req, res, next) => {
@@ -25,7 +26,15 @@ authRouter.post('/test', jwtAuth,
 	  }
 });
 
-authRouter.use(isLoggedIn);
-authRouter.route('/kakao/logout').get(kakaoLogout);
+authRouter.get('/isLogin', (req, res) => {
+    if(req.isAuthenticated()){
+        console.log(req.session);
+        res.send("yeah");
+    }
+    else{
+        console.log(req.session);
+        res.send("no");
+    }
+})
 
 module.exports = authRouter;

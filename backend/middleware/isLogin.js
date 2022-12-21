@@ -16,8 +16,7 @@ const isNotLoggedIn = (req, res, next) => {
         next();
     }
     else{
-        const message = encodeURIComponent('로그인한 상태입니다.');
-        res.send(`/?error=${message}`);
+        res.send({message: '로그인 상태'});
     }
 };
 

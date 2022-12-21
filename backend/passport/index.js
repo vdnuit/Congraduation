@@ -21,6 +21,7 @@ module.exports = () => { // middleware function
     // passport.session()이 호출함
     passport.deserializeUser((user, done) => {     // req.session의 id로 DB 조회 후 req.user에 전체 정보 불러옴
         console.log("deserialize");
+        console.log(user);
         User.findOne({id: user.id})
         .then(result => done(null, {user: result, accessToken: user.accessToken})) // req.user에 저장
         .catch(err => done(err));
