@@ -37,40 +37,68 @@ const signin = (req, res, next) => {
     }
 };
 
-const signout = (req, res) => {
-    if(req.session.id){
-        console.log("LOCAL~");
-        req.session.destroy((err) => {
-            if(err) console.log(err);
-            console.log("LOGOUT~");
-            res.redirect('/');
-        });
-    };
-};
-
-const kakaoLogout = async (req, res) => {
-    try {
-        const ACCESS_TOKEN = req.user.accessToken;
-        console.log(ACCESS_TOKEN);
-        let logout = await axios({
-            method:'post',
-            url:'https://kapi.kakao.com/v1/user/unlink',
-            headers:{
-              'Authorization': `Bearer ${ACCESS_TOKEN}`
+const signout = async (req, res) => {
+    try{
+        if(req.user.user.id && req.user.user.provider == 'local'){
+            console.log("LOCAL LOGOUT");
+            req.session.destroy((err) => {
+                if(err) console.log(err);
+                console.log("LOGOUT~");
+                res.redirect('/');
+            });
+        }
+        else if(req.user.user.id && req.user.user.provider == 'kakao'){
+            console.log("KAKAO LOGOUT");
+            try {
+                const ACCESS_TOKEN = req.user.accessToken;
+                console.log(ACCESS_TOKEN);
+                let logout = await axios({
+                    method:'post',
+                    url:'https://kapi.kakao.com/v1/user/unlink',
+                    headers:{
+                      'Authorization': `Bearer ${ACCESS_TOKEN}`
+                    }
+                  });
             }
-          });
+            catch(err){
+                console.log(err);
+                res.json(err);
+            }
+            req.session.destroy();
+            console.log("LOGOUT!!");
+            res.redirect('/');
+        }
     }
     catch(err){
         console.log(err);
-        res.json(err);
+        res.send({error: err});
     }
-    req.session.destroy();
-    console.log("LOGOUT!!");
-    res.redirect('/');
-}
+};
+
+// const kakaoLogout = async (req, res) => {
+//     try {
+//         console.log(req.user);
+//         const ACCESS_TOKEN = req.user.accessToken;
+//         console.log("This is access token: ");
+//         console.log(ACCESS_TOKEN);
+//         let logout = await axios({
+//             method:'post',
+//             url:'https://kapi.kakao.com/v1/user/unlink',
+//             headers:{
+//               'Authorization': `Bearer ${ACCESS_TOKEN}`
+//             }
+//           });
+//     }
+//     catch(err){
+//         console.log(err);
+//         res.json(err);
+//     }
+//     req.session.destroy();
+//     console.log("LOGOUT!!");
+//     res.redirect('/');
+// }
 
 module.exports = {
     signin,
     signout,
-    kakaoLogout,
 };

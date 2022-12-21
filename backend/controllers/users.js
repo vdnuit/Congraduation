@@ -12,7 +12,7 @@ const signup = async(req, res) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
             //생성
-            const newUser = {userId, password: hashedPassword, nick};
+            const newUser = {userId, password: hashedPassword, provider: 'local', nick};
             console.log(newUser);
             console.log(newUser.id);
             User.create(newUser);
