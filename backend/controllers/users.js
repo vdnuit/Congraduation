@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Message = require('../models/message');
 const bcrypt = require('bcrypt');
 
 // 로컬 유저 회원가입
@@ -58,8 +59,45 @@ const getUserById = async(req, res) => {
     });
 };
 
+const deleteUserById = async(req, res) => {
+    console.log("delete!");
+    try{
+        const user = await User.findOne({_id: req.params.id});
+        if(user){
+            await User.deleteOne({_id: user.id});
+            await Message.deleteMany({receiverId: user.id});
+            res.status(200).json({message: "Successfully deleted"});
+        }
+    }
+    catch(err){
+        console.log(err);
+        res.json({error: err});
+    }
+    // await Message.remove({receiverId: "63a330e6702ceb7dba908f11"});
+    // await User.findOne({_id: req.params.id}).exec((err, data) => {
+    //     try{
+    //         Message.remove({receiverId: data.id});
+    //         User.remove({_id: data.id});
+    //         console.log(data.id);
+    //         console.log("Completely deleted!");
+    //     }
+    //     catch(err){
+    //         console.log(err);
+    //         res.json({error: err});
+    //     }
+    //     if(err){
+    //         console.log(err);
+    //         res.json({error: err});
+    //     }
+    //     else{
+    //         res.status(200).json(data);
+    //     }
+    // })
+}
+
 module.exports = {
     signup,
     getUser,
-    getUserById
+    getUserById,
+    deleteUserById,
 }

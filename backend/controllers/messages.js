@@ -28,13 +28,14 @@ const getMessagesByUserId = async(req, res) => {
 
 const createMessage = async(req, res) => {
     try{
-        console.log(req.userObjectId);
+        console.log(req.user);
         const {senderNickName, content, topic, color} = req.body;
-        const senderId = req.userObjectId;
-        const message = {_id: new mongoose.Types.ObjectId(), senderId, senderNickName, content, topic, color};
+        const receiverId = req.params.id;
+        const senderId = req.user.user.id;
+        const message = {_id: new mongoose.Types.ObjectId(), receiverId, senderId, senderNickName, content, topic, color};
         console.log(message);
         Message.create(message);
-        await User.findOneAndUpdate({_id: senderId}, {$push: {message: message._id}}).exec((err, success) => {
+        await User.findOneAndUpdate({_id: receiverId}, {$push: {message: message._id}}).exec((err, success) => {
             if(err)
                 res.json({error: err});
             else
@@ -47,8 +48,20 @@ const createMessage = async(req, res) => {
     }
 };
 
+const deleteMessage = async(req, res) => {
+    try{
+        await Message.findOneAndDelete({_id: req.params.id});
+        res.status(200).json({message: "Successfully deleted"});
+    }
+    catch(err){
+        console.log(err);
+        res.json({error: err});
+    }
+}
+
 module.exports = {
     getMessages,
     getMessagesByUserId,
-    createMessage
+    createMessage,
+    deleteMessage,
 };
