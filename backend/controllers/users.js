@@ -48,7 +48,7 @@ const getUser = async(req, res) => {
 };
 
 const getUserById = async(req, res) => {
-    await User.find({_id: req.params.id}).exec((err, data) => {
+    await User.find({_id: req.params.userId}).exec((err, data) => {
         if(err){
             console.log(err);
             res.json({error: err});
@@ -62,7 +62,7 @@ const getUserById = async(req, res) => {
 const deleteUserById = async(req, res) => {
     console.log("delete!");
     try{
-        const user = await User.findOne({_id: req.params.id});
+        const user = await User.findOne({_id: req.params.userId});
         if(user){
             await User.deleteOne({_id: user.id});
             await Message.deleteMany({receiverId: user.id});
@@ -74,7 +74,7 @@ const deleteUserById = async(req, res) => {
         res.json({error: err});
     }
     // await Message.remove({receiverId: "63a330e6702ceb7dba908f11"});
-    // await User.findOne({_id: req.params.id}).exec((err, data) => {
+    // await User.findOne({_id: req.params.userId}).exec((err, data) => {
     //     try{
     //         Message.remove({receiverId: data.id});
     //         User.remove({_id: data.id});

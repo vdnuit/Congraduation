@@ -15,7 +15,7 @@ const getMessages = async (req, res) => {
 };
 
 const getMessagesByUserId = async(req, res) => {
-    const messages = await User.findOne({_id: req.params.id}).populate('message').exec((err, data) => {
+    const messages = await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
         if(err){
             console.log(err);
             res.json({error: err});
@@ -30,7 +30,8 @@ const createMessage = async(req, res) => {
     try{
         console.log(req.user);
         const {senderNickName, content, topic, color} = req.body;
-        const receiverId = req.params.id;
+        const receiverId = req.params.userId;
+        console.log(receiverId);
         const senderId = req.user.user.id;
         const message = {_id: new mongoose.Types.ObjectId(), receiverId, senderId, senderNickName, content, topic, color};
         console.log(message);
@@ -50,7 +51,7 @@ const createMessage = async(req, res) => {
 
 const deleteMessage = async(req, res) => {
     try{
-        await Message.findOneAndDelete({_id: req.params.id});
+        await Message.findOneAndDelete({_id: req.params.messageId});
         res.status(200).json({message: "Successfully deleted"});
     }
     catch(err){
