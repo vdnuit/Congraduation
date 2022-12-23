@@ -13,7 +13,9 @@ const errorHandler = require('./middleware/error-handler');
 const notFoundError = require('./middleware/not-found');
 const { kakaoLogout } = require('./controllers/auth');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 // session
