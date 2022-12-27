@@ -28,13 +28,10 @@ const getMessagesByUserId = async(req, res) => {
 
 const createMessage = async(req, res) => {
     try{
-        console.log(req.user);
         const {senderNickName, content, topic, color} = req.body;
         const receiverId = req.params.userId;
-        console.log(receiverId);
         const senderId = req.user.user.id;
         const message = {_id: new mongoose.Types.ObjectId(), receiverId, senderId, senderNickName, content, topic, color};
-        console.log(message);
         Message.create(message);
         await User.findOneAndUpdate({_id: receiverId}, {$push: {message: message._id}}).exec((err, success) => {
             if(err)

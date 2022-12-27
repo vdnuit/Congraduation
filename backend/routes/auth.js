@@ -15,11 +15,9 @@ authRouter.get('/kakao/callback', isNotLoggedIn, passport.authenticate('kakao', 
 authRouter.post('/test', jwtAuth,
 	async (req, res, next) => {
 	  try {
-        console.log("hoho");
         console.log(req);
 	    res.json({ result: true });
 	  } catch (error) {
-        console.log("heh");
 	    console.error(error);
 	    next(error);
 	  }
@@ -28,7 +26,7 @@ authRouter.post('/test', jwtAuth,
 authRouter.get('/isLogin', (req, res) => {
     if(req.isAuthenticated()){
         console.log(req.session);
-        res.send("yeah");
+        res.send("yes");
     }
     else{
         console.log(req.session);

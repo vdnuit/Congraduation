@@ -3,9 +3,7 @@ const passport = require('passport');
 const {ExtractJwt, Strategy: JWTStrategy} = require('passport-jwt');
 
 const cookieExtractor = (req) => {
-    console.log(req);
     const {token} = req.cookies;
-    console.log(token);
     return token;
 }
 

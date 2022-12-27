@@ -11,12 +11,10 @@ module.exports = () => {
         },
         async (accessToken, refreshToken, profile, done) => { // (2) Verify Function, proceed after accessing redirect URI
             try {
-                console.log("trial on kakao verification");
                 const exUser = await User.findOne({ // find user
                     userId: profile.id, provider: 'kakao'
                 });
                 if (exUser) { // user exist
-                    console.log("kakao: existing user");
                     const tokenUser = {
                         user: exUser,
                         accessToken: accessToken || '',
@@ -24,7 +22,6 @@ module.exports = () => {
                     done(null, tokenUser);
                 }
                 else{ // user not exist
-                    console.log("kakao: non-existing user");
                     const newUser = await User.create({
                         userId: profile.id,
                         nick: profile.displayName,

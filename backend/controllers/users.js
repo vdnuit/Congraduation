@@ -14,10 +14,7 @@ const signup = async(req, res) => {
             const hashedPassword = await bcrypt.hash(password, salt);
             //생성
             const newUser = {userId, password: hashedPassword, provider: 'local', nick};
-            console.log(newUser);
-            console.log(newUser.id);
             User.create(newUser);
-            console.log("create");
             //토큰
             // const newUserToken = jwt.sign({id}, process.env.JSON_WEB_TOKEN, {expiresIn: 60 * 60}); //jwt
             res.status(201).json(newUser);
@@ -60,7 +57,6 @@ const getUserById = async(req, res) => {
 };
 
 const deleteUserById = async(req, res) => {
-    console.log("delete!");
     try{
         const user = await User.findOne({_id: req.params.userId});
         if(user){

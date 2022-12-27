@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 // 로컬 유저 로그인
 const signin = (req, res, next) => {
     try{
-        console.log("wow");
         passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
             console.log(user);
             if(authError){
@@ -15,8 +14,6 @@ const signin = (req, res, next) => {
             if(!user){
                 return res.redirect(`/?loginError${info.message}`);
             }
-            console.log("Login!");
-            console.log(req.isAuthenticated());
             req.login(user, (loginError) => {
                 if(loginError){
                     console.error(loginError);
@@ -40,18 +37,14 @@ const signin = (req, res, next) => {
 const signout = async (req, res) => {
     try{
         if(req.user.user.id && req.user.user.provider == 'local'){
-            console.log("LOCAL LOGOUT");
             req.session.destroy((err) => {
                 if(err) console.log(err);
-                console.log("LOGOUT~");
                 res.redirect('/');
             });
         }
         else if(req.user.user.id && req.user.user.provider == 'kakao'){
-            console.log("KAKAO LOGOUT");
             try {
                 const ACCESS_TOKEN = req.user.accessToken;
-                console.log(ACCESS_TOKEN);
                 let logout = await axios({
                     method:'post',
                     url:'https://kapi.kakao.com/v1/user/unlink',
@@ -65,7 +58,6 @@ const signout = async (req, res) => {
                 res.json(err);
             }
             req.session.destroy();
-            console.log("LOGOUT!!");
             res.redirect('/');
         }
     }
