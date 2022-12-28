@@ -33,15 +33,20 @@ const signup = async(req, res) => {
 }
 
 const getUser = async(req, res) => {
-    await User.find({}).exec((err, data) => {
-        if(err){
-            console.log(err);
-            res.json({error: err});
-        }
-        else {
-            res.status(200).json(data);
-        }
-    });
+    if(req.session.isAuth == true){
+        await User.find({_id: req.session.passport.user.id}).exec((err, data) => {
+            if(err){
+                console.log(err);
+                res.json({error: err});
+            }
+            else {
+                res.status(200).json(data);
+            }
+        });
+    }
+    else{
+        res.status(401).json('message: Unauthorized');
+    }
 };
 
 const getUserById = async(req, res) => {
@@ -62,6 +67,7 @@ const deleteUserById = async(req, res) => {
         if(user){
             await User.deleteOne({_id: user.id});
             await Message.deleteMany({receiverId: user.id});
+            req.session.destroy();
             res.status(200).json({message: "Successfully deleted"});
         }
     }

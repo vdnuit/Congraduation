@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const signin = (req, res, next) => {
     try{
         passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
-            console.log(user);
             if(authError){
                 console.error(authError);
                 return next(authError);
@@ -19,13 +18,13 @@ const signin = (req, res, next) => {
                     console.error(loginError);
                     return next(loginError);
                 }
-                console.log(user._id);
+                req.session.isAuth = true;
                 // const token = jwt.sign({id: user._id}, process.env.JSON_WEB_TOKEN);
                 // console.log(token);
                 // res.cookie("token", token, {httpOnly: true}).json({message: "token!"});
+                res.cookie("sessionID", req.sessionID, {httpOnly: true});
                 res.redirect('/');
             });
-            console.log(req.isAuthenticated());
         })(req,res,next); //?
     }
     catch(err){
