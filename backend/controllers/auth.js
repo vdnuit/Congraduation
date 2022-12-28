@@ -18,7 +18,6 @@ const signin = (req, res, next) => {
                     console.error(loginError);
                     return next(loginError);
                 }
-                req.session.isAuth = true;
                 // const token = jwt.sign({id: user._id}, process.env.JSON_WEB_TOKEN);
                 // console.log(token);
                 // res.cookie("token", token, {httpOnly: true}).json({message: "token!"});

@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Message = require('../models/message');
 const bcrypt = require('bcrypt');
+const { isLoggedIn } = require('../middleware/isLogin');
 
 // 로컬 유저 회원가입
 const signup = async(req, res) => {
@@ -33,7 +34,7 @@ const signup = async(req, res) => {
 }
 
 const getUser = async(req, res) => {
-    if(req.session.isAuth == true){
+    if(req.isAuthenticated()){
         await User.find({_id: req.session.passport.user.id}).exec((err, data) => {
             if(err){
                 console.log(err);
