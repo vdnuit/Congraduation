@@ -22,7 +22,6 @@ const signin = (req, res, next) => {
                 // const token = jwt.sign({id: user._id}, process.env.JSON_WEB_TOKEN);
                 // console.log(token);
                 // res.cookie("token", token, {httpOnly: true}).json({message: "token!"});
-                res.cookie("sessionID", req.sessionID, {httpOnly: true});
                 res.redirect('/');
             });
         })(req,res,next); //?
