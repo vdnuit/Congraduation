@@ -48,7 +48,11 @@ const signout = async (req, res) => {
                     headers:{
                       'Authorization': `Bearer ${ACCESS_TOKEN}`
                     }
-                  });
+                });
+                req.session.destroy((err) => {
+                    if(err) console.log(err);
+                    res.redirect('/');
+                });
             }
             catch(err){
                 console.log(err);
