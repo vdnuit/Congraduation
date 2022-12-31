@@ -2,7 +2,7 @@ const Message = require('../models/message');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 
-const getMessages = async (req, res) => {
+const getMessages = async (req, res, next) => {
     try{
         await Message.find({}).exec((err, data) => {
             if(err){
@@ -20,7 +20,7 @@ const getMessages = async (req, res) => {
     }
 };
 
-const getMessagesByUserId = async(req, res) => {
+const getMessagesByUserId = async(req, res, next) => {
     try{
         await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
             if(err){
@@ -38,7 +38,7 @@ const getMessagesByUserId = async(req, res) => {
     }
 };
 
-const createMessage = async(req, res) => {
+const createMessage = async(req, res, next) => {
     try{
         const {senderNickName, content, topic, color} = req.body;
         const receiverId = req.params.userId;
@@ -58,7 +58,7 @@ const createMessage = async(req, res) => {
     }
 };
 
-const deleteMessage = async(req, res) => {
+const deleteMessage = async(req, res, next) => {
     try{
         await Message.findOneAndDelete({_id: req.params.messageId});
         res.status(200).json({message: "Successfully deleted"});

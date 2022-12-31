@@ -28,7 +28,7 @@ const signin = (req, res, next) => {
     }
 };
 
-const signout = async (req, res) => {
+const signout = async (req, res, next) => {
     try{
         if(req.user.user.id && req.user.user.provider == 'local'){
             req.session.destroy((err) => {
@@ -39,6 +39,7 @@ const signout = async (req, res) => {
         else if(req.user.user.id && req.user.user.provider == 'kakao'){
             try {
                 const ACCESS_TOKEN = req.user.accessToken;
+                console.log(ACCESS_TOKEN);
                 await axios({
                     method:'post',
                     url:'https://kapi.kakao.com/v1/user/unlink',
@@ -46,17 +47,15 @@ const signout = async (req, res) => {
                       'Authorization': `Bearer ${ACCESS_TOKEN}`
                     }
                 });
-                req.session.destroy((err) => {
-                    if(err) console.log(err);
-                    res.redirect('/');
-                });
             }
             catch(err){
                 console.log(err);
                 return next(err);
             }
-            req.session.destroy();
-            res.redirect('/');
+            req.session.destroy((err) => {
+                if(err) console.log(err);
+                res.redirect('/');
+            });
         }
     }
     catch(err){

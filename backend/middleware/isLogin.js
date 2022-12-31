@@ -3,7 +3,7 @@ const isLoggedIn = (req, res, next) => {
         next();
     }
     else{
-        res.status(403).send("로그인 필요");
+        res.status(403).json({message: 'Unauthorized'});
     }
 };
 
@@ -12,7 +12,7 @@ const isNotLoggedIn = (req, res, next) => {
         next();
     }
     else{
-        res.send({message: '로그인 상태'});
+        res.json({message: 'Already authenticated'});
     }
 };
 

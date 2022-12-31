@@ -3,7 +3,7 @@ const Message = require('../models/message');
 const bcrypt = require('bcrypt');
 
 // 로컬 유저 회원가입
-const signup = async(req, res) => {
+const signup = async(req, res, next) => {
     try{
         const {userId, password, nick} = req.body;
         const user = await User.findOne({userId: userId});
@@ -30,7 +30,7 @@ const signup = async(req, res) => {
     }
 }
 
-const getUser = async(req, res) => {
+const getUser = async(req, res, next) => {
     try{
         if(req.isAuthenticated()){
             await User.find({_id: req.session.passport.user.id}).exec((err, data) => {
@@ -53,7 +53,7 @@ const getUser = async(req, res) => {
     }
 };
 
-const getUserById = async(req, res) => {
+const getUserById = async(req, res, next) => {
     try{
         await User.find({_id: req.params.userId}).exec((err, data) => {
             if(err){
@@ -71,7 +71,7 @@ const getUserById = async(req, res) => {
     }
 };
 
-const deleteUserById = async(req, res) => {
+const deleteUserById = async(req, res, next) => {
     try{
         const user = await User.findOne({_id: req.params.userId});
         if(user){
