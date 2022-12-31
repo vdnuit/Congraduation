@@ -3,27 +3,39 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 
 const getMessages = async (req, res) => {
-    await Message.find({}).exec((err, data) => {
-        if(err){
-            console.log(err);
-            res.json({error: err});
-        }
-        else{
-            res.send(data);
-        }
-    });
+    try{
+        await Message.find({}).exec((err, data) => {
+            if(err){
+                console.log(err);
+                return next(err);
+            }
+            else{
+                res.status(200).json(data);
+            }
+        });
+    }
+    catch(err){
+        console.log(err);
+        return next(err);
+    }
 };
 
 const getMessagesByUserId = async(req, res) => {
-    await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
-        if(err){
-            console.log(err);
-            res.json({error: err});
-        }
-        else{
-            res.send(data.message);
-        }
-    });
+    try{
+        await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
+            if(err){
+                console.log(err);
+                return next(err);
+            }
+            else{
+                res.status(200).json(data.message);
+            }
+        });
+    }
+    catch(err){
+        console.log(err);
+        return next(err);
+    }
 };
 
 const createMessage = async(req, res) => {
@@ -35,14 +47,14 @@ const createMessage = async(req, res) => {
         Message.create(message);
         await User.findOneAndUpdate({_id: receiverId}, {$push: {message: message._id}}).exec((err, success) => {
             if(err)
-                res.json({error: err});
+                return next(err);
             else
                 res.status(201).json({msg: "Successfully created."});
         });
     }
     catch(err){
         console.error(err);
-        res.json({error: err});
+        return next(err);
     }
 };
 
@@ -53,7 +65,7 @@ const deleteMessage = async(req, res) => {
     }
     catch(err){
         console.log(err);
-        res.json({error: err});
+        return next(err);
     }
 }
 

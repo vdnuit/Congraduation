@@ -26,37 +26,49 @@ const signup = async(req, res) => {
     }
     catch(err){
         console.log(err);
-        res.json({error: err});
+        return next(err);
     }
 }
 
 const getUser = async(req, res) => {
-    if(req.isAuthenticated()){
-        await User.find({_id: req.session.passport.user.id}).exec((err, data) => {
-            if(err){
-                console.log(err);
-                res.json({error: err});
-            }
-            else {
-                res.status(200).json(data);
-            }
-        });
+    try{
+        if(req.isAuthenticated()){
+            await User.find({_id: req.session.passport.user.id}).exec((err, data) => {
+                if(err){
+                    console.log(err);
+                    return next(err);
+                }
+                else {
+                    res.status(200).json(data);
+                }
+            });
+        }
+        else{
+            res.status(401).json({message: 'Unauthorized'});
+        }
     }
-    else{
-        res.status(401).json('message: Unauthorized');
+    catch(err){
+        console.log(err);
+        return next(err);
     }
 };
 
 const getUserById = async(req, res) => {
-    await User.find({_id: req.params.userId}).exec((err, data) => {
-        if(err){
-            console.log(err);
-            res.json({error: err});
-        }
-        else{
-            res.status(200).json(data);
-        }
-    });
+    try{
+        await User.find({_id: req.params.userId}).exec((err, data) => {
+            if(err){
+                console.log(err);
+                return next(err);
+            }
+            else{
+                res.status(200).json(data);
+            }
+        });
+    }
+    catch(err){
+        console.log(err);
+        return next(err);
+    }
 };
 
 const deleteUserById = async(req, res) => {
@@ -71,7 +83,7 @@ const deleteUserById = async(req, res) => {
     }
     catch(err){
         console.log(err);
-        res.json({error: err});
+        return next(err);
     }
 }
 

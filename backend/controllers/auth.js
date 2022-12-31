@@ -7,16 +7,16 @@ const signin = (req, res, next) => {
     try{
         passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
             if(authError){
-                console.error(authError);
+                console.log(authError);
                 return next(authError);
             }
             if(!user){
-                return res.redirect(`/?loginError${info.message}`);
+                return res.json({loginError: info.message});
             }
-            req.login(user, (loginError) => {
-                if(loginError){
-                    console.error(loginError);
-                    return next(loginError);
+            req.login(user, (err) => {
+                if(err){
+                    console.log(err);
+                    return next(err);
                 }
                 res.redirect('/');
             });
@@ -24,7 +24,7 @@ const signin = (req, res, next) => {
     }
     catch(err){
         console.log(err);
-        next(err);
+        return next(err);
     }
 };
 
@@ -39,7 +39,7 @@ const signout = async (req, res) => {
         else if(req.user.user.id && req.user.user.provider == 'kakao'){
             try {
                 const ACCESS_TOKEN = req.user.accessToken;
-                let logout = await axios({
+                await axios({
                     method:'post',
                     url:'https://kapi.kakao.com/v1/user/unlink',
                     headers:{
@@ -53,7 +53,7 @@ const signout = async (req, res) => {
             }
             catch(err){
                 console.log(err);
-                res.json(err);
+                return next(err);
             }
             req.session.destroy();
             res.redirect('/');
@@ -61,32 +61,9 @@ const signout = async (req, res) => {
     }
     catch(err){
         console.log(err);
-        res.json({error: err});
+        return next(err);
     }
 };
-
-// const kakaoLogout = async (req, res) => {
-//     try {
-//         console.log(req.user);
-//         const ACCESS_TOKEN = req.user.accessToken;
-//         console.log("This is access token: ");
-//         console.log(ACCESS_TOKEN);
-//         let logout = await axios({
-//             method:'post',
-//             url:'https://kapi.kakao.com/v1/user/unlink',
-//             headers:{
-//               'Authorization': `Bearer ${ACCESS_TOKEN}`
-//             }
-//           });
-//     }
-//     catch(err){
-//         console.log(err);
-//         res.json(err);
-//     }
-//     req.session.destroy();
-//     console.log("LOGOUT!!");
-//     res.redirect('/');
-// }
 
 module.exports = {
     signin,
