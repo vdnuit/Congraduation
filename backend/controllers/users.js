@@ -1,7 +1,6 @@
 const User = require('../models/user');
 const Message = require('../models/message');
 const bcrypt = require('bcrypt');
-const { isLoggedIn } = require('../middleware/isLogin');
 
 // 로컬 유저 회원가입
 const signup = async(req, res) => {
@@ -16,8 +15,6 @@ const signup = async(req, res) => {
             //생성
             const newUser = {userId, password: hashedPassword, provider: 'local', nick};
             User.create(newUser);
-            //토큰
-            // const newUserToken = jwt.sign({id}, process.env.JSON_WEB_TOKEN, {expiresIn: 60 * 60}); //jwt
             res.status(201).json(newUser);
         }
         else{
@@ -76,26 +73,6 @@ const deleteUserById = async(req, res) => {
         console.log(err);
         res.json({error: err});
     }
-    // await Message.remove({receiverId: "63a330e6702ceb7dba908f11"});
-    // await User.findOne({_id: req.params.userId}).exec((err, data) => {
-    //     try{
-    //         Message.remove({receiverId: data.id});
-    //         User.remove({_id: data.id});
-    //         console.log(data.id);
-    //         console.log("Completely deleted!");
-    //     }
-    //     catch(err){
-    //         console.log(err);
-    //         res.json({error: err});
-    //     }
-    //     if(err){
-    //         console.log(err);
-    //         res.json({error: err});
-    //     }
-    //     else{
-    //         res.status(200).json(data);
-    //     }
-    // })
 }
 
 module.exports = {

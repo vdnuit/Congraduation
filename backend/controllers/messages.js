@@ -3,7 +3,7 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 
 const getMessages = async (req, res) => {
-    const messages = await Message.find({}).exec((err, data) => {
+    await Message.find({}).exec((err, data) => {
         if(err){
             console.log(err);
             res.json({error: err});
@@ -15,7 +15,7 @@ const getMessages = async (req, res) => {
 };
 
 const getMessagesByUserId = async(req, res) => {
-    const messages = await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
+    await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
         if(err){
             console.log(err);
             res.json({error: err});
@@ -37,12 +37,12 @@ const createMessage = async(req, res) => {
             if(err)
                 res.json({error: err});
             else
-                res.json({msg: "Successfully created."});
+                res.status(201).json({msg: "Successfully created."});
         });
     }
     catch(err){
         console.error(err);
-        res.json(err);
+        res.json({error: err});
     }
 };
 

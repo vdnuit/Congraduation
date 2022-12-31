@@ -5,7 +5,7 @@ const { isLoggedIn } = require('../middleware/isLogin');
 const messageRouter = express.Router();
 
 messageRouter.get('/', getMessages);
-messageRouter.get('/:userId', getMessagesByUserId); // /~~임
+messageRouter.get('/:userId', getMessagesByUserId);
 messageRouter.post('/:userId', isLoggedIn, createMessage);
 messageRouter.delete('/:messageId', isLoggedIn, deleteMessage);
 

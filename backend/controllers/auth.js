@@ -18,12 +18,9 @@ const signin = (req, res, next) => {
                     console.error(loginError);
                     return next(loginError);
                 }
-                // const token = jwt.sign({id: user._id}, process.env.JSON_WEB_TOKEN);
-                // console.log(token);
-                // res.cookie("token", token, {httpOnly: true}).json({message: "token!"});
                 res.redirect('/');
             });
-        })(req,res,next); //?
+        })(req,res,next);
     }
     catch(err){
         console.log(err);
@@ -64,7 +61,7 @@ const signout = async (req, res) => {
     }
     catch(err){
         console.log(err);
-        res.send({error: err});
+        res.json({error: err});
     }
 };
 

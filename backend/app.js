@@ -39,9 +39,6 @@ app.use(session({
 }));
 app.use(express.json()); // body-parser
 
-// app.use('/auth', authRouter); // authenticate
-// app.use('/api/v1/users', userRouter);
-
 // passport
 app.use(passport.initialize()); //session을 초기화 (req에 passport 설정을 심음)
 app.use(passport.session()); //deserializeUser 호출
