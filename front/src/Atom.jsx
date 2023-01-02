@@ -14,3 +14,13 @@ export const temporaryTreeAtom = atom({
     key: 'temporaryTree',
     default: []
 });
+
+export const countAtom = atom({
+    key: 'count',
+    default: 0
+});
+
+export const dateAtom = atom({
+    key: 'date',
+    default: Math.ceil((new Date(2022, 11, 15) - new Date()) / (1000 * 60 * 60 * 24))
+});

@@ -83,6 +83,7 @@ function Main() {
                 <StyledLink to={{ pathname: `/signup/*` }}>
                     <h2>회원가입</h2>
                 </StyledLink>
+
                 <StyledLink to={{ pathname: `/tree/*` }}>
                     <h2>트리로 이동</h2>
                 </StyledLink>

@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { ownerNameAtom, temporaryTreeAtom } from '../Atom';
+import { ownerNameAtom, temporaryTreeAtom, countAtom } from '../Atom';
 import ColorSelect from '../components/ColorSelect';
 import ShuffleImg from '../assets/shuffle.png';
 
@@ -112,6 +113,7 @@ export const StyledButton = styled.button`
 function Write() {
     const [icon, setIcon] = useState();
     const { register, watch } = useForm();
+    const navigate = useNavigate();
     const IconChecked = (current) => {
         setIcon(current);
     };
@@ -120,6 +122,7 @@ function Write() {
         console.log(icon);
     }, [icon]);
     const [temporaryTree, setTree] = useRecoilState(temporaryTreeAtom);
+    const [count, setCount] = useRecoilState(countAtom);
     const questions = [
         `${ownerName}님이 좋아하는 것은?`,
         `${ownerName}님과 함께한 가장 즐거웠던 추억은?`,
@@ -172,8 +175,9 @@ function Write() {
         setTree(copy);
 
         console.log(copy);
-
+        setCount(count + 1);
         console.log(temporaryTree);
+        navigate(`/tree/*`);
     };
 
     return (
