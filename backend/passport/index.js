@@ -19,6 +19,7 @@ module.exports = () => { // middleware function
 
     // passport.session()이 호출함
     passport.deserializeUser((data, done) => {     // req.session의 id로 DB 조회 후 req.user에 전체 정보 불러옴
+        console.log("DESERIALIZE");
         if(data.provider == 'kakao'){
             User.findOne({_id: data.id})
             .then(result => {console.log(result); done(null, {user: result, accessToken: data.accessToken})}) // req.user에 저장

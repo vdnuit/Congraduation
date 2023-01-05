@@ -1,3 +1,5 @@
+const { TokenExpiredError } = require("jsonwebtoken");
+
 const errorHandler = async (err, req, res, next) => {
     return res.status(500).json({error: err});
 }

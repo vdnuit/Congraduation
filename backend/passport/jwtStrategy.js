@@ -13,9 +13,10 @@ module.exports = () => {
         new JWTStrategy({
             // jwtFromRequest: ExtractJwt.fromHeader('authorization'),
             jwtFromRequest: cookieExtractor,
-            secretOrKey: process.env.JSON_WEB_TOKEN // authorization header로부터 jwt 가져옴, 복호화하기 위한 암호키
+            secretOrKey: process.env.JWTSecret // authorization header로부터 jwt 가져옴, 복호화하기 위한 암호키
         },
         async (jwtPayload, done) => { // 토큰의 페이로드에서 가져온 정보를 갖고 DB 접근하여 유저 찾음
+            console.log("JWT!");
             try{
                 const user = await User.findOne({_id: jwtPayload.id});
                 if(user){
