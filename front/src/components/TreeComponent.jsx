@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { temporaryTreeAtom } from '../Atom';
-import Leaf from './Leaf';
+
 
 const startX = 26;
 const startY = 28;
@@ -19,6 +19,9 @@ function randomY(){
 
 const Img = styled.img`
     position: absolute;
+    max-width: 64px;
+    max-height: 64px;
+    width: 12.8%;
     left: ${randomX}%;
     top: ${randomY}%;
 `
@@ -35,3 +38,4 @@ function TreeComponent(){
 }
 
 export default TreeComponent;
+
