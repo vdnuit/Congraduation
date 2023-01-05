@@ -17,7 +17,8 @@ const jwtAuth = (req, res, next) => {
                         const user = await User.findOne({_id: refreshToken.userId});
                         console.log("userId: ", user);
                         const accessToken = jwt.sign({id: user._id, provider: user.provider}, process.env.JWTSecret, {expiresIn: "10s"});
-                        return res.cookie("accessToken", accessToken, {httpOnly: true}).json({message: "reissued: " + accessToken});
+                        res.cookie("accessToken", accessToken, {httpOnly: true});
+                        return next();
                     }
                     else{
                         res.clearCookie('accessToken');

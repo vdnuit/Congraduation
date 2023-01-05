@@ -8,7 +8,7 @@ module.exports = () => {
         new KakaoStrategy({ // (1) Strategy
             clientID: process.env.KAKAO_ID, // REST API Key
             clientSecret: process.env.KAKAO_SECRET,
-            callbackURL: "/api/v1/auth/kakao/callback", // Redirect URI
+            callbackURL: process.env.REDIRECT_URL, // Redirect URI
         },
         async (accessToken, refreshToken, profile, done) => { // (2) Verify Function, proceed after accessing redirect URI
             console.log("KAKAO LOGIN")

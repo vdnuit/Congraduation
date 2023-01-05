@@ -65,18 +65,41 @@ const kakaoLogin = async(req, res, next) => {
     }
 }
 
-const signout = async (req, res, next) => {
+const kakaoAuth = async(req, res, next) => {
     try{
-        if(req.user.user.id && req.user.user.provider == 'local'){
-            req.session.destroy((err) => {
-                if(err) console.log(err);
-                return res.redirect('/');
-            });
-            // return res.clearCookie('token').end();
-        }
-        else if(req.user.user.id && req.user.user.provider == 'kakao'){
+        console.log(req.cookies.accessToken);
+        const ACCESS_TOKEN = req.cookies.accessToken;
+        const tokenInfo = await axios({
+            method:'get',
+            url:'https://kapi.kakao.com/v1/user/access_token_info',
+            headers:{
+              'Authorization': `Bearer ${ACCESS_TOKEN}`
+            }
+        });
+        if(tokenInfo.data)
+            res.status(200).json({message: "valid token"});
+        else
+            res.json({message: "invalid token"});
+    }
+    catch(err){
+        console.log(err);
+        return next(err);
+    }
+}
+
+// refresh token
+
+const signout = async (req, res, next) => {
+    console.log("LOGOUT START");
+    console.log(req);
+    try{
+        // local
+        // res.clearCookie('accessToken');
+        // res.clearCookie('refreshToken').end();
+        // if(req.user.user.id && req.user.user.provider == 'kakao'){
             try {
                 const ACCESS_TOKEN = req.user.accessToken;
+                console.log(ACCESS_TOKEN);
                 await axios({
                     method:'post',
                     url:'https://kapi.kakao.com/v1/user/unlink',
@@ -93,7 +116,7 @@ const signout = async (req, res, next) => {
                 if(err) console.log(err);
                 return res.redirect('/');
             });
-        }
+        // }
     }
     catch(err){
         console.log(err);
@@ -104,4 +127,5 @@ const signout = async (req, res, next) => {
 module.exports = {
     signin,
     signout,
+    kakaoAuth,
 };
