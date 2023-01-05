@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import ImageMap from "image-map";
 import { useRecoilValue } from 'recoil';
 import TreeNight from '../assets/treenight.png';
-import { ownerNameAtom, countAtom, dateAtom } from '../Atom';
+import { ownerNameAtom, countAtom } from '../Atom';
 import TreeComponent from '../components/TreeComponent';
 
 const Container = styled.div`
@@ -29,7 +30,7 @@ const Dday = styled.p`
     font-weight: 400;
     font-size: 20px;
     line-height: 25px;
-    color: #072A60;
+    color: #072a60;
     margin: 10px;
     text-align: center;
 `;
@@ -38,7 +39,6 @@ const TreeBackground = styled.img`
     position: absolute;
     top: 62px;
     left: 0px;
-
     z-index: -1;
     width: 100%;
     max-width: 500px;
@@ -52,7 +52,6 @@ const Buttons = styled.div`
 `;
 export const StyledLink = styled(Link)`
     text-decoration: none;
-
     h2 {
         background: #072a60;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
@@ -63,7 +62,6 @@ export const StyledLink = styled(Link)`
         font-size: 20px;
         line-height: 30px;
         /* identical to box height */
-
         text-align: center;
         padding: 0.6rem;
         margin: 1rem 3rem;
@@ -79,7 +77,6 @@ export const StyledLink = styled(Link)`
         font-size: 20px;
         line-height: 30px;
         /* identical to box height */
-
         text-align: center;
         padding: 0.6rem;
         margin: 0rem 3rem;
@@ -87,14 +84,31 @@ export const StyledLink = styled(Link)`
     }
 `;
 
+const Treezone = styled.map`
+    height: auto;
+`
+
 function MyTree() {
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
+    useEffect(() => {
+        ImageMap('img[usemap]')
+    },[])
+    const clickHandler = (title) => {
+        console.log(title)
+    }
 
     return (
         <Container>
-            <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-            <Count>{ownerName} 님의 나무에 {count}개의 메시지</Count>
+            <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap"/>
+            <Count>
+                {ownerName} 님의 나무에 {count}개의 메시지
+            </Count>
+            <Link to={{ pathname: `/list/* `}}>
+                <Treezone name="treemap">
+                    <area aria-hidden="true" onClick={()=>clickHandler("tree")} shape="poly" alt="tree" coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364" />
+                </Treezone>
+            </Link>
             <TreeComponent />
             <Buttons>
                 <StyledLink to={{ pathname: `/list/*` }}>
@@ -108,6 +122,5 @@ function MyTree() {
         </Container>
     );
 }
-
 
 export default MyTree;
