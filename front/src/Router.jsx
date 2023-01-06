@@ -16,15 +16,15 @@ function Router() {
         <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Header />
             <Routes>
-                <Route path="/" element={<Main />} />
-                <Route path="/signup/*" element={<SignUp />} />
-                <Route path="/login/*" element={<LogIn />} />
+                <Route path="/" element={<Main />} errorElement={<Main />} />
+                <Route path="/signup/*" element={<SignUp />} errorElement={<Main />} />
+                <Route path="/login/*" element={<LogIn />} errorElement={<Main />} />
 
-                <Route path="/tree/*" element={<Tree />} />
-                <Route path="/write/*" element={<Write />} />
-                <Route path="/mytree/*" element={<MyTree />} />
-                <Route path="/list/*" element={<List />} />
-                <Route path="/content/*" element={<Content />} />
+                <Route path="/tree/*" element={<Tree />} errorElement={<Main />} />
+                <Route path="/write/*" element={<Write />} errorElement={<Main />} />
+                <Route path="/mytree/*" element={<MyTree />} errorElement={<Main />} />
+                <Route path="/list/*" element={<List />} errorElement={<Main />} />
+                <Route path="/content/*" element={<Content />} errorElement={<Main />} />
             </Routes>
             {/* <Footer /> */}
         </BrowserRouter>
