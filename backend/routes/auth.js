@@ -8,10 +8,12 @@ const jwtAuth = require('../middleware/auth');
 
 passportConfig();
 authRouter.post('/login', signin);
-authRouter.get('/logout', signout);
+authRouter.get('/logout', jwtAuth, signout);
 authRouter.get('/kakao', passport.authenticate('kakao'));
 authRouter.get('/kakao/callback', passport.authenticate('kakao', {failureRedirect: '/', session: false}), (req, res) => {
+  res.cookie('provider', 'kakao', {httpOnly: true});
   res.cookie('accessToken', req.user.accessToken, {httpOnly: true});
+  res.cookie('refreshToken', req.user.refreshToken, {httpOnly: true});
   res.redirect('/');
 }); // redirect URI (Access token) [fail, success]
 authRouter.get('/kakao/token', kakaoAuth);

@@ -32,8 +32,8 @@ const signup = async(req, res, next) => {
 
 const getUser = async(req, res, next) => {
     try{
-        if(req.isAuthenticated()){
-            await User.find({_id: req.session.passport.user.id}).exec((err, data) => {
+        if(req.userId){
+            await User.find({_id: req.userId}).exec((err, data) => {
                 if(err){
                     console.log(err);
                     return next(err);
@@ -61,7 +61,10 @@ const getUserById = async(req, res, next) => {
                 return next(err);
             }
             else{
-                res.status(200).json(data);
+                if(req.userId)
+                    res.status(200).json(data);
+                else
+                    res.status(401).json(data);
             }
         });
     }
@@ -73,12 +76,18 @@ const getUserById = async(req, res, next) => {
 
 const deleteUserById = async(req, res, next) => {
     try{
-        const user = await User.findOne({_id: req.params.userId});
-        if(user){
-            await User.deleteOne({_id: user.id});
-            await Message.deleteMany({receiverId: user.id});
-            req.session.destroy();
-            res.status(200).json({message: "Successfully deleted"});
+        if(req.userId){
+            const user = await User.findOne({_id: req.params.userId});
+            if(user){
+                await User.deleteOne({_id: user.id});
+                await Message.deleteMany({receiverId: user.id});
+                res.clearCookie('accessToken');
+                res.clearCookie('refreshToken');
+                res.status(200).json({_id: user._id});
+            }
+        }
+        else{
+            return res.status(401).json({message: 'Unauthorized'});
         }
     }
     catch(err){

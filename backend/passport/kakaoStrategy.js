@@ -21,6 +21,7 @@ module.exports = () => {
                     const tokenUser = {
                         user: exUser,
                         accessToken: accessToken || '',
+                        refreshToken: refreshToken,
                     }
                     done(null, tokenUser);
                 }
@@ -33,6 +34,7 @@ module.exports = () => {
                     const tokenUser = {
                         user: newUser,
                         accessToken: accessToken || '',
+                        refreshToken: refreshToken,
                     }
                     done(null, tokenUser);
                 }

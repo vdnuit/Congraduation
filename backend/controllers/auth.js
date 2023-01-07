@@ -37,8 +37,9 @@ const signin = (req, res, next) => {
                 console.log(accessToken);
                 console.log(refreshToken);
                 Token.create({userId: user._id, token: refreshToken, createdAt: new Date(Date.now())});
+                res.cookie("provider", "local", {httpOnly: true});
                 res.cookie("accessToken", accessToken, {httpOnly: true});
-                res.cookie("refreshToken", refreshToken, {httpOnly: true}).json({message: "access token!"});
+                res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({_id: user._id});
             });
         })(req,res,next);
     }
@@ -91,32 +92,36 @@ const kakaoAuth = async(req, res, next) => {
 
 const signout = async (req, res, next) => {
     console.log("LOGOUT START");
-    console.log(req);
+    console.log(req.provider);
     try{
-        // local
-        // res.clearCookie('accessToken');
-        // res.clearCookie('refreshToken').end();
-        // if(req.user.user.id && req.user.user.provider == 'kakao'){
-            try {
-                const ACCESS_TOKEN = req.user.accessToken;
-                console.log(ACCESS_TOKEN);
-                await axios({
-                    method:'post',
-                    url:'https://kapi.kakao.com/v1/user/unlink',
-                    headers:{
-                      'Authorization': `Bearer ${ACCESS_TOKEN}`
-                    }
-                });
+        if(req.isLogin == true){
+            if(req.cookies.provider == 'local'){
+                res.clearCookie('accessToken');
+                return res.clearCookie('refreshToken').status(200).json({message: "Logout succeed"});
             }
-            catch(err){
-                console.log(err);
-                return next(err);
+            else if(req.cookies.provider == 'kakao'){
+                try {
+                    const ACCESS_TOKEN = req.cookies.accessToken;
+                    console.log(ACCESS_TOKEN);
+                    await axios({
+                        method:'post',
+                        url:'https://kapi.kakao.com/v1/user/unlink',
+                        headers:{
+                          'Authorization': `Bearer ${ACCESS_TOKEN}`
+                        }
+                    });
+                }
+                catch(err){
+                    console.log(err);
+                    return next(err);
+                }
+                res.clearCookie('accessToken');
+                return res.clearCookie('refreshToken').status(200).json({message: "Logout succeed"});
             }
-            req.session.destroy((err) => {
-                if(err) console.log(err);
-                return res.redirect('/');
-            });
-        // }
+        }
+        else{
+            res.status(401).json({message: "Unauthorized"});
+        }
     }
     catch(err){
         console.log(err);
