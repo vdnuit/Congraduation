@@ -63,7 +63,7 @@ export const StyledLink = styled(Link)`
 `;
 const Snow = styled.img`
     position: absolute;
-    top: 0px;
+    top: 62px;
     left: 0px;
     pointer-events: none;
     z-index: 1;
