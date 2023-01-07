@@ -137,7 +137,7 @@ function ColorSelect({ IconChecked }) {
                 <Colors>
                     <input
                         style={{
-                            backgroundImage: `url("https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon0.png?raw=true")`,
+                            backgroundImage: `url("https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/select10.png?raw=true")`,
                             backgroundPosition: 'center',
                             backgroundRepeat: 'no-repeat',
                             backgroundSize: 'cover'
