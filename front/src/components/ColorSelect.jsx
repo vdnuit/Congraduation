@@ -24,11 +24,11 @@ const Colors = styled.div`
         max-height: 50px;
     }
     [type='radio']:checked {
-        border: 1px solid #535353;
+        border: 1px solid #ffa1a1;
     }
 `;
 function ColorSelect({ IconChecked }) {
-    const [value, setValue] = useState({ color: undefined });
+    const [value, setValue] = useState({ color: 0 });
     const { register, watch } = useForm();
     useEffect(() => {
         console.log(value);
@@ -87,10 +87,10 @@ function ColorSelect({ IconChecked }) {
                         value="4"
                     />
                 </Colors>
-                {/* <Colors>
+                <Colors>
                     <input
                         style={{
-                            backgroundColor: '#707070'
+                            backgroundColor: '#6F6F6F'
                         }}
                         {...register('color')}
                         type="radio"
@@ -99,7 +99,7 @@ function ColorSelect({ IconChecked }) {
                     />
                     <input
                         style={{
-                            backgroundColor: '#E2B0B0'
+                            backgroundColor: '#FEB2B2'
                         }}
                         {...register('color')}
                         type="radio"
@@ -108,7 +108,7 @@ function ColorSelect({ IconChecked }) {
                     />
                     <input
                         style={{
-                            backgroundColor: '#AFCCDB'
+                            backgroundColor: '#B1E4FE'
                         }}
                         {...register('color')}
                         type="radio"
@@ -117,7 +117,7 @@ function ColorSelect({ IconChecked }) {
                     />
                     <input
                         style={{
-                            backgroundColor: '#B2D3B4'
+                            backgroundColor: '#A0E5A5'
                         }}
                         {...register('color')}
                         type="radio"
@@ -126,7 +126,7 @@ function ColorSelect({ IconChecked }) {
                     />
                     <input
                         style={{
-                            backgroundColor: '#E5DC9'
+                            backgroundColor: '#FEF198'
                         }}
                         {...register('color')}
                         type="radio"
@@ -137,7 +137,10 @@ function ColorSelect({ IconChecked }) {
                 <Colors>
                     <input
                         style={{
-                            backgroundColor: '#072A60'
+                            backgroundImage: `url("https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon0.png?raw=true")`,
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundSize: 'cover'
                         }}
                         {...register('color')}
                         type="radio"
@@ -180,7 +183,7 @@ function ColorSelect({ IconChecked }) {
                         name="color"
                         value="14"
                     />
-                </Colors> */}
+                </Colors>
             </form>
         </div>
     );

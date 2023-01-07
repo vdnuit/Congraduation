@@ -30,10 +30,9 @@ const Hamburger = styled.img`
 const CapDeco = styled.img`
     position: absolute;
     top: 0px;
-    left: 0px;
+    right: 50px;
     pointer-events: none;
     z-index: 3;
-    width: 100%;
     height: 80px;
     max-width: 500px;
 `;

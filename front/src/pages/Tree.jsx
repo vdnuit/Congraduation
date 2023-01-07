@@ -88,7 +88,7 @@ const Count = styled.p`
 function Time() {
     const today = new Date();
     const hours = today.getHours();
-    if (hours > 19 || hours < 5) {
+    if (hours >= 20 || hours <= 5) {
         return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />;
     }
     if (hours <= 16 && hours >= 9) {

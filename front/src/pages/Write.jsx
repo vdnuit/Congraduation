@@ -110,8 +110,33 @@ export const StyledButton = styled.button`
     color: #ffffff;
     margin-bottom: 10vh;
 `;
+const Circle = styled.div`
+    background: #ffffff;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #c8c8c8;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    div {
+        vertical-align: middle;
+        appearance: none;
+        border-radius: 50%;
+        /* stroke */
+
+        border: 1px solid #c8c8c8;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+        width: 12vw;
+        max-width: 50px;
+        height: 12vw;
+        max-height: 50px;
+    }
+`;
+
 function Write() {
     const [icon, setIcon] = useState();
+
+    const [selectOpen, setSelectOpen] = useState(true);
     const { register, watch } = useForm();
     const navigate = useNavigate();
     const IconChecked = (current) => {
@@ -179,13 +204,18 @@ function Write() {
         console.log(temporaryTree);
         navigate(`/tree/*`);
     };
+    const showSelect = () => {
+        setSelectOpen(true);
+    };
 
     return (
         <Container>
             <h3>쪽지 색</h3>
-            <GreyBox>
-                <ColorSelect IconChecked={IconChecked} />
-            </GreyBox>
+            <Circle onClick={showSelect}>
+                <div />
+            </Circle>
+            {selectOpen ? <ColorSelect IconChecked={IconChecked} /> : null}
+            {/* setSelectOpen={setSelectOpen} */}
             <Shuffle>
                 <h3>랜덤 주제</h3>
                 <button

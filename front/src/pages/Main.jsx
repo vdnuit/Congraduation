@@ -35,8 +35,8 @@ const Box = styled.div`
 `;
 const Cap = styled.img`
     margin-top: 10vh;
-    margin-bottom: -9vh;
-    width: 50%;
+    margin-bottom: -3vh;
+    width: 40%;
 `;
 const Logo = styled.img`
     width: 95%;
