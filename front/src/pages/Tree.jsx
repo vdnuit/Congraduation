@@ -84,6 +84,8 @@ const Count = styled.p`
     line-height: 25px;
     color: #f7f7f7;
     margin: 20px;
+
+    margin-top: 80px;
 `;
 function Time() {
     const today = new Date();

@@ -6,7 +6,12 @@ import LogoImg from '../assets/logoImg.png';
 import CapImg from '../assets/capImg.png';
 import SnowImg from '../assets/snowbackground.png';
 
+import InstaImg from '../assets/instaImg.png';
+
 const Container = styled.div`
+    z-index: -1;
+
+    position: absolute;
     max-width: 500px;
     display: flex;
     flex-direction: column;
@@ -32,6 +37,7 @@ const Box = styled.div`
     height: 180vw;
     max-height: 800px;
     text-align: center;
+    margin-top 100px;
 `;
 const Cap = styled.img`
     margin-top: 10vh;
@@ -41,6 +47,24 @@ const Cap = styled.img`
 const Logo = styled.img`
     width: 95%;
     margin-bottom: 8vh;
+`;
+const Insta = styled.div`
+    margin: 30px;
+    img {
+        height: 32px;
+        width: 32px;
+    }
+    p {
+        font-family: 'Jua';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+
+        text-align: center;
+
+        color: #072a60;
+    }
 `;
 export const StyledLink = styled(Link)`
     text-decoration: none;
@@ -87,7 +111,12 @@ function Main() {
                 <StyledLink to={{ pathname: `/tree/*` }}>
                     <h2>트리로 이동</h2>
                 </StyledLink>
+                <Insta>
+                    <img src={InstaImg} alt="인스타그램 로고" />
+                    <p>@congraduation_skku</p>
+                </Insta>
             </Box>
+
             <Snow src={SnowImg} alt="눈 내리는 배경" />
         </Container>
     );

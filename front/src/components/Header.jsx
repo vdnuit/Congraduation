@@ -7,6 +7,8 @@ import CapDecoImg from '../assets/capdeco.png';
 import LogoImg from '../assets/logoImg.png';
 
 const Container = styled.div`
+    z-index: 0;
+    position: absolute;
     width: 100%;
     background-color: #072a60;
     max-width: 500px;

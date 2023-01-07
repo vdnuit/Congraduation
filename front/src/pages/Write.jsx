@@ -26,6 +26,17 @@ const Container = styled.div`
         margin-top: 15px;
         margin-bottom: -5px;
     }
+    h5 {
+        font-family: 'Jua';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 18px;
+        color: #252525;
+        margin-left: 10px;
+        margin-top: 80px;
+        margin-bottom: -5px;
+    }
     h2 {
         font-family: 'Jua';
         font-style: normal;
@@ -190,6 +201,9 @@ function Write() {
     const [index, setIndex] = useState(randomNum(0, questions.length));
 
     const SubmitEvent = () => {
+        if (watch().message === '' || watch().writer === '') {
+            return 0;
+        }
         const dict = {
             ...watch(),
             question: questions[index],
@@ -203,6 +217,7 @@ function Write() {
         setCount(count + 1);
         console.log(temporaryTree);
         navigate(`/tree/*`);
+        return 1;
     };
     const showSelect = () => {
         setSelectOpen(true);
@@ -210,12 +225,20 @@ function Write() {
 
     return (
         <Container>
-            <h3>쪽지 색</h3>
+            <h5>쪽지 색</h5>
             <Circle onClick={showSelect}>
-                <div />
+                <div
+                    style={{
+                        backgroundImage: `url("https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/select${icon}.png?raw=true")`,
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: 'cover'
+                    }}
+                />
             </Circle>
-            {selectOpen ? <ColorSelect IconChecked={IconChecked} /> : null}
-            {/* setSelectOpen={setSelectOpen} */}
+            {selectOpen ? (
+                <ColorSelect IconChecked={IconChecked} setSelectOpen={setSelectOpen} />
+            ) : null}
             <Shuffle>
                 <h3>랜덤 주제</h3>
                 <button
