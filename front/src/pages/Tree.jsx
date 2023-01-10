@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import ImageMap from "image-map";
 import { useRecoilValue } from 'recoil';
 import { ownerNameAtom, countAtom } from '../Atom';
 import TreeNight from '../assets/treenight.png';
@@ -87,16 +88,21 @@ const Count = styled.p`
 
     margin-top: 80px;
 `;
+
+const Treezone = styled.map`
+    height: auto;
+`
+
 function Time() {
     const today = new Date();
     const hours = today.getHours();
     if (hours >= 20 || hours <= 5) {
-        return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />;
+        return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap"/>;
     }
     if (hours <= 16 && hours >= 9) {
-        return <TreeBackground src={TreeDay} alt="낮 배경 은행나무" />;
+        return <TreeBackground src={TreeDay} alt="낮 배경 은행나무" useMap="#treemap"/>;
     }
-    return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" />;
+    return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap"/>;
 }
 function Tree() {
     const ownerName = useRecoilValue(ownerNameAtom);
@@ -109,6 +115,11 @@ function Tree() {
             </Count>
 
             <Time />
+            <Link to={{ pathname: `/list/* `}}>
+                <Treezone name="treemap">
+                    <area aria-hidden="true" onClick={()=>clickHandler("tree")} shape="poly" alt="tree" coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364" />
+                </Treezone>
+            </Link>
             <TreeComponent />
             <Buttons>
                 {/* 외부 이용자일 때 */}

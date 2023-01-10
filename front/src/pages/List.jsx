@@ -1,4 +1,5 @@
 import { React } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { countAtom, temporaryTreeAtom } from '../Atom';
@@ -101,7 +102,9 @@ function List() {
             <Count>받은 쪽지 수 {count}</Count>
             <Grid>
                 {leaves.map((leaf) => (
-                    <Leaf key={leaf.id} id={leaf.id} icon={leaf.icon} />
+                    <Link to = {{ pathname : `/content/${leaf.id}`}}>
+                        <Leaf key={leaf.id} id={leaf.id} icon={leaf.icon} />
+                    </Link>
                 ))}
             </Grid>
         </StyledGrid>

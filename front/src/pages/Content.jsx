@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 // import { useForm } from 'react-hook-form';
+
+import { toBlob } from 'html-to-image';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { ownerNameAtom, temporaryTreeAtom } from '../Atom';
+import trash from '../assets/trash.png';
 
 const Container = styled.div`
     width: 100%;
@@ -27,10 +30,14 @@ const Container = styled.div`
         font-style: normal;
         font-weight: 400;
         font-size: 20px;
-        line-height: 25px;
+        line-height: 30px;
         color: #072a60;
         margin-left: 10px;
+        margin-right: 10px;
         margin-top: 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
     h4 {
         font-family: 'Jua';
@@ -80,7 +87,6 @@ const GreyBox = styled.div`
         line-height: 17px;
         color: #000000;
         width: 100%;
-        height: 10rem;
     }
 `;
 
@@ -96,10 +102,9 @@ const StyledButton = styled.button`
     font-size: 20px;
     line-height: 30px;
     text-align: center;
-    padding: 0.6rem;
-    margin: 1rem 9rem;
     color: #ffffff;
-    margin-bottom: 1vh;
+    width: 67.5%;
+    height: 3.5rem;
 `;
 
 const StyledBtn = styled.button`
@@ -114,10 +119,9 @@ const StyledBtn = styled.button`
     font-size: 20px;
     line-height: 30px;
     text-align: center;
-    padding: 0.6rem;
-    margin: 1rem 9rem;
     color: #7c7c7c;
-    margin-bottom: 1vh;
+    width: 67.5%;
+    height: 3.5rem;
 `;
 
 const Div = styled.div`
@@ -125,25 +129,84 @@ const Div = styled.div`
     margin-bottom: 1rem;
 `;
 
+const ButtonDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    height: 7.5rem;
+`
+
+const Img = styled.img`
+    width: 23%;
+    margin-right: 5%;
+`;
+
+const Button = styled.button`
+    background: #072A60;
+    border-color: #072A60;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 300px;
+    color: #FFFFFF;
+    font-family: 'Jua';
+    font-style: normal;
+    font-size: 14px;
+    text-align: center;
+    width: 24.1%;
+    line-height: 18px;
+    padding: 4px 12px;
+    gap: 4px;
+    `
+    
 function Content() {
     const ownerName = useRecoilValue(ownerNameAtom);
     const leaves = useRecoilValue(temporaryTreeAtom);
+    const imageRef = useRef(null);
+    const handleShare = async() => {
+        const newFile = await toBlob(imageRef.current);
+        const data = {
+            files: [
+                new File([newFile], 'image.png', {
+                    type: newFile.type,
+                }),
+            ],
+            title: 'Image',
+            text: 'image',
+        };
+
+        try {
+            if(!navigator.canShare(data)){
+                alert("이미지를 공유할 수 없습니다.");
+            }
+            await navigator.share(data);
+        } catch(err){
+            console.error(err);
+        }
+    }
 
     return (
         <Container>
-            <Div>
-                <GreyBox>
-                    <p>{leaves[0].question}</p>
-                </GreyBox>
-            </Div>
+            <div ref={imageRef}>
+                <Div>
+                    <GreyBox>
+                        <p>{leaves[0].question}</p>
+                    </GreyBox>
+                </Div>
 
-            <h2>To. {ownerName}</h2>
-            <GreyBox>
-                <p>{leaves[0].message}</p>
-            </GreyBox>
-            <h4>From. {leaves[0].writer}</h4>
-            <StyledButton type="button">스토리 공유하기</StyledButton>
-            <StyledBtn type="button">이미지 다운로드</StyledBtn>
+                <h2>
+                    <p>To. {ownerName}</p>
+                    <Button type="button"><Img src={trash} alt="trash"/>삭제</Button>
+                </h2>
+                <GreyBox>
+                    <p>{leaves[0].message}</p>
+                </GreyBox>
+                <h4>From. {leaves[0].writer}</h4>
+            </div>
+            <ButtonDiv>
+                <StyledButton type="button" onClick={handleShare}>스토리 공유하기</StyledButton>
+                <StyledBtn type="button">이미지 다운로드</StyledBtn>
+            </ButtonDiv>
         </Container>
     );
 }

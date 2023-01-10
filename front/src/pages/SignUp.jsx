@@ -1,7 +1,8 @@
 import { React } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
-import { StyledLink } from './Main';
+import axios from 'axios';
+import { StyledLink } from './Tree';
 
 const Container = styled.div`
     width: 100%;
@@ -63,7 +64,7 @@ const Warn = styled.div`
     font-family: 'Inter';
     font-style: normal;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 10px;
     line-height: 19px;
     color: #ff6c0f;
     margin-top: 5rem;
@@ -74,16 +75,30 @@ const Warn = styled.div`
 function SignUp() {
     const {
         register,
+        watch,
         handleSubmit,
         formState: { errors }
     } = useForm();
-    const onValid = (data) => {
-        console.log(data);
-    };
+
+    const handleRegister = () => {
+        axios
+        .post("http://13.125.183.250:8000/api/v1/users/signup", {
+            userId: watch().ID,
+            password: watch().password,
+            nick: watch().nickname
+        })
+        .then((response) => {
+            console.log('Well done!');
+            console.log('User profile', response.data.user);
+            console.log('User token', response.data.jwt)
+        })
+        .catch(()=>alert("중복된 사용자 정보입니다. 다시 한번 확인해주세요.")) 
+    }
+    
     return (
         <Container>
             <Warn>계정은 다시 찾기 어려우니, 아이디와 비밀번호를 기억해주세요!</Warn>
-            <Form onSubmit={handleSubmit(onValid)}>
+            <Form onSubmit={handleSubmit(handleRegister)}>
                 <div>
                     <Span>아이디</Span>
                     <Error>{errors?.ID?.message}</Error>
@@ -103,7 +118,7 @@ function SignUp() {
                     <Span>비밀번호</Span>
                     <Error>{errors?.password?.message}</Error>
                 </div>
-                <Input
+                <Input type="password"
                     {...register('password', {
                         required: true,
                         pattern: {
@@ -122,15 +137,13 @@ function SignUp() {
                 <Input
                     {...register('nickname', {
                         required: true,
-                        minLength: { value: 8, message: '닉네임은 1자 이상이어야 합니다.' },
-                        validate: (value) =>
-                            value.includes('잉') ? '이미 사용중인 닉네임입니다.' : true
+                        minLength: { value: 1, message: '닉네임은 1자 이상이어야 합니다.' },
                     })}
                     placeholder="닉네임을 입력하세요"
                 />
 
                 <Div>
-                    <StyledLink to={{ pathname: `/login/*` }}>
+                    <StyledLink type="button" onClick={handleSubmit(handleRegister)}>
                         <h2>가입 완료</h2>
                     </StyledLink>
                 </Div>

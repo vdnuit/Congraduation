@@ -1,9 +1,8 @@
 import { React } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import axios from 'axios';
 import { StyledLink } from './Tree';
-import { isLoginAtom } from '../Atom';
 
 const Container = styled.div`
     width: 100%;
@@ -63,17 +62,31 @@ const Div = styled.div`
 function LogIn() {
     const {
         register,
+        watch,
         handleSubmit,
         formState: { errors }
     } = useForm();
-    const setLogIn = useSetRecoilState(isLoginAtom);
-    const checkLogin = () => setLogIn(() => true);
-    const onValid = (data) => {
-        console.log(data);
+
+    const handleLogin = () => {
+        axios
+        .post("http://13.125.183.250:8000/api/v1/auth/login", {
+            userId: watch().ID,
+            password: watch().password
+        })
+        .then((response)=>{
+            if(response.data.loginSuccess === true){
+                alert("로그인 성공");
+            } else {
+                alert(response.data.message);
+            }
+        })
+        .catch(()=>alert("인증 정보가 유효하지 않습니다."))   
     };
+
+
     return (
         <Container>
-            <Form onSubmit={handleSubmit(onValid)}>
+            <Form>
                 <div>
                     <Span>아이디</Span>
                     <Error>{errors?.ID?.message}</Error>
@@ -84,18 +97,18 @@ function LogIn() {
                     <Span>비밀번호</Span>
                     <Error>{errors?.password?.message}</Error>
                 </div>
-                <Input
+                <Input type="password"
                     {...register('password', { required: true })}
                     placeholder="비밀번호를 입력하세요"
                 />
 
                 <Div>
-                    <StyledLink to={{ pathname: `/mytree/*` }} onClick={checkLogin}>
+                    <StyledLink onClick={handleSubmit(handleLogin)}>
                         <h2>로그인</h2>
                     </StyledLink>
-                    <StyledLink to={{ pathname: `/tree/*` }} onClick={checkLogin}>
-                        <h3>카카오 로그인</h3>
-                    </StyledLink>
+                    <a href="http://13.125.183.250:8000/api/v1/auth/kakao">
+                        카카오 로그인
+                    </a>
                 </Div>
             </Form>
         </Container>
