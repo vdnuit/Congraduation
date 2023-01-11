@@ -3,24 +3,11 @@ import React from 'react';
 import reset from 'styled-reset';
 import Router from './Router';
 
-import InterTTF from './assets/Inter.ttf';
-import JuaTTF from './assets/Jua.ttf';
-
 const GlobalStyle = createGlobalStyle`
 ${reset}
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
   // font import
-  @font-face {
-    font-family: 'Jua';
-    src: local('Jua'), local('Jua');
-    font-style: normal;
-    src: url(${JuaTTF}) format('truetype');
-}
-@font-face {
-    font-family: 'Inter';
-    src: local('Inter'), local('Inter');
-    font-style: normal;
-    src: url(${InterTTF}) format('truetype');
-}
+
  `;
 
 function App() {

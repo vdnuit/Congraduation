@@ -10,9 +10,5 @@ module.exports = {
         sourceType: 'module'
     },
     plugins: ['react'],
-    rules: {
-        'no-console': 'off',
-        'react/jsx-props-no-spreading': 'off',
-        'import/no-unresolved': 'off'
-    }
+    rules: {}
 };
