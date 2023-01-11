@@ -9,11 +9,11 @@ const messageSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
-    senderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
+    // senderId: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User',
+    //     required: true
+    // },
     senderNickName: {
         type: String,
         required: true
@@ -26,7 +26,7 @@ const messageSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    color: {
+    paperImage: {
         type: String,
         required: true
     },

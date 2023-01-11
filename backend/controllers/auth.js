@@ -32,14 +32,12 @@ const signin = (req, res, next) => {
                     console.log(err);
                     return next(err);
                 }
-                const accessToken = createToken('AccessKey', user._id, user.provider);
+                const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
                 const refreshToken = createToken('RefreshKey');
-                console.log(accessToken);
-                console.log(refreshToken);
                 Token.create({userId: user._id, token: refreshToken, createdAt: new Date(Date.now())});
                 res.cookie("provider", "local", {httpOnly: true});
                 res.cookie("accessToken", accessToken, {httpOnly: true});
-                res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({_id: user._id});
+                res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({_id: user._id, nick: user.nick});
             });
         })(req,res,next);
     }
@@ -48,23 +46,6 @@ const signin = (req, res, next) => {
         return next(err);
     }
 };
-
-const kakaoLogin = async(req, res, next) => {
-    const {accessToken} = req.body;
-    let kakaoProfile;
-    try {
-        kakaoProfile = await axios.get(
-            'https://kapi.kakao.com/v2/user/me',{
-            headers: {
-                Authorization: 'Bearer ' + accessToken,
-                'Content-Type': 'application/json'
-            }       
-        })
-    }
-    catch(err){
-        return res.send(errResponse())
-    }
-}
 
 const kakaoAuth = async(req, res, next) => {
     try{
@@ -91,8 +72,6 @@ const kakaoAuth = async(req, res, next) => {
 // refresh token
 
 const signout = async (req, res, next) => {
-    console.log("LOGOUT START");
-    console.log(req.provider);
     try{
         if(req.isLogin == true){
             if(req.cookies.provider == 'local'){
@@ -103,7 +82,6 @@ const signout = async (req, res, next) => {
             else if(req.cookies.provider == 'kakao'){
                 try {
                     const ACCESS_TOKEN = req.cookies.accessToken;
-                    console.log(ACCESS_TOKEN);
                     await axios({
                         method:'post',
                         url:'https://kapi.kakao.com/v1/user/unlink',

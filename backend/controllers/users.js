@@ -7,21 +7,18 @@ const signup = async(req, res, next) => {
     try{
         const {userId, password, nick} = req.body;
         const user = await User.findOne({userId: userId});
-        const userNickname = await User.findOne({nick: nick});
-        if(!user && ! userNickname){ //id, nick 모두 아직 존재하지 않을 시
+        if(!user){ //id, nick 모두 아직 존재하지 않을 시
             //해쉬화
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
             //생성
             const newUser = {userId, password: hashedPassword, provider: 'local', nick};
             User.create(newUser);
-            res.status(201).json(newUser);
+            res.status(201).json({message: "Successfully registered"});
         }
         else{
             if(user)
                 res.status(400).json({msg: "이미 동일한 아이디가 존재합니다."});
-            if(userNickname)
-                res.status(400).json({msg: "이미 동일한 닉네임이 존재합니다."});
         }
     }
     catch(err){
@@ -32,14 +29,16 @@ const signup = async(req, res, next) => {
 
 const getUser = async(req, res, next) => {
     try{
-        if(req.userId){
+        if(req.isLogin === true){
             await User.find({_id: req.userId}).exec((err, data) => {
                 if(err){
                     console.log(err);
                     return next(err);
                 }
                 else {
-                    res.status(200).json(data);
+                    if(req.userId === data._id){
+                        res.status(200).json(data);
+                    }
                 }
             });
         }
@@ -55,16 +54,17 @@ const getUser = async(req, res, next) => {
 
 const getUserById = async(req, res, next) => {
     try{
-        await User.find({_id: req.params.userId}).exec((err, data) => {
+        await User.findOne({_id: req.params.userId}).exec((err, data) => {
             if(err){
                 console.log(err);
                 return next(err);
             }
             else{
-                if(req.userId)
-                    res.status(200).json(data);
+                if(req.isLogin === true && data._id.equals(req.userId)){
+                    return res.status(200).json({userId: data.userId, nick: data.nick, message: data.message});
+                }
                 else
-                    res.status(401).json(data);
+                    return res.status(401).json({userId: data.userId, nick: data.nick, message: data.message});
             }
         });
     }

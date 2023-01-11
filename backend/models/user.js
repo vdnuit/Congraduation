@@ -12,7 +12,6 @@ const userSchema = mongoose.Schema({
     nick: {
         type: String,
         required: [true, "You must type in your nickname"],
-        unique: true
     },
     provider:{
         type: String,

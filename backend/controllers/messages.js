@@ -22,15 +22,28 @@ const getMessages = async (req, res, next) => {
 
 const getMessagesByUserId = async(req, res, next) => {
     try{
-        await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
-            if(err){
-                console.log(err);
-                return next(err);
-            }
-            else{
-                res.status(200).json(data.message);
-            }
-        });
+        if(req.isLogin === true){
+            await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
+                if(err){
+                    console.log(err);
+                    return next(err);
+                }
+                else if(data === null){
+                    return res.status(400).json({message: "The user does not exist"});
+                }
+                else{
+                    if(data._id.equals(req.userId)){
+                        return res.status(200).json(data.message);
+                    }
+                    else{
+                        return res.status(401).json({message: "Unauthorized"});
+                    }
+                }
+            });
+        }
+        else{
+            return res.status(401).json({message: "Unauthorized"});
+        }
     }
     catch(err){
         console.log(err);
@@ -38,18 +51,43 @@ const getMessagesByUserId = async(req, res, next) => {
     }
 };
 
+const getMessageByMessageId = async(req, res, next) => {
+    if(req.isLogin === true){
+        await User.findOne({_id: req.userId}).populate('message').exec((err, data) => {
+            if(err){
+                console.log(err);
+                return next(err);
+            }
+            else if(data === null){
+                return res.status(400).json({message: "The message does not exist"});
+            }
+            else{
+                // data.message
+            }
+        });
+    }
+    else{
+        return res.status(401).json({message: "Unauthorized"});
+    }
+}
+
 const createMessage = async(req, res, next) => {
     try{
-        const {senderNickName, content, topic, color} = req.body;
+        const {senderNickName, content, topic, paperImage} = req.body;
         const receiverId = req.params.userId;
-        const senderId = req.user.user.id;
-        const message = {_id: new mongoose.Types.ObjectId(), receiverId, senderId, senderNickName, content, topic, color};
-        Message.create(message);
-        await User.findOneAndUpdate({_id: receiverId}, {$push: {message: message._id}}).exec((err, success) => {
-            if(err)
+        const message = {_id: new mongoose.Types.ObjectId(), receiverId, senderNickName, content, topic, paperImage};
+        await User.findOneAndUpdate({_id: receiverId}, {$push: {message: message._id}}).exec((err, data) => {
+            if(err){
+                console.log(err);
                 return next(err);
-            else
-                res.status(201).json({msg: "Successfully created."});
+            }
+            else if(data === null){
+                return res.status(400).json({message: "The user does not exist"});
+            }
+            else{
+                Message.create(message);
+                return res.status(201).json({message: "Successfully created."});
+            }
         });
     }
     catch(err){
@@ -72,6 +110,7 @@ const deleteMessage = async(req, res, next) => {
 module.exports = {
     getMessages,
     getMessagesByUserId,
+    getMessageByMessageId,
     createMessage,
     deleteMessage,
 };
