@@ -18,6 +18,7 @@ module.exports = () => {
                     //done은 passport.authenticate()의 콜백으로 3개의 인자 err, 수행결과(정보), 추가정보를 넘김
                 }
                 const compareResult = await bcrypt.compare(password, user.password);
+                console.log("HA!");
                 if(compareResult){
                     return done(null, user); //유저 객체 전송
                 }

@@ -91,7 +91,7 @@ const createMessage = async(req, res, next) => {
             }
             else{
                 Message.create(message);
-                return res.status(201).json({message: "Successfully created."});
+                return res.status(201).json({message: "Successfully created"});
             }
         });
     }

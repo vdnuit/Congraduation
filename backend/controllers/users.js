@@ -76,14 +76,18 @@ const getUserById = async(req, res, next) => {
 
 const deleteUserById = async(req, res, next) => {
     try{
-        if(req.userId){
+        if(req.isLogin === true){
             const user = await User.findOne({_id: req.params.userId});
-            if(user){
+            if(user && user._id.equals(req.userId)){
                 await User.deleteOne({_id: user.id});
                 await Message.deleteMany({receiverId: user.id});
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
-                res.status(200).json({_id: user._id});
+                res.clearCookie('provider');
+                return res.status(200).json({message: "Successfully deleted"});
+            }
+            else{
+                return res.status(401).json({message: "Unauthorized"});
             }
         }
         else{

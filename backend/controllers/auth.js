@@ -25,7 +25,8 @@ const signin = (req, res, next) => {
                 return next(authError);
             }
             if(!user){
-                return res.json({loginError: info.message});
+                console.log(info);
+                return res.status(400).json({loginError: info.reason});
             }
             req.login(user, {session: false}, (err) => { // {session:false}
                 if(err){
