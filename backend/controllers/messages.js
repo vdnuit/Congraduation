@@ -53,7 +53,7 @@ const getMessagesByUserId = async(req, res, next) => {
 
 const getMessageByMessageId = async(req, res, next) => {
     if(req.isLogin === true){
-        await User.findOne({_id: req.userId}).populate('message').exec((err, data) => {
+        await Message.findOne({_id: req.params.messageId}).exec((err, data) => {
             if(err){
                 console.log(err);
                 return next(err);
@@ -62,7 +62,12 @@ const getMessageByMessageId = async(req, res, next) => {
                 return res.status(400).json({message: "The message does not exist"});
             }
             else{
-                // data.message
+                if(data.receiverId.equals(req.userId)){
+                    return res.status(200).json(data);
+                }
+                else{
+                    return res.status(401).json({message: "Unauthorized"});
+                }
             }
         });
     }

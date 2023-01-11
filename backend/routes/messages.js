@@ -6,7 +6,7 @@ const messageRouter = express.Router();
 
 messageRouter.get('/', getMessages);
 messageRouter.get('/:userId', jwtAuth, getMessagesByUserId);
-messageRouter.get('/:messageId', jwtAuth, getMessageByMessageId);
+messageRouter.get('/:userId/:messageId', jwtAuth, getMessageByMessageId);
 messageRouter.post('/:userId', createMessage);
 messageRouter.delete('/:messageId', jwtAuth, deleteMessage);
 
