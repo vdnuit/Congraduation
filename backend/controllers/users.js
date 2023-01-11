@@ -74,17 +74,46 @@ const getUserById = async(req, res, next) => {
     }
 };
 
-const deleteUserById = async(req, res, next) => {
+const deleteUser = async(req, res, next) => {
     try{
         if(req.isLogin === true){
-            const user = await User.findOne({_id: req.params.userId});
-            if(user && user._id.equals(req.userId)){
-                await User.deleteOne({_id: user.id});
-                await Message.deleteMany({receiverId: user.id});
-                res.clearCookie('accessToken');
-                res.clearCookie('refreshToken');
-                res.clearCookie('provider');
-                return res.status(200).json({message: "Successfully deleted"});
+            if(req.provider === 'local'){
+                const user = await User.findOne({_id: req.params.userId});
+                if(user && user._id.equals(req.userId)){
+                    await User.deleteOne({_id: user.id});
+                    await Message.deleteMany({receiverId: user.id});
+                    res.clearCookie('accessToken');
+                    res.clearCookie('refreshToken');
+                    res.clearCookie('provider');
+                    return res.status(200).json({message: "Successfully deleted"});
+                }
+                else{
+                    return res.status(401).json({message: "Unauthorized"});
+                }   
+            }
+            else if(req.provider === 'kakao'){
+                try {
+                    const ACCESS_TOKEN = req.cookies.accessToken;
+                    await axios({
+                        method:'post',
+                        url:'https://kapi.kakao.com/v1/user/unlink',
+                        headers:{
+                          'Authorization': `Bearer ${ACCESS_TOKEN}`
+                        }
+                    });
+                    if(user && user._id.equals(req.userId)){
+                        await User.deleteOne({_id: user.id});
+                        await Message.deleteMany({receiverId: user.id});
+                        res.clearCookie('accessToken');
+                        res.clearCookie('refreshToken');
+                        res.clearCookie('provider');
+                        return res.status(200).json({message: "Successfully deleted"});
+                    }
+                }
+                catch(err){
+                    console.log(err);
+                    return next(err);
+                }
             }
             else{
                 return res.status(401).json({message: "Unauthorized"});
@@ -100,9 +129,28 @@ const deleteUserById = async(req, res, next) => {
     }
 }
 
+const deleteKakaoUserById = async(req, res, next) => {
+    try {
+        const ACCESS_TOKEN = req.cookies.accessToken;
+        await axios({
+            method:'post',
+            url:'https://kapi.kakao.com/v1/user/unlink',
+            headers:{
+              'Authorization': `Bearer ${ACCESS_TOKEN}`
+            }
+        });
+
+        
+    }
+    catch(err){
+        console.log(err);
+        return next(err);
+    }
+}
+
 module.exports = {
     signup,
     getUser,
     getUserById,
-    deleteUserById,
+    deleteUser,
 }

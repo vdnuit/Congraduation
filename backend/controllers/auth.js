@@ -48,56 +48,25 @@ const signin = (req, res, next) => {
     }
 };
 
-const kakaoAuth = async(req, res, next) => {
-    try{
-        console.log(req.cookies.accessToken);
-        const ACCESS_TOKEN = req.cookies.accessToken;
-        const tokenInfo = await axios({
-            method:'get',
-            url:'https://kapi.kakao.com/v1/user/access_token_info',
-            headers:{
-              'Authorization': `Bearer ${ACCESS_TOKEN}`
-            }
-        });
-        if(tokenInfo.data)
-            res.status(200).json({message: "valid token"});
-        else
-            res.json({message: "invalid token"});
-    }
-    catch(err){
-        console.log(err);
-        return next(err);
-    }
-}
-
-// refresh token
-
 const signout = async (req, res, next) => {
     try{
         if(req.isLogin == true){
-            if(req.cookies.provider == 'local'){
+            if(req.cookies.provider === 'local'){
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
                 return res.clearCookie('provider').status(200).json({message: "Logout succeed"});
             }
-            else if(req.cookies.provider == 'kakao'){
+            else if(req.cookies.provider === 'kakao'){
                 try {
-                    const ACCESS_TOKEN = req.cookies.accessToken;
-                    await axios({
-                        method:'post',
-                        url:'https://kapi.kakao.com/v1/user/unlink',
-                        headers:{
-                          'Authorization': `Bearer ${ACCESS_TOKEN}`
-                        }
-                    });
+                    res.clearCookie('accessToken');
+                    res.clearCookie('refreshToken');
+                    res.clearCookie('provider');
+                    return res.redirect(`https://kauth.kakao.com/oauth/logout?client_id=${process.env.KAKAO_ID}&logout_redirect_uri=${process.env.LOGOUT_REDIRECT_URL}`);
                 }
                 catch(err){
                     console.log(err);
                     return next(err);
                 }
-                res.clearCookie('accessToken');
-                res.clearCookie('refreshToken')
-                return res.clearCookie('provider').status(200).json({message: "Logout succeed"});
             }
         }
         else{
@@ -113,5 +82,4 @@ const signout = async (req, res, next) => {
 module.exports = {
     signin,
     signout,
-    kakaoAuth,
 };
