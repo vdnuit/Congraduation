@@ -175,6 +175,20 @@ function Write() {
         `졸업을 앞둔 ${ownerName}님에게 추천하고 싶은 영화는?`,
         `졸업을 앞둔 ${ownerName}님에게 추천하고 싶은 노래는?`,
         `졸업을 앞둔 ${ownerName}님에게 추천하고 싶은 책은?`,
+        `${ownerName}님의 귀여운 주사는?`,
+        `${ownerName}님은 공강시간에 무엇을 하나요?`,
+        `${ownerName}님과 함께한 일탈이 있나요?`,
+        `${ownerName}님이 제일 멋졌던 순간은?`,
+        `${ownerName}님은 줌 강의를 어떻게 들었나요?`,
+        `다른 사람들은 모르는 ${ownerName}님의 습관은?`,
+        `${ownerName}님과 함께 여행 가고싶은 나라는?`,
+        `${ownerName}님이 한 가장 웃긴 말실수는?`,
+        `${ownerName}님이 가장 잘 부르는 노래는?`,
+        `${ownerName}님에게 가장 부러운 점은?`,
+        `${ownerName}님과 가장 닮고 싶은 점은?`,
+        `${ownerName}님에게 추천하고 싶은 인스타/유튜브 채널은?`,
+        `${ownerName}님이 틱토커/유튜버라면 분야는?`,
+        `${ownerName}님에게 어울리는 취미는?`,
         `${ownerName}님과 함께하고 싶은 활동이 있다면?`,
         `${ownerName}님에게 가장 어울리는/어울리지 않는 전공은?`,
         `${ownerName}님을 전공과 함께 소개해주세요!`,
@@ -192,7 +206,9 @@ function Write() {
         `${ownerName}님의 선배미를 볼 수 있는 일화를 알려주세요!`,
         `${ownerName}님과 가장 닮은 연예인/캐릭터는?`,
         `${ownerName}님의 학교생활을 단 한 줄로 요약하자면?`,
-        `${ownerName}님의 시간표에 대한 평가는?`
+        `${ownerName}님의 시간표에 대한 평가는?`,
+        `${ownerName}님의 첫인상은?`,
+        `${ownerName}님의 의외의 귀여운 점은?`
     ];
     function randomNum(min, max) {
         const randNum = Math.floor(Math.random() * (max - min)) + min;
