@@ -53,8 +53,7 @@ const signout = async (req, res, next) => {
         if(req.isLogin == true){
             if(req.cookies.provider === 'local'){
                 res.clearCookie('accessToken');
-                res.clearCookie('refreshToken');
-                return res.clearCookie('provider').status(200).json({message: "Logout succeed"});
+                return res.clearCookie('refreshToken').status(200).json({message: "Logout succeed"});
             }
             else if(req.cookies.provider === 'kakao'){
                 try {
