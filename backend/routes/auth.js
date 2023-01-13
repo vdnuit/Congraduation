@@ -14,7 +14,7 @@ authRouter.get('/kakao/callback', passport.authenticate('kakao', {failureRedirec
   res.cookie('provider', 'kakao', {httpOnly: true});
   res.cookie('accessToken', req.user.accessToken, {httpOnly: true});
   res.cookie('refreshToken', req.user.refreshToken, {httpOnly: true});
-  res.redirect('/');
+  return res.status(200).json({_id: req.user.user._id, nick: req.user.user.nick});
 }); // redirect URI (Access token) [fail, success]
 
 authRouter.get('/test', auth, (req, res) => {
