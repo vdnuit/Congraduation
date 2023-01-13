@@ -20,7 +20,6 @@ const corsOptions = {
     credentials: true
 };
 app.use(cors(corsOptions));
-app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 // session
