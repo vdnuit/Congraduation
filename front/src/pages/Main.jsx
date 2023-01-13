@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import React from 'react';
+import { useRecoilValue } from 'recoil';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
 import CapImg from '../assets/capImg.png';
 import SnowImg from '../assets/snowbackground.png';
-
 import InstaImg from '../assets/instaImg.png';
+import { isLoginAtom } from '../Atom';
 
 const Container = styled.div`
     z-index: -1;
@@ -94,20 +95,14 @@ const Snow = styled.img`
     width: 100%;
     max-width: 500px;
 `;
-function Main() {
-    return (
-        <Container>
-            <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
+
+function Button() {
+    const Login = useRecoilValue(isLoginAtom);
+    if(Login){
+        return (
             <Box>
                 <Cap src={CapImg} />
                 <Logo src={LogoImg} />
-                <StyledLink to={{ pathname: `/login/*` }}>
-                    <h2>로그인</h2>
-                </StyledLink>
-                <StyledLink to={{ pathname: `/signup/*` }}>
-                    <h2>회원가입</h2>
-                </StyledLink>
-
                 <StyledLink to={{ pathname: `/tree/*` }}>
                     <h2>트리로 이동</h2>
                 </StyledLink>
@@ -116,7 +111,30 @@ function Main() {
                     <p>@congraduation_skku</p>
                 </Insta>
             </Box>
+        )
+    } return (
+        <Box>
+            <Cap src={CapImg} />
+            <Logo src={LogoImg} />
+            <StyledLink to={{ pathname: `/login/*` }}>
+                <h2>로그인</h2>
+            </StyledLink>
+            <StyledLink to={{ pathname: `/signup/*` }}>
+                <h2>회원가입</h2>
+            </StyledLink>
+            <Insta>
+                <img src={InstaImg} alt="인스타그램 로고" />
+                <p>@congraduation_skku</p>
+            </Insta>
+        </Box>
+    )
+}
 
+function Main() {
+    return (
+        <Container>
+            <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
+            <Button />
             <Snow src={SnowImg} alt="눈 내리는 배경" />
         </Container>
     );

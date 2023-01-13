@@ -82,7 +82,7 @@ function SignUp() {
 
     const handleRegister = () => {
         axios
-        .post("http://13.125.183.250:8000/api/v1/users/signup", {
+        .post("http://localhost:8000/api/v1/users/signup", {
             userId: watch().ID,
             password: watch().password,
             nick: watch().nickname

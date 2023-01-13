@@ -1,8 +1,12 @@
 import { React } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useSetRecoilState } from 'recoil';
 import { StyledLink } from './Tree';
+import { ownerNameAtom, isLoginAtom } from '../Atom';
+import KakaoImg from '../assets/kakao_login_medium_narrow.png';
 
 const Container = styled.div`
     width: 100%;
@@ -57,9 +61,26 @@ const Input = styled.input`
 
 const Div = styled.div`
     margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 `;
 
+const Kakao = styled.a`
+    width: 100%;
+    text-align: center;
+`;
+
+const Img = styled.img`
+    width: 46.8%;
+    max-width: 234px;
+
+`
+
 function LogIn() {
+    const setOwnerName = useSetRecoilState(ownerNameAtom);
+    const setLogin = useSetRecoilState(isLoginAtom);
+    const navigate = useNavigate();
     const {
         register,
         watch,
@@ -69,15 +90,18 @@ function LogIn() {
 
     const handleLogin = () => {
         axios
-        .post("http://13.125.183.250:8000/api/v1/auth/login", {
-            userId: watch().ID,
+        .post("http://localhost:8000/api/v1/auth/login", {
+            id: watch().ID,
             password: watch().password
         })
         .then((response)=>{
-            if(response.data.loginSuccess === true){
-                alert("로그인 성공");
+            if(response.status === 200){
+                console.log(response);
+                setOwnerName({ _id: response.data.id,  nick: response.data.nick });
+                setLogin(true);
+                navigate(`/tree`);
             } else {
-                alert(response.data.message);
+                alert(response.statusText);
             }
         })
         .catch(()=>alert("인증 정보가 유효하지 않습니다."))   
@@ -106,9 +130,9 @@ function LogIn() {
                     <StyledLink onClick={handleSubmit(handleLogin)}>
                         <h2>로그인</h2>
                     </StyledLink>
-                    <a href="http://13.125.183.250:8000/api/v1/auth/kakao">
-                        카카오 로그인
-                    </a>
+                    <Kakao href="http://localhost:8000/api/v1/auth/kakao">
+                        <Img src={KakaoImg} alt="kakaoImg" />
+                    </Kakao>
                 </Div>
             </Form>
         </Container>

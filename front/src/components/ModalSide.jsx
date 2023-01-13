@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
-import { isLoginAtom } from '../Atom';
+import axios from 'axios';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { isLoginAtom, ownerNameAtom } from '../Atom';
 import ModalOkay from './ModalOkay';
 
 const Container = styled.div`
@@ -39,14 +40,26 @@ function ModalSide({ setModalOpen }) {
     const [okay, setOkay] = useState(false);
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
+    const setOwnerName = useSetRecoilState(ownerNameAtom);
     const closeModal = () => {
         console.log(okay);
         setModalOpen(false);
     };
     const onLogOut = () => {
-        navigate(`/`);
-        closeModal(false);
-        setIsLogin(false);
+        axios
+        .get("http://localhost:8000/api/v1/auth/logout")
+        .then((response)=>{
+            if(response.status === 200){
+                closeModal(false);
+                setOwnerName({ _id: "",  nick: "" });
+                setIsLogin(false);
+                alert("로그아웃 되었습니다.");
+                navigate(`/`);
+                console.log(isLogin);
+            } else {
+                alert(response.statusText);
+            }
+        })
     };
     const onLogIn = () => {
         navigate(`/login/*`);
@@ -59,6 +72,7 @@ function ModalSide({ setModalOpen }) {
         navigate(`/signup/*`);
         closeModal(false);
     };
+
     return (
         <Container>
             {isLogin ? (

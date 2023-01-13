@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageMap from "image-map";
 import { useRecoilValue } from 'recoil';
-import { ownerNameAtom, countAtom } from '../Atom';
+import { ownerNameAtom, countAtom, isLoginAtom } from '../Atom';
 import TreeNight from '../assets/treenight.png';
 import TreeDay from '../assets/treeday.png';
 import TreeSunset from '../assets/treesunset.png';
@@ -105,20 +105,50 @@ function Time() {
     return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap"/>;
 }
 
+function Button() {
+    const Login = useRecoilValue(isLoginAtom);
+    if(Login) {
+        return (
+            <Buttons>
+                <StyledLink to={{ pathname: `/list/*` }}>
+                    <h2>받은 쪽지 목록</h2>
+                </StyledLink>
+                <StyledLink>
+                    <h3>공유하기</h3>
+                </StyledLink>
+                <Dday>쪽지 오픈 D-7</Dday>
+            </Buttons>
+        )
+    } return(
+            <Buttons>
+                <StyledLink to={{ pathname: `/write/*` }}>
+                    <h2>쪽지 남기기</h2>
+                </StyledLink>
+                <StyledLink to={{ pathname: `/signup/*` }}>
+                    <h3>나도 계정 만들기</h3>
+                </StyledLink>
+                <Dday>쪽지 오픈 D-7</Dday>
+            </Buttons>
+        )
+}
+
 function Tree() {
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
+    const Login = useRecoilValue(isLoginAtom);
     useEffect(() => {
         ImageMap('img[usemap]')
     },[])
     const clickHandler = (title) => {
-        console.log(title)
+        if(Login){
+            console.log(title);
+        }
     }
 
     return (
         <Container>
             <Count>
-                {ownerName} 님의 나무에 {count}개의 메시지
+                {ownerName.nick} 님의 나무에 {count}개의 메시지
             </Count>
 
             <Time />
@@ -128,23 +158,7 @@ function Tree() {
                 </Treezone>
             </Link>
             <TreeComponent />
-            <Buttons>
-                {/* 외부 이용자일 때 */}
-                <StyledLink to={{ pathname: `/write/*` }}>
-                    <h2>쪽지 남기기</h2>
-                </StyledLink>
-                <StyledLink to={{ pathname: `/signup/*` }}>
-                    <h3>나도 계정 만들기</h3>
-                </StyledLink>
-                {/* 계정 주인일 때 */}
-                <StyledLink to={{ pathname: `/list/*` }}>
-                    <h2>받은 쪽지 목록</h2>
-                </StyledLink>
-                <StyledLink>
-                    <h3>공유하기</h3>
-                </StyledLink>
-                <Dday>쪽지 오픈 D-7</Dday>
-            </Buttons>
+            <Button />
         </Container>
     );
 }

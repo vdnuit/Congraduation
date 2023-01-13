@@ -195,7 +195,7 @@ function Content() {
                 </Div>
 
                 <h2>
-                    <p>To. {ownerName}</p>
+                    <p>To. {ownerName.nick}</p>
                     <Button type="button"><Img src={trash} alt="trash"/>삭제</Button>
                 </h2>
                 <GreyBox>

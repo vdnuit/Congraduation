@@ -2,12 +2,15 @@ import { atom } from 'recoil';
 
 export const isLoginAtom = atom({
     key: 'isLogin',
-    default: true
+    default: false
 });
 
 export const ownerNameAtom = atom({
     key: 'ownerName',
-    default: '강서현'
+    default: {
+        _id: '',
+        nick: ''
+    }
 });
 
 export const temporaryTreeAtom = atom({
