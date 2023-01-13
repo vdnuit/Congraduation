@@ -15,7 +15,11 @@ const notFoundError = require('./middleware/not-found');
 const { kakaoLogout } = require('./controllers/auth');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true
+};
+app.use(cors(corsOptions));
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
