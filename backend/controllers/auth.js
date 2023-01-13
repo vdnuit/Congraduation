@@ -22,10 +22,16 @@ const signin = (req, res, next) => {
         passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
             if(authError){
                 console.log(authError);
+                res.clearCookie('provider');
+                res.clearCookie('accessToken');
+                res.clearCookie('refreshToken');
                 return next(authError);
             }
             if(!user){
                 console.log(info);
+                res.clearCookie('provider');
+                res.clearCookie('accessToken');
+                res.clearCookie('refreshToken');
                 return res.status(400).json({loginError: info.reason});
             }
             req.login(user, {session: false}, (err) => { // {session:false}
