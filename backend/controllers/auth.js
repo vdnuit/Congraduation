@@ -67,8 +67,7 @@ const signout = async (req, res, next) => {
                     return next(err);
                 }
                 res.clearCookie('accessToken');
-                res.clearCookie('refreshToken')
-                return res.clearCookie('provider').status(200).json({message: "Logout succeed"});
+                return res.clearCookie('refreshToken').status(200).json({message: "Logout succeed"});
             }
         }
         else{
