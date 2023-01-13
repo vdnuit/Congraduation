@@ -22,6 +22,9 @@ const signin = (req, res, next) => {
         passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
             if(authError){
                 console.log(authError);
+                res.clearCookie('provider');
+                res.clearCookie('accessToken');
+                res.clearCookie('refreshToken');
                 return next(authError);
             }
             if(!user){
@@ -31,6 +34,9 @@ const signin = (req, res, next) => {
             req.login(user, {session: false}, (err) => { // {session:false}
                 if(err){
                     console.log(err);
+                    res.clearCookie('provider');
+                    res.clearCookie('accessToken');
+                    res.clearCookie('refreshToken');
                     return next(err);
                 }
                 const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
