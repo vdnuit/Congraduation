@@ -4,7 +4,7 @@ const session = require('express-session');
 const PORT = process.env.port || 8000;
 const passport = require('passport');
 const connectDB = require('./db/connect');
-const MongoDBSession = require('connect-mongodb-session')(session);
+// const MongoDBSession = require('connect-mongodb-session')(session);
 require('dotenv').config(); // dotenv
 require('express-async-errors'); // async error handling
 const routes = require('./routes');
@@ -22,21 +22,16 @@ app.use(cookieParser());
 // session
     // 아래 passport메서드가 이 세션에 의존하기 때문에 앞에 선언해야 함
 
-const sessionStorage = new MongoDBSession({
-    uri: process.env.MONGO_URI,
-    collection: 'sessions',
-});
-
 app.use(session({
     resave: false,
     saveUninitialized: false,
     secret: process.env.COOKIE_SECRET,
-    store: sessionStorage,
     cookie: {
         httpOnly: true,
         secure: false,
     },
 }));
+
 app.use(express.json()); // body-parser
 
 // passport
@@ -47,7 +42,6 @@ app.use('/', routes); // 모듈명을 명시하지 않으면 routes/index.js를 
 
 app.use(errorHandler); // server error
 app.use(notFoundError); // page not found
-
 
 const run = async() => {
     try{
