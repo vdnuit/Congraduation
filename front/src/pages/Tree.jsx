@@ -104,9 +104,16 @@ function Time() {
     }
     return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap"/>;
 }
+
 function Tree() {
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
+    useEffect(() => {
+        ImageMap('img[usemap]')
+    },[])
+    const clickHandler = (title) => {
+        console.log(title)
+    }
 
     return (
         <Container>
