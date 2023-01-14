@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const Token = require('../models/token');
 
 // 로컬 유저 로그인
-const createToken = (type, bodyId='', bodyProvider='') => {
+const createToken = (type, bodyId='', bodyNick='', bodyProvider='') => {
     if(type === 'AccessKey'){
-        const accessToken = jwt.sign({id: bodyId, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "10s"});
+        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "5m"});
         console.log(accessToken);
         return accessToken;
     }
@@ -88,4 +88,6 @@ const signout = async (req, res, next) => {
 module.exports = {
     signin,
     signout,
+
+    createToken,
 };
