@@ -55,7 +55,6 @@ function ModalSide({ setModalOpen }) {
                 setIsLogin(false);
                 alert("로그아웃 되었습니다.");
                 navigate(`/`);
-                console.log(isLogin);
             } else {
                 alert(response.statusText);
             }
