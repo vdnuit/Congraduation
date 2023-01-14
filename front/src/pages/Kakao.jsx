@@ -59,9 +59,9 @@ function Kakao() {
                 const ACCESS_TOKEN = response.data.accessToken;
                 const PROVIDER = "kakao";
                 const REFRESH_TOKEN = response.data.refreshToken;
-                setCookie('accessToken', ACCESS_TOKEN);
-                setCookie('provider',PROVIDER);
-                setCookie('refreshToken', REFRESH_TOKEN);
+                setCookie('accessToken', ACCESS_TOKEN, { path: "/", sameSite: "strict", });
+                setCookie('provider',PROVIDER, { path: "/", sameSite: "strict", });
+                setCookie('refreshToken', REFRESH_TOKEN, { path: "/", sameSite: "strict", });
                 setOwnerName({ _id: response.data.id,  nick: response.data.nick });
                 setLogin(true);
                 navigate(`/tree`);
