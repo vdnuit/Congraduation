@@ -44,13 +44,13 @@ authRouter.get('/kakao/callback', async(req, res) => { //passport.authenticate('
           const accessToken = createToken('AccessKey', newUser._id, userInfo.data.kakao_account.profile.nickname, user.provider);
           const refreshToken = createToken('RefreshKey');
           Token.create({userId: newUser._id, token: refreshToken, createdAt: new Date(Date.now())});
-          return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname});
+          return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
           }
           else{
             const accessToken = createToken('AccessKey', exUser._id, exUser.nick, exUser.provider);
             const refreshToken = createToken('RefreshKey');
             Token.create({userId: exUser._id, token: refreshToken, createdAt: new Date(Date.now())});
-            return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: exUser.userId, nick: exUser.nick});
+            return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: exUser.userId, nick: exUser.nick, _id: exUser._id});
           }
         }
         else{
