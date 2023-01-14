@@ -46,8 +46,6 @@ function TreeComponent(){
       };
       window.addEventListener("resize", resizeListener);
     });
-  
-    console.log("innerWidth", innerWidth);
     
     return (
         <div>

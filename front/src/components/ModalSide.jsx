@@ -47,7 +47,7 @@ function ModalSide({ setModalOpen }) {
     };
     const onLogOut = () => {
         axios
-        .get("http://localhost:8000/api/v1/auth/logout")
+        .get("http://localhost:8000/api/v1/auth/logout", {withCredentials: true} )
         .then((response)=>{
             if(response.status === 200){
                 closeModal(false);

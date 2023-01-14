@@ -93,7 +93,7 @@ function LogIn() {
         .post("http://localhost:8000/api/v1/auth/login", {
             id: watch().ID,
             password: watch().password
-        })
+        }, {withCredentials: true})
         .then((response)=>{
             if(response.status === 200){
                 console.log(response);
