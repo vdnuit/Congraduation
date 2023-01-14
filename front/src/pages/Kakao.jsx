@@ -54,6 +54,7 @@ function Kakao() {
         axios
         .get(`http://localhost:8000/api/v1/auth/kakao/callback?code=${code}`, {withCredentials: true})
         .then((response)=>{
+            console.log(response);
             if(response.status === 200){
                 console.log(response);
                 const ACCESS_TOKEN = response.data.accessToken;
