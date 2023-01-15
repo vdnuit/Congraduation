@@ -3,9 +3,9 @@
 import { createGlobalStyle } from 'styled-components';
 import { React, useEffect } from 'react';
 import reset from 'styled-reset';
-import { Cookies } from "react-cookie";
 import { useSetRecoilState } from 'recoil';
-import { ownerNameAtom, isLoginAtom } from './Atom';
+import axios from 'axios';
+import { ownerNameAtom } from './Atom';
 import Router from './Router';
 
 import InterTTF from './assets/Inter.ttf';
@@ -30,21 +30,23 @@ ${reset}
 
 function App() {
     const setOwnerName = useSetRecoilState(ownerNameAtom);
-    const setLogin = useSetRecoilState(isLoginAtom);
-    const cookies = new Cookies();
-    const getCookie = (name) => cookies.get(name);
-    const id = getCookie("_id");
-    const Nick = getCookie("nick");
-    const userinfo = () => {
-        console.log(getCookie("accessToken"));
-        if(Nick){
-            setOwnerName({ _id: id,  nick: Nick });
-            setLogin(true);
-        } 
+    const params = new URL(window.location.href).pathname;
+    const userObjectId = params.substring(6);
+    const getUser = () => {
+        axios
+        .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
+        .then((response)=> {
+            console.log(response);
+            if(response.status === 200){
+                console.log("app");
+                setOwnerName(response.data._id);
+            }
+
+        })
     }
 
     useEffect(() => {
-        userinfo();
+        getUser();
     })
 
     return (
