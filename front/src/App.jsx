@@ -36,7 +36,6 @@ function App() {
     const id = getCookie("_id");
     const Nick = getCookie("nick");
     const userinfo = () => {
-        console.log(getCookie("accessToken"));
         if(Nick){
             setOwnerName({ _id: id,  nick: Nick });
             setLogin(true);

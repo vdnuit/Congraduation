@@ -138,15 +138,13 @@ function Tree() {
     const count = useRecoilValue(countAtom);
     const Login = useRecoilValue(isLoginAtom);
     const params = new URL(window.location.href).pathname;
-    const userObjectId = params.substring(6)
-    console.log(userObjectId);
+    const userObjectId = params.substring(6);
     const getUser = () => {
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
             if(response.status === 200){
                 console.log("done");
-                console.log(response.data);
             }
 
         })
