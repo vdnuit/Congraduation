@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Cookies } from "react-cookie";
 import ImageMap from "image-map";
 import { useRecoilValue } from 'recoil';
 import { ownerNameAtom, countAtom, isLoginAtom } from '../Atom';
@@ -138,11 +137,12 @@ function Tree() {
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
     const Login = useRecoilValue(isLoginAtom);
-    const cookies = new Cookies();
-    const userObjectId = cookies.get("_id");
+    const params = new URL(window.location.href).pathname;
+    const userObjectId = params.substring(6)
+    console.log(userObjectId);
     const getUser = () => {
         axios
-        .get(`http://localhost:8000/api/v1/users/${userObjectId}`)
+        .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
             if(response.status === 200){
                 console.log("done");
