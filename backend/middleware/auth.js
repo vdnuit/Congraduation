@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const Token = require('../models/token');
 const User = require('../models/user');
 const axios = require('axios');
-const { findOne } = require("../models/user");
 
 const auth = async (req, res, next) => {
     const token = req.cookies.accessToken;
@@ -34,6 +33,7 @@ const auth = async (req, res, next) => {
                                 res.clearCookie('nick');
                                 res.clearCookie('provider');
                                 req.isLogin = false;
+                                // return res.redirect('http://localhost:3000/');
                             }
                             return next();
                         }
@@ -119,7 +119,8 @@ const auth = async (req, res, next) => {
         }
     }
     else{
-        res.status(401).json({message: "Unauthorized"});
+        req.isLogin = false;
+        return next();
     }
 };
 
