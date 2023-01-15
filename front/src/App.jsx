@@ -36,15 +36,13 @@ function App() {
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
-            try {
-                if(response.status === 200){
-                    setOwnerName({ _id: response.data._id, nick: response.data.nick });
+            console.log(response.data);
+            if(response.status === 200){
+                if(response.data.authorized){
+                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
                     setLogin(true);
-                }
-            }
-            catch {
-                if(response.status === 401) {
-                    setOwnerName({ _id: response.data._id, nick: response.data.nick });
+                } else if(!response.data.authorized){
+                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
                 }
             }
         })

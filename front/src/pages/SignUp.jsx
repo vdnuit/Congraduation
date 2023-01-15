@@ -6,6 +6,9 @@ import axios from 'axios';
 import { StyledLink } from './Tree';
 
 const Container = styled.div`
+    position: absolute;
+    top: 62px;
+    left: 0px;
     width: 100%;
     max-width: 500px;
     display: flex;
@@ -62,15 +65,15 @@ const Div = styled.div`
 
 const Warn = styled.div`
     height: 19px;
+    text-align: center;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 600;
-    font-size: 10px;
+    font-size: 14px;
     line-height: 19px;
     color: #ff6c0f;
-    margin-top: 5rem;
-    margin-bottom: 3rem;
-    margin: 3rem 7rem;
+
+    margin: 10% 10%;
 `;
 
 function SignUp() {
@@ -99,7 +102,10 @@ function SignUp() {
     
     return (
         <Container>
-            <Warn>계정은 다시 찾기 어려우니, 아이디와 비밀번호를 기억해주세요!</Warn>
+            <Warn>
+                <p>계정은 다시 찾기 어려우니,</p>
+                <p>아이디와 비밀번호를 기억해주세요!</p>
+            </Warn>
             <Form onSubmit={handleSubmit(handleRegister)}>
                 <div>
                     <Span>아이디</Span>
