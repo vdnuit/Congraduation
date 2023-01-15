@@ -7,7 +7,7 @@ const Token = require('../models/token');
 // 로컬 유저 로그인
 const createToken = (type, bodyId='', bodyNick='', bodyProvider='') => {
     if(type === 'AccessKey'){
-        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "5m"});
+        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "1m"});
         console.log(accessToken);
         return accessToken;
     }
@@ -103,25 +103,28 @@ const signout = async (req, res, next) => {
     }
 };
 
-// const kakaoLogin = async(req, res, next) => {
-//     try{
-//         const baseUrl = "https://kauth.kakao.com/oauth/authorize";
-//         const config = {
-//           client_id: process.env.KAKAO_ID,
-//           redirect_uri: process.env.REDIRECT_URL,
-//           response_type: "code",
-//         };
-//         const params = new URLSearchParams(config).toString();
-      
-//         const finalUrl = `${baseUrl}?${params}`;
-//         console.log(finalUrl);
-//         return res.redirect(finalUrl);
-//     }
-//     catch(err){
-//         console.log(err);
-//         return res.next(err);
-//     }
-// }
+
+// GET /oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code HTTP/1.1
+// Host: kauth.kakao.com
+
+const kakaoLogin = async(req, res, next) => {
+    try{
+        console.log("HERE!");
+        const loginInfo = await axios.get('https://kauth.kakao.com/oauth/authorize', {
+            params: {
+                client_id: process.env.KAKAO_ID,
+                redirect_uri: process.env.REDIRECT_URL,
+                response_type: 'code'
+            }
+        });
+        console.log(loginInfo);
+        res.send(loginInfo.data);
+    }
+    catch(err){
+        console.log(err);
+        return res.next(err);
+    }
+}
 
 const kakaoCallback = async(req, res, next) => {
     if(req.query.code){
@@ -191,7 +194,7 @@ const kakaoCallback = async(req, res, next) => {
 module.exports = {
     signin,
     signout,
-    // kakaoLogin,
+    kakaoLogin,
     kakaoCallback,
     createToken,
 };
