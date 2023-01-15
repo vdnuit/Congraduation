@@ -26,8 +26,9 @@ const Hamburger = styled.img`
     width: 20px;
     height: 4px;
     position: absolute;
-    top: 30px;
-    right: 20px;
+    top: 10px;
+    right: 0px;
+    padding: 20px;
 `;
 const CapDeco = styled.img`
     position: absolute;
