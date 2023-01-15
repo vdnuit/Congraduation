@@ -1,9 +1,11 @@
+/* eslint no-underscore-dangle: 0 */
+
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import ImageMap from "image-map";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ownerNameAtom, countAtom, isLoginAtom } from '../Atom';
 import TreeNight from '../assets/treenight.png';
 import TreeDay from '../assets/treeday.png';
@@ -133,20 +135,26 @@ function Button() {
         )
 }
 
+const params = new URL(window.location.href).pathname;
+export const userObjectId = params.substring(6);
+ 
 function Tree() {
+    const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
-    const Login = useRecoilValue(isLoginAtom);
-    const params = new URL(window.location.href).pathname;
-    const userObjectId = params.substring(6);
+    const setOwnerName = useSetRecoilState(ownerNameAtom);
+    const setLogin = useSetRecoilState(isLoginAtom);
     const getUser = () => {
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
             if(response.status === 200){
-                console.log("tree");
+                setOwnerName({ _id: response.data._id, nick: response.data.nick });
+                setLogin(true);
             }
-
+            if(response.status === 401) {
+                setOwnerName({ _id: response.data._id, nick: response.data.nick });
+            }
         })
     }
     useEffect(() => {

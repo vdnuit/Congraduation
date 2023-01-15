@@ -2,11 +2,12 @@
 
 import { createGlobalStyle } from 'styled-components';
 import { React, useEffect } from 'react';
+import axios from "axios";
 import reset from 'styled-reset';
 import { useSetRecoilState } from 'recoil';
-import axios from 'axios';
-import { ownerNameAtom } from './Atom';
+import { ownerNameAtom, isLoginAtom } from './Atom';
 import Router from './Router';
+import { userObjectId } from "./pages/Tree";
 
 import InterTTF from './assets/Inter.ttf';
 import JuaTTF from './assets/Jua.ttf';
@@ -30,23 +31,22 @@ ${reset}
 
 function App() {
     const setOwnerName = useSetRecoilState(ownerNameAtom);
-    const params = new URL(window.location.href).pathname;
-    const userObjectId = params.substring(6);
-    const getUser = () => {
+    const setLogin = useSetRecoilState(isLoginAtom);
+    const userinfo = () => {
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
-        .then((response)=> {
-            console.log(response);
+        .then((response)=>{
             if(response.status === 200){
-                console.log("app");
-                setOwnerName(response.data._id);
+                setOwnerName({_id: response.data._id, nick: response.data.nick });
+                setLogin(true);
+            } else if(response.status === 401){
+                setOwnerName({_id: response.data._id, nick: response.data.nick });
             }
-
         })
-    }
-
+        } 
+    
     useEffect(() => {
-        getUser();
+        userinfo();
     })
 
     return (
