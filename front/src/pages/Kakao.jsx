@@ -78,7 +78,9 @@ function Kakao() {
     };
 
     useEffect(() => {
-        KakaoLogin(code);
+        if(code){
+            KakaoLogin(code)
+        };
     },[code])
 
     return (

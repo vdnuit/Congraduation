@@ -1,5 +1,6 @@
 import { React } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { StyledLink } from './Tree';
@@ -79,7 +80,7 @@ function SignUp() {
         handleSubmit,
         formState: { errors }
     } = useForm();
-
+    const navigate = useNavigate();
     const handleRegister = () => {
         axios
         .post("http://localhost:8000/api/v1/users/signup", {
@@ -90,7 +91,8 @@ function SignUp() {
         .then((response) => {
             console.log('Well done!');
             console.log('User profile', response.data.user);
-            console.log('User token', response.data.jwt)
+            console.log('User token', response.data.jwt);
+            navigate(`/`);
         })
         .catch(()=>alert("중복된 사용자 정보입니다. 다시 한번 확인해주세요.")) 
     }
