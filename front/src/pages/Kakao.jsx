@@ -79,7 +79,7 @@ function Kakao() {
 
     useEffect(() => {
         KakaoLogin(code);
-    },[])
+    },[code])
 
     return (
         <Container>
