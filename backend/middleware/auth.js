@@ -7,6 +7,7 @@ const axios = require('axios');
 const auth = async (req, res, next) => {
     const token = req.cookies.accessToken;
     if(req.cookies.refreshToken){
+        console.log("HAHA");
         if(req.cookies.provider === 'local'){
             try{
                 jwt.verify(token, process.env.JWTSecret, async(err, decoded) => {

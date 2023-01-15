@@ -1,6 +1,7 @@
 const passport = require('passport');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const Token = require('../models/token');
 
 // 로컬 유저 로그인
@@ -60,19 +61,26 @@ const signout = async (req, res, next) => {
             if(req.cookies.provider === 'local'){
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
-                return res.clearCookie('provider').status(200).json({message: "Logout succeed"});
+                return res.clearCookie('provider').status(200).json({message: "Logout successful"});
             }
             else if(req.cookies.provider === 'kakao'){
                 try {
-                    res.clearCookie('accessToken');
-                    res.clearCookie('refreshToken');
-                    res.clearCookie('provider');
-                    return res.redirect(`https://kauth.kakao.com/oauth/logout?client_id=${process.env.KAKAO_ID}&logout_redirect_uri=${process.env.LOGOUT_REDIRECT_URL}`);
+                    const data = await axios.get('https://kapi.kakao.com/v1/user/logout',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${req.cookies.accessToken}`
+                        }
+                    }
+                    );
+                    // return res.redirect(`https://kauth.kakao.com/oauth/logout?client_id=${process.env.KAKAO_ID}&logout_redirect_uri=${process.env.LOGOUT_REDIRECT_URL}`);
                 }
                 catch(err){
                     console.log(err);
                     return next(err);
                 }
+                res.clearCookie('accessToken');
+                res.clearCookie('refreshToken');
+                return res.clearCookie('provider').status(200).json({message: "Logout successful"});
             }
         }
         else{
@@ -85,9 +93,94 @@ const signout = async (req, res, next) => {
     }
 };
 
+// const kakaoLogin = async(req, res, next) => {
+//     try{
+//         const baseUrl = "https://kauth.kakao.com/oauth/authorize";
+//         const config = {
+//           client_id: process.env.KAKAO_ID,
+//           redirect_uri: process.env.REDIRECT_URL,
+//           response_type: "code",
+//         };
+//         const params = new URLSearchParams(config).toString();
+      
+//         const finalUrl = `${baseUrl}?${params}`;
+//         console.log(finalUrl);
+//         return res.redirect(finalUrl);
+//     }
+//     catch(err){
+//         console.log(err);
+//         return res.next(err);
+//     }
+// }
+
+const kakaoCallback = async(req, res, next) => {
+    if(req.query.code){
+      try{
+        const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
+          params: {
+            grant_type: 'authorization_code',
+            client_id: process.env.KAKAO_ID,
+            redirect_uri: 'http://localhost:3000/auth/kakao/callback',
+            code: req.query.code
+          }
+        });
+        if(tokenInfo.data.access_token){
+            console.log("TOKEN:", tokenInfo.data.access_token);
+          const userInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
+            headers: {
+              Authorization: `Bearer ${tokenInfo.data.access_token}`,
+            }
+          });
+          if(userInfo.data){
+            console.log(userInfo.data);
+            let exUser = null;
+            exUser = await User.findOne({ // find user
+              userId: userInfo.data.id, provider: 'kakao'
+            });
+            if(exUser === null){
+              const newUser = await User.create({
+                userId: userInfo.data.id,
+                nick: userInfo.data.kakao_account.profile.nickname,
+                provider: 'kakao',
+            });
+            const accessToken = tokenInfo.data.access_token;
+            // const accessToken = createToken('AccessKey', newUser._id, userInfo.data.kakao_account.profile.nickname, user.provider);
+            const refreshToken = createToken('RefreshKey');
+            Token.create({userId: newUser._id, token: refreshToken, createdAt: new Date(Date.now())});
+            return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
+            }
+            else{
+              const accessToken = tokenInfo.data.access_token
+              // const accessToken = createToken('AccessKey', exUser._id, exUser.nick, exUser.provider);
+              const refreshToken = createToken('RefreshKey');
+              Token.create({userId: exUser._id, token: refreshToken, createdAt: new Date(Date.now())});
+              return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: exUser.userId, nick: exUser.nick, _id: exUser._id});
+            }
+          }
+          else{
+            return res.status(401).json({message: "Unauthorized"});
+          }
+        }
+        else{
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
+            res.clearCookie('provider');
+            return res.status(401).json({message: "Unauthorized"});
+        }
+      }
+    catch(err){
+      if(err){
+        console.log(err);
+        return res.send(err);
+      }
+    }
+  }
+}; // redirect URI (Access token) [fail, success]
+
 module.exports = {
     signin,
     signout,
-
+    // kakaoLogin,
+    kakaoCallback,
     createToken,
 };
