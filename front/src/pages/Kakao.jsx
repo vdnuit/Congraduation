@@ -55,7 +55,7 @@ function Kakao() {
         .get(`http://localhost:8000/api/v1/auth/kakao/callback?code=${code}`)
         .then((response)=>{
             console.log(response);
-            if(response.status === 200){
+            if(response.status === 200 && response.data.accessToken !== undefined){
                 const ACCESS_TOKEN = response.data.accessToken;
                 const PROVIDER = "kakao";
                 const REFRESH_TOKEN = response.data.refreshToken;
@@ -65,7 +65,10 @@ function Kakao() {
                 setOwnerName({ _id: response.data.id,  nick: response.data.nick });
                 setLogin(true);
                 navigate(`/tree`);
-            } else {
+            } else if(response.status === 200 && response.data.accessToken === undefined) {
+                setLogin(true);
+                navigate(`/tree`);
+            }else {
                 alert(response.statusText);
             }
         })
