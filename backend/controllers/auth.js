@@ -26,6 +26,8 @@ const signin = (req, res, next) => {
                 res.clearCookie('provider');
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
+                res.clearCookie('_id');
+                res.clearCookie('nick');
                 return next(authError);
             }
             if(!user){
@@ -38,6 +40,8 @@ const signin = (req, res, next) => {
                     res.clearCookie('provider');
                     res.clearCookie('accessToken');
                     res.clearCookie('refreshToken');
+                    res.clearCookie('_id');
+                    res.clearCookie('nick');
                     return next(err);
                 }
                 const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
@@ -45,6 +49,8 @@ const signin = (req, res, next) => {
                 Token.create({userId: user._id, token: refreshToken, createdAt: new Date(Date.now())});
                 res.cookie("provider", "local", {httpOnly: true});
                 res.cookie("accessToken", accessToken, {httpOnly: true});
+                res.cookie("_id", user._id, {httpOnly: true});
+                res.cookie("nick", user.nick, {httpOnly: true});
                 return res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({_id: user._id, nick: user.nick});
             });
         })(req,res,next);
@@ -61,6 +67,8 @@ const signout = async (req, res, next) => {
             if(req.cookies.provider === 'local'){
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
+                res.clearCookie('_id');
+                res.clearCookie('nick');
                 return res.clearCookie('provider').status(200).json({message: "Logout successful"});
             }
             else if(req.cookies.provider === 'kakao'){
@@ -80,6 +88,8 @@ const signout = async (req, res, next) => {
                 }
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
+                res.clearCookie('_id');
+                res.clearCookie('nick');
                 return res.clearCookie('provider').status(200).json({message: "Logout successful"});
             }
         }
@@ -164,6 +174,8 @@ const kakaoCallback = async(req, res, next) => {
         else{
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
+            res.clearCookie('_id');
+            res.clearCookie('nick');
             res.clearCookie('provider');
             return res.status(401).json({message: "Unauthorized"});
         }

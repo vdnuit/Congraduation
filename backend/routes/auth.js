@@ -8,6 +8,7 @@ const auth = require('../middleware/auth');
 const axios = require('axios');
 const User = require('../models/user');
 const Token = require('../models/token');
+
 passportConfig();
 authRouter.post('/login', signin);
 authRouter.get('/logout', auth, signout);

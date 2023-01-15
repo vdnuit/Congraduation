@@ -7,7 +7,6 @@ const axios = require('axios');
 const auth = async (req, res, next) => {
     const token = req.cookies.accessToken;
     if(req.cookies.refreshToken){
-        console.log("HAHA");
         if(req.cookies.provider === 'local'){
             try{
                 jwt.verify(token, process.env.JWTSecret, async(err, decoded) => {
@@ -18,6 +17,10 @@ const auth = async (req, res, next) => {
                                 const user = await User.findOne({_id: refreshToken.userId});
                                 const accessToken = jwt.sign({id: user._id, nick: user.nick, provider: user.provider}, process.env.JWTSecret, {expiresIn: "10s"});
                                 res.cookie("accessToken", accessToken, {httpOnly: true});
+                                res.cookie('refreshToken', refreshToken, {httpOnly: true});
+                                res.cookie('_id', user._id, {httpOnly: true});
+                                res.cookie('nick', user.nick, {httpOnly: true});
+                                res.cookie('provider', user.provider, {httpOnly: true});
                                 req.userId = user._id;
                                 req.nick = user.nick;
                                 req.provider = user.provider;
@@ -26,6 +29,8 @@ const auth = async (req, res, next) => {
                             else{
                                 res.clearCookie('accessToken');
                                 res.clearCookie('refreshToken');
+                                res.clearCookie('_id');
+                                res.clearCookie('nick');
                                 res.clearCookie('provider');
                                 req.isLogin = false;
                             }
@@ -37,7 +42,12 @@ const auth = async (req, res, next) => {
                         }
                     }
                     else{
-                        req.userId = decoded.id;
+                        res.cookie('accessToken', accessToken, {httpOnly: true});
+                        res.cookie('refreshToken', refreshToken, {httpOnly: true});
+                        res.cookie('_id', decoded._id, {httpOnly: true});
+                        res.cookie('nick', decoded.nick, {httpOnly: true});
+                        res.cookie('provider', decoded.provider, {httpOnly: true});
+                        req.userId = decoded._id;
                         req.nick = decoded.nick;
                         req.provider = decoded.provider;
                         req.isLogin = true;
@@ -46,8 +56,8 @@ const auth = async (req, res, next) => {
                 })
             }
             catch(err){
-                res.clearCookie("accessToken");
-                return res.redirect('/');
+                console.log(err);
+                return res.next(err);
             }
         }
         else if(req.cookies.provider === 'kakao'){
