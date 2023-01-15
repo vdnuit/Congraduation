@@ -142,7 +142,6 @@ const kakaoCallback = async(req, res, next) => {
             }
           });
           if(userInfo.data){
-            console.log(userInfo.data);
             let exUser = null;
             exUser = await User.findOne({ // find user
               userId: userInfo.data.id, provider: 'kakao'

@@ -6,21 +6,20 @@ const axios = require('axios');
 
 const auth = async (req, res, next) => {
     const token = req.cookies.accessToken;
+    console.log("AUTH");
     if(req.cookies.refreshToken){
         if(req.cookies.provider === 'local'){
+            console.log("here0");
             try{
                 jwt.verify(token, process.env.JWTSecret, async(err, decoded) => {
                     if(err){
+                        console.log("here1");
                         if(err instanceof jwt.TokenExpiredError){
                             const refreshToken = await Token.findOne({token: req.cookies.refreshToken});
                             if(refreshToken){
                                 const user = await User.findOne({_id: refreshToken.userId});
                                 const accessToken = jwt.sign({id: user._id, nick: user.nick, provider: user.provider}, process.env.JWTSecret, {expiresIn: "10s"});
                                 res.cookie("accessToken", accessToken, {httpOnly: true});
-                                res.cookie('refreshToken', refreshToken, {httpOnly: true});
-                                res.cookie('_id', user._id, {httpOnly: true});
-                                res.cookie('nick', user.nick, {httpOnly: true});
-                                res.cookie('provider', user.provider, {httpOnly: true});
                                 req.userId = user._id;
                                 req.nick = user.nick;
                                 req.provider = user.provider;
@@ -42,11 +41,7 @@ const auth = async (req, res, next) => {
                         }
                     }
                     else{
-                        res.cookie('accessToken', accessToken, {httpOnly: true});
-                        res.cookie('refreshToken', refreshToken, {httpOnly: true});
-                        res.cookie('_id', decoded._id, {httpOnly: true});
-                        res.cookie('nick', decoded.nick, {httpOnly: true});
-                        res.cookie('provider', decoded.provider, {httpOnly: true});
+                        console.log("here2");
                         req.userId = decoded._id;
                         req.nick = decoded.nick;
                         req.provider = decoded.provider;
