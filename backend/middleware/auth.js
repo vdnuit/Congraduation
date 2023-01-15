@@ -63,6 +63,7 @@ const auth = async (req, res, next) => {
                 console.log(req.cookies.accessToken);
                 const accessToken = req.cookies.accessToken;
                 const refreshToken = req.cookies.refreshToken;
+                console.log("yaa");
                 const accessTokenInfo = await axios({
                     method:'get',
                     url:'https://kapi.kakao.com/v1/user/access_token_info',
@@ -70,6 +71,7 @@ const auth = async (req, res, next) => {
                       'Authorization': `Bearer ${accessToken}`
                     }
                 });
+                console.log("yab");
                 // GET/POST /v2/user/me HTTP/1.1
                 // Host: kapi.kakao.com
                 // Authorization: Bearer ${ACCESS_TOKEN}/KakaoAK ${APP_ADMIN_KEY}
@@ -96,6 +98,7 @@ const auth = async (req, res, next) => {
                             'Authorization': `Bearer ${accessToken}`
                         }
                     })
+                    console.log("yay");
                     console.log("this is", userInfo.data.id);
                     const user = await User.findOne({userId: userInfo.data.id});
                     req.userId = user._id;
