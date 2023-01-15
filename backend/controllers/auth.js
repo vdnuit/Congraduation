@@ -47,10 +47,10 @@ const signin = (req, res, next) => {
                 const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
                 const refreshToken = createToken('RefreshKey');
                 Token.create({userId: user._id, token: refreshToken, createdAt: new Date(Date.now())});
-                res.cookie("provider", "local", {httpOnly: true});
+                res.cookie("provider", "local");
                 res.cookie("accessToken", accessToken, {httpOnly: true});
-                res.cookie("_id", user._id, {httpOnly: true});
-                res.cookie("nick", user.nick, {httpOnly: true});
+                res.cookie("_id", user._id);
+                res.cookie("nick", user.nick);
                 return res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({_id: user._id, nick: user.nick});
             });
         })(req,res,next);

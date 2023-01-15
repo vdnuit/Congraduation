@@ -7,6 +7,7 @@ const axios = require('axios');
 const auth = async (req, res, next) => {
     const token = req.cookies.accessToken;
     console.log("AUTH");
+    console.log(req.cookies);
     if(req.cookies.refreshToken){
         if(req.cookies.provider === 'local'){
             console.log("here0");

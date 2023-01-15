@@ -64,7 +64,7 @@ const getUserById = async(req, res, next) => {
                     return res.status(200).json({userId: data.userId, nick: data.nick, message: data.message});
                 }
                 else
-                    return res.status(401).json({userId: data.userId, nick: data.nick, message: data.message});
+                    return res.status(200).json({userId: data.userId, nick: data.nick, message: data.message});
             }
         });
     }
