@@ -1,3 +1,5 @@
+/* eslint no-underscore-dangle: 0 */
+
 import { React } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -97,7 +99,7 @@ function LogIn() {
         .then((response)=>{
             if(response.status === 200){
                 console.log(response);
-                setOwnerName({ _id: response.data.id,  nick: response.data.nick });
+                setOwnerName({ _id: response.data._id,  nick: response.data.nick });
                 setLogin(true);
                 navigate(`/tree`);
             } else {

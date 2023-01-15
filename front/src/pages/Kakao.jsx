@@ -1,3 +1,5 @@
+/* eslint no-underscore-dangle: 0 */
+
 import { React, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -54,15 +56,19 @@ function Kakao() {
         axios
         .get(`http://localhost:8000/api/v1/auth/kakao/callback?code=${code}`)
         .then((response)=>{
-            console.log(response);
+            console.log(response.data.nick);
             if(response.status === 200 && response.data.accessToken !== undefined){
                 const ACCESS_TOKEN = response.data.accessToken;
                 const PROVIDER = "kakao";
                 const REFRESH_TOKEN = response.data.refreshToken;
+                const ID = response.data._id;
+                const NICK = response.data.nick;
                 setCookie('accessToken', ACCESS_TOKEN, { path: "/", sameSite: "strict", });
                 setCookie('provider',PROVIDER, { path: "/", sameSite: "strict", });
                 setCookie('refreshToken', REFRESH_TOKEN, { path: "/", sameSite: "strict", });
-                setOwnerName({ _id: response.data.id,  nick: response.data.nick });
+                setCookie('_id', ID, { path: "/", sameSite: "strict", });
+                setCookie('nick', NICK, { path: "/", sameSite: "strict", });
+                setOwnerName({ _id: ID,  nick: NICK });
                 setLogin(true);
                 navigate(`/tree`);
             } else if(response.status === 200 && response.data.accessToken === undefined) {
