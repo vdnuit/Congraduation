@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const Token = require('../models/token');
 const User = require('../models/user');
 const axios = require('axios');
+const { findOne } = require("../models/user");
 
 const auth = async (req, res, next) => {
     const token = req.cookies.accessToken;
@@ -69,6 +70,11 @@ const auth = async (req, res, next) => {
                       'Authorization': `Bearer ${accessToken}`
                     }
                 });
+                // GET/POST /v2/user/me HTTP/1.1
+                // Host: kapi.kakao.com
+                // Authorization: Bearer ${ACCESS_TOKEN}/KakaoAK ${APP_ADMIN_KEY}
+                // Content-type: application/x-www-form-urlencoded;charset=utf-8
+
                 // const refreshTokenInfo = await axios({
                 //     method:'post',
                 //     url:'https://kauth.kakao.com/oauth/token/',
@@ -83,6 +89,18 @@ const auth = async (req, res, next) => {
                 // });
                 // console.log("HERE:", refreshTokenInfo.data);
                 if(accessTokenInfo.data){
+                    const userInfo = await axios({
+                        method:'get',
+                        url:'https://kapi.kakao.com/v2/user/me',
+                        headers:{
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    })
+                    console.log("this is", userInfo.data.id);
+                    const user = await User.findOne({userId: userInfo.data.id});
+                    req.userId = user._id;
+                    req.nick = user.nick;
+                    req.provider = 'kakao';
                     req.isLogin = true;
                     return next();
                 }
