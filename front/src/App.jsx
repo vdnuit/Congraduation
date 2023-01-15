@@ -35,15 +35,20 @@ function App() {
     const userinfo = () => {
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
-        .then((response)=>{
-            if(response.status === 200){
-                setOwnerName({_id: response.data._id, nick: response.data.nick });
-                setLogin(true);
-            } else if(response.status === 401){
-                setOwnerName({_id: response.data._id, nick: response.data.nick });
+        .then((response)=> {
+            try {
+                if(response.status === 200){
+                    setOwnerName({ _id: response.data._id, nick: response.data.nick });
+                    setLogin(true);
+                }
+            }
+            catch {
+                if(response.status === 401) {
+                    setOwnerName({ _id: response.data._id, nick: response.data.nick });
+                }
             }
         })
-        } 
+    }
     
     useEffect(() => {
         userinfo();

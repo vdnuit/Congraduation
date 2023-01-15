@@ -148,12 +148,16 @@ function Tree() {
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
-            if(response.status === 200){
-                setOwnerName({ _id: response.data._id, nick: response.data.nick });
-                setLogin(true);
+            try {
+                if(response.status === 200){
+                    setOwnerName({ _id: response.data._id, nick: response.data.nick });
+                    setLogin(true);
+                }
             }
-            if(response.status === 401) {
-                setOwnerName({ _id: response.data._id, nick: response.data.nick });
+            catch{
+                if(response.status === 401) {
+                    setOwnerName({ _id: response.data._id, nick: response.data.nick });
+                }
             }
         })
     }
