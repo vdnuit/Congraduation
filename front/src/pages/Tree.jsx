@@ -144,7 +144,7 @@ function Tree() {
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
             if(response.status === 200){
-                console.log("done");
+                console.log("tree");
             }
 
         })
