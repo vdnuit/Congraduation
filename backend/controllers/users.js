@@ -54,6 +54,8 @@ const getUser = async(req, res, next) => {
 
 const getUserById = async(req, res, next) => {
     try{
+        console.log(req.isLogin);
+        console.log(req.userId);
         await User.findOne({_id: req.params.userId}).exec((err, data) => {
             if(err){
                 console.log(err);
@@ -61,10 +63,11 @@ const getUserById = async(req, res, next) => {
             }
             else{
                 if(req.isLogin === true && data._id.equals(req.userId)){
-                    return res.status(200).json({userId: data.userId, nick: data.nick, message: data.message});
+                    return res.status(200).json({userId: data._id, nick: data.nick, message: data.message});
                 }
-                else
-                    return res.status(401).json({userId: data.userId, nick: data.nick, message: data.message});
+                else{
+                    return res.status(401).json({userId: data._id, nick: data.nick, message: data.message});
+                }
             }
         });
     }

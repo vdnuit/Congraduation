@@ -43,7 +43,8 @@ const auth = async (req, res, next) => {
                     }
                     else{
                         console.log("here2");
-                        req.userId = decoded._id;
+                        console.log(decoded);
+                        req.userId = decoded.id;
                         req.nick = decoded.nick;
                         req.provider = decoded.provider;
                         req.isLogin = true;
