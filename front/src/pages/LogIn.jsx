@@ -101,7 +101,7 @@ function LogIn() {
                 console.log(response);
                 setOwnerName({ _id: response.data._id,  nick: response.data.nick });
                 setLogin(true);
-                navigate(`/tree`);
+                navigate(`/tree/${response.data._id}`);
             } else {
                 alert(response.statusText);
             }
