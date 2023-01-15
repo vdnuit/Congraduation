@@ -63,7 +63,7 @@ const getUserById = async(req, res, next) => {
             }
             else{
                 if(req.isLogin === true && data._id.equals(req.userId)){
-                    console.log("AAA");
+                    console.log("AAAA");
                     return res.status(200).json({userId: data._id, nick: data.nick, message: data.message});
                 }
                 else{
