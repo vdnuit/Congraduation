@@ -126,14 +126,6 @@ const kakaoLogin = async(req, res, next) => {
     }
 }
 
-// const refreshTokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
-//     params: {
-//         grant_type: 'refresh_token',
-//         client_id: process.env.KAKAO_ID,
-//         refresh_token: tokenInfo.data.refresh_token
-//     }
-// });
-
 const kakaoCallback = async(req, res, next) => {
     if(req.query.code){
       try{
@@ -155,27 +147,26 @@ const kakaoCallback = async(req, res, next) => {
               Authorization: `Bearer ${accessToken}`,
             }
           });
+          console.log("HEYHEY", userInfo);
           if(userInfo.data){
             let exUser = null;
             exUser = await User.findOne({ // find user
               userId: userInfo.data.id, provider: 'kakao'
             });
             if(exUser === null){
-              const newUser = await User.create({
-                userId: userInfo.data.id,
-                nick: userInfo.data.kakao_account.profile.nickname,
-                provider: 'kakao',
-            });
-            Token.create({userId: newUser._id, token: refreshToken, createdAt: new Date(Date.now())});
-            return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
+                const newUser = await User.create({
+                    userId: userInfo.data.id,
+                    nick: userInfo.data.kakao_account.profile.nickname,
+                    provider: 'kakao',
+                });
+                return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
             }
             else{
-              Token.create({userId: exUser._id, token: refreshToken, createdAt: new Date(Date.now())});
               return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: exUser.userId, nick: exUser.nick, _id: exUser._id});
             }
           }
           else{
-            return res.status(401).json({message: "Unauthorized"});
+            return res.status(400).json({message: "Bad Request"});
           }
         }
         else{
@@ -184,7 +175,7 @@ const kakaoCallback = async(req, res, next) => {
             res.clearCookie('_id');
             res.clearCookie('nick');
             res.clearCookie('provider');
-            return res.status(401).json({message: "Unauthorized"});
+            return res.status(400).json({message: "Bad Request"});
         }
       }
     catch(err){

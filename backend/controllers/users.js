@@ -58,7 +58,7 @@ const getUserById = async(req, res, next) => {
         console.log(req.isLogin);
         console.log(req.userId);
         if(Types.ObjectId.isValid(req.params.userId)){
-            await User.findOne({_id: req.params.userId}).exec((err, data) => {
+            await User.findOne({_id: req.params.userId}).lean().populate('message', '_id paperImage').exec((err, data) => {
                 if(err){
                     console.log(err);
                     return next(err);
@@ -127,7 +127,7 @@ const deleteUser = async(req, res, next) => {
                 }
             }
             else{
-                return res.status(401).json({message: "Unauthorized"});
+                return res.status(400).json({message: "Bad Request"});
             }
         }
         else{
