@@ -53,6 +53,7 @@ function Kakao() {
     const params = new URL(window.location.href).searchParams;
     const code = params.get("code");
     const KakaoLogin = () => {
+        console.log(code);
         axios
         .get(`http://localhost:8000/api/v1/auth/kakao/callback?code=${code}`)
         .then((response)=>{

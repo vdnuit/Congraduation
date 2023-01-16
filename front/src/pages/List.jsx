@@ -7,6 +7,9 @@ import Leaf from '../components/Leaf';
 import { StyledLink } from './Main';
 
 const Container = styled.div`
+    position: absolute;
+    top: 62px;
+    left: 0px;
     width: 100%;
     max-width: 500px;
     height: 93vh;
@@ -32,6 +35,9 @@ const Count = styled.div`
 `;
 
 const Empty = styled.div`
+    position: absolute;
+    left: 30px;
+    top: 100px;
     width: 70%;
     height: 12.5%;
     margin-left: 3%;
@@ -66,17 +72,21 @@ const StyledGrid = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     background-color: #f5f5f5;
 `;
 
 const Grid = styled.div`
+    position: absolute;
+    width: 100%;
+    max-width: 500px;
+    top: 120px;
     display: grid;
     grid-template-rows: repeat(auto-fill, 1fr);
     grid-template-columns: repeat(3, 1fr);
-    gap: 8%;
-    margin-top: 13%;
-    margin-left: 9%;
+    gap: 4%;
+    margin: 0 auto;
+
 `;
 
 function List() {

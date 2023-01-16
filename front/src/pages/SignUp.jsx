@@ -27,7 +27,7 @@ const Form = styled.form`
 `;
 
 const Span = styled.span`
-    width: 14%;
+    width: 100%;
     height: 1em;
     font-family: 'Inter';
     font-style: normal;
@@ -37,12 +37,12 @@ const Span = styled.span`
 `;
 
 const Error = styled.span`
-    width: 20%;
-    height: 1em;
+    width: 100%;
+    height: auto;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 300;
-    font-size: 14px;
+    font-size: 11px;
     line-height: 19px;
     color: #ff6c0f;
 `;
@@ -95,6 +95,7 @@ function SignUp() {
             console.log('Well done!');
             console.log('User profile', response.data.user);
             console.log('User token', response.data.jwt);
+            alert("가입이 완료되었습니다.");
             navigate(`/`);
         })
         .catch(()=>alert("중복된 사용자 정보입니다. 다시 한번 확인해주세요.")) 
@@ -116,7 +117,7 @@ function SignUp() {
                         required: true,
                         pattern: {
                             value: /^[a-z]+[a-z0-9]{5,19}$/g,
-                            message: '아이디는 6자 이상 20자 이하여야 합니다.'
+                            message: ' 6-20자의 영문과 숫자'
                         }
                     })}
                     placeholder="아이디를 입력하세요"
@@ -132,7 +133,7 @@ function SignUp() {
                         pattern: {
                             value: /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/,
                             message:
-                                '비밀번호는 8자 이상 20자 이하로, 영문, 숫자, 특수문자를 최소 한 가지씩 포함해야 합니다.'
+                                ' 8-20자의 영문, 숫자, 특수문자'
                         }
                     })}
                     placeholder="비밀번호를 입력하세요"
@@ -145,7 +146,7 @@ function SignUp() {
                 <Input
                     {...register('nickname', {
                         required: true,
-                        minLength: { value: 1, message: '닉네임은 1자 이상이어야 합니다.' },
+                        minLength: { value: 1, message: '닉네임을 작성해주세요.' },
                     })}
                     placeholder="닉네임을 입력하세요"
                 />

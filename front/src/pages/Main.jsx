@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
+import { userObjectId } from './Tree';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
 import CapImg from '../assets/capImg.png';
@@ -103,7 +104,7 @@ function Button() {
             <Box>
                 <Cap src={CapImg} />
                 <Logo src={LogoImg} />
-                <StyledLink to={{ pathname: `/tree/*` }}>
+                <StyledLink to={{ pathname: `/tree/${userObjectId}` }}>
                     <h2>트리로 이동</h2>
                 </StyledLink>
                 <Insta>
