@@ -115,9 +115,7 @@ const Treezone = styled.map`
     height: auto;
 `;
 
-const params = new URL(window.location.href).pathname;
-export const userObjectId = params.substring(6);
-console.log(userObjectId);
+
 
 function Time() {
     const today = new Date();
@@ -130,6 +128,9 @@ function Time() {
     }
     return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap" />;
 }
+
+const params = new URL(window.location.href).pathname;
+export const userObjectId = params.substring(6);
 
 function Button() {
     const navigate = useNavigate();
@@ -171,6 +172,7 @@ function Button() {
     );
 }
 
+
 function Tree() {
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
@@ -208,7 +210,9 @@ function Tree() {
     }, []);
 
     useEffect(() => {
-        getUser();
+        if(userObjectId!=='kakao/callback'){
+            getUser();
+        }
     }, []);
 
     const clickHandler = (title) => {
@@ -240,5 +244,6 @@ function Tree() {
         </Container>
     );
 }
+
 
 export default Tree;
