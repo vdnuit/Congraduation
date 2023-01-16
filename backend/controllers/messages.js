@@ -75,7 +75,7 @@ const createMessage = async(req, res, next) => {
     try{
         const {senderNickName, content, topic, paperImage} = req.body;
         const receiverId = req.params.userId;
-        const message = {_id: new mongoose.Types.ObjectId(), receiverId, senderNickName, content, topic, paperImage};
+        const message = {_id: new Types.ObjectId(), receiverId, senderNickName, content, topic, paperImage};
         await User.findOneAndUpdate({_id: receiverId}, {$push: {message: message._id}}).exec((err, data) => {
             if(err){
                 console.log(err);
