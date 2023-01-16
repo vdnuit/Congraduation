@@ -72,11 +72,7 @@ const auth = async (req, res, next) => {
                     }
                 });
                 console.log("yab");
-                // GET/POST /v2/user/me HTTP/1.1
-                // Host: kapi.kakao.com
-                // Authorization: Bearer ${ACCESS_TOKEN}/KakaoAK ${APP_ADMIN_KEY}
-                // Content-type: application/x-www-form-urlencoded;charset=utf-8
-
+                
                 // const refreshTokenInfo = await axios({
                 //     method:'post',
                 //     url:'https://kauth.kakao.com/oauth/token/',

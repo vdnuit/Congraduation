@@ -126,6 +126,14 @@ const kakaoLogin = async(req, res, next) => {
     }
 }
 
+// const refreshTokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
+//     params: {
+//         grant_type: 'refresh_token',
+//         client_id: process.env.KAKAO_ID,
+//         refresh_token: tokenInfo.data.refresh_token
+//     }
+// });
+
 const kakaoCallback = async(req, res, next) => {
     if(req.query.code){
       try{
@@ -137,12 +145,14 @@ const kakaoCallback = async(req, res, next) => {
             code: req.query.code
           }
         });
-        if(tokenInfo.data.access_token){
+        const accessToken = tokenInfo.data.access_token;
+        const refreshToken = tokenInfo.data.refresh_token;
+        if(accessToken){
             console.log("TOKEN INFO: ", tokenInfo);
-            console.log("TOKEN:", tokenInfo.data.access_token);
+            console.log("TOKEN:", accessToken);
           const userInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
             headers: {
-              Authorization: `Bearer ${tokenInfo.data.access_token}`,
+              Authorization: `Bearer ${accessToken}`,
             }
           });
           if(userInfo.data){
@@ -156,16 +166,10 @@ const kakaoCallback = async(req, res, next) => {
                 nick: userInfo.data.kakao_account.profile.nickname,
                 provider: 'kakao',
             });
-            const accessToken = tokenInfo.data.access_token;
-            // const accessToken = createToken('AccessKey', newUser._id, userInfo.data.kakao_account.profile.nickname, user.provider);
-            const refreshToken = createToken('RefreshKey');
             Token.create({userId: newUser._id, token: refreshToken, createdAt: new Date(Date.now())});
             return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
             }
             else{
-              const accessToken = tokenInfo.data.access_token
-              // const accessToken = createToken('AccessKey', exUser._id, exUser.nick, exUser.provider);
-              const refreshToken = createToken('RefreshKey');
               Token.create({userId: exUser._id, token: refreshToken, createdAt: new Date(Date.now())});
               return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: exUser.userId, nick: exUser.nick, _id: exUser._id});
             }
