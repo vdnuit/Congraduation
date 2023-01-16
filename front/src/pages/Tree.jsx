@@ -1,10 +1,10 @@
 /* eslint no-underscore-dangle: 0 */
 
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-import ImageMap from "image-map";
+import ImageMap from 'image-map';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ownerNameAtom, countAtom, isLoginAtom } from '../Atom';
 import TreeNight from '../assets/treenight.png';
@@ -43,6 +43,25 @@ const Buttons = styled.div`
     text-align: center;
     width: 100%;
     max-width: 500px;
+    button {
+        border: none;
+        background: #072a60;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 100px;
+        font-family: 'Jua';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 30px;
+        /* identical to box height */
+        width: 80%;
+        max-width: 405px;
+        text-align: center;
+        padding: 0.6rem;
+        margin: 0 auto;
+        color: #ffffff;
+        margin-top: 10px;
+    }
 `;
 export const StyledLink = styled(Link)`
     text-decoration: none;
@@ -94,23 +113,34 @@ const Count = styled.p`
 
 const Treezone = styled.map`
     height: auto;
-`
+`;
+
+const params = new URL(window.location.href).pathname;
+export const userObjectId = params.substring(6);
 
 function Time() {
     const today = new Date();
     const hours = today.getHours();
     if (hours >= 20 || hours <= 5) {
-        return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap"/>;
+        return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
     }
     if (hours <= 16 && hours >= 9) {
-        return <TreeBackground src={TreeDay} alt="낮 배경 은행나무" useMap="#treemap"/>;
+        return <TreeBackground src={TreeDay} alt="낮 배경 은행나무" useMap="#treemap" />;
     }
-    return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap"/>;
+    return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap" />;
 }
 
 function Button() {
+    const navigate = useNavigate();
+
     const Login = useRecoilValue(isLoginAtom);
-    if(Login) {
+    const writeNote = () => {
+        navigate(`/write/${userObjectId}`);
+    };
+    const makeAccount = () => {
+        navigate('/signup/*');
+    };
+    if (Login) {
         return (
             <Buttons>
                 <StyledLink to={{ pathname: `/list/*` }}>
@@ -121,23 +151,25 @@ function Button() {
                 </StyledLink>
                 <Dday>쪽지 오픈 D-7</Dday>
             </Buttons>
-        )
-    } return(
-            <Buttons>
-                <StyledLink to={{ pathname: `/write/*` }}>
-                    <h2>쪽지 남기기</h2>
-                </StyledLink>
-                <StyledLink to={{ pathname: `/signup/*` }}>
-                    <h3>나도 계정 만들기</h3>
-                </StyledLink>
-                <Dday>쪽지 오픈 D-7</Dday>
-            </Buttons>
-        )
+        );
+    }
+    return (
+        <Buttons>
+            <button type="button" onClick={writeNote}>
+                쪽지 남기기
+            </button>
+            <button
+                type="button"
+                onClick={makeAccount}
+                style={{ backgroundColor: '#ffffff', color: '#7c7c7c' }}
+            >
+                나도 계정 만들기
+            </button>
+            <Dday>쪽지 오픈 D-7</Dday>
+        </Buttons>
+    );
 }
 
-const params = new URL(window.location.href).pathname;
-export const userObjectId = params.substring(6);
- 
 function Tree() {
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
@@ -146,32 +178,32 @@ function Tree() {
     const setLogin = useSetRecoilState(isLoginAtom);
     const getUser = () => {
         axios
-        .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
-        .then((response)=> {
-            console.log(response.data);
-            if(response.status === 200){
-                if(response.data.authorized){
-                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-                    setLogin(true);
-                } else if(!response.data.authorized){
-                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+            .get(`http://localhost:8000/api/v1/users/${userObjectId}`, { withCredentials: true })
+            .then((response) => {
+                console.log(response.data);
+                if (response.status === 200) {
+                    if (response.data.authorized) {
+                        setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+                        setLogin(true);
+                    } else if (!response.data.authorized) {
+                        setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+                    }
                 }
-            }
-        })
-    }
+            });
+    };
     useEffect(() => {
-        ImageMap('img[usemap]')
-    },[])
+        ImageMap('img[usemap]');
+    }, []);
 
     useEffect(() => {
-        getUser()
-    },[])
+        getUser();
+    }, []);
 
     const clickHandler = (title) => {
-        if(Login){
+        if (Login) {
             console.log(title);
         }
-    }
+    };
 
     return (
         <Container>
@@ -180,9 +212,15 @@ function Tree() {
             </Count>
 
             <Time />
-            <Link to={{ pathname: `/list/* `}}>
+            <Link to={{ pathname: `/list/* ` }}>
                 <Treezone name="treemap">
-                    <area aria-hidden="true" onClick={()=>clickHandler("tree")} shape="poly" alt="tree" coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364" />
+                    <area
+                        aria-hidden="true"
+                        onClick={() => clickHandler('tree')}
+                        shape="poly"
+                        alt="tree"
+                        coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364"
+                    />
                 </Treezone>
             </Link>
             <TreeComponent />

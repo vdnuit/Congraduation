@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { ownerNameAtom, temporaryTreeAtom, countAtom } from '../Atom';
+import axios from 'axios';
+import { ownerNameAtom, countAtom } from '../Atom';
 import ColorSelect from '../components/ColorSelect';
 import ShuffleImg from '../assets/shuffle.png';
 
@@ -143,8 +144,31 @@ const Circle = styled.div`
         max-height: 50px;
     }
 `;
-
+const params = new URL(window.location.href).pathname;
+export const userObjectId = params.substring(6);
 function Write() {
+    const sendMessage = (dict) => {
+        console.log(dict);
+        console.log(dict.writer);
+        axios
+            .post(`http://localhost:8000/api/v1/messages/${userObjectId}`, {
+                withCredentials: true,
+
+                senderNickName: dict.writer,
+                content: dict.message,
+                topic: dict.question,
+                paperImage: dict.icon
+            })
+            .then((response) => {
+                if (response.status === 200) {
+                    console.log(response.data);
+                }
+                if (response.status === 500) {
+                    // 재전송 요청 띄우기
+                    console.log(response.data);
+                }
+            });
+    };
     const [icon, setIcon] = useState();
 
     const [selectOpen, setSelectOpen] = useState(true);
@@ -157,7 +181,6 @@ function Write() {
     useEffect(() => {
         console.log(icon);
     }, [icon]);
-    const [temporaryTree, setTree] = useRecoilState(temporaryTreeAtom);
     const [count, setCount] = useRecoilState(countAtom);
     const questions = [
         `${ownerName.nick}님이 좋아하는 것은?`,
@@ -225,13 +248,8 @@ function Write() {
             question: questions[index],
             icon: `https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon${icon}.png?raw=true`
         };
-        const copy = JSON.parse(JSON.stringify(temporaryTree));
-        copy.push(dict);
-        setTree(copy);
-
-        console.log(copy);
         setCount(count + 1);
-        console.log(temporaryTree);
+        sendMessage(dict);
         navigate(`/tree/*`);
         return 1;
     };
@@ -272,7 +290,7 @@ function Write() {
             </GreyBox>
 
             <form>
-                <h2>TO. {ownerName}</h2>
+                <h2>TO. {ownerName.nick}</h2>
                 <GreyBox>
                     <textarea
                         {...register('message')}
