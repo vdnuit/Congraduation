@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Message = require('../models/message');
 const bcrypt = require('bcrypt');
+const { Types } = require('mongoose');
 
 // 로컬 유저 회원가입
 const signup = async(req, res, next) => {
@@ -56,22 +57,27 @@ const getUserById = async(req, res, next) => {
     try{
         console.log(req.isLogin);
         console.log(req.userId);
-        await User.findOne({_id: req.params.userId}).exec((err, data) => {
-            if(err){
-                console.log(err);
-                return next(err);
-            }
-            else{
-                if(req.isLogin === true && data._id.equals(req.userId)){
-                    console.log("AAAA");
-                    return res.status(200).json({userId: data._id, nick: data.nick, message: data.message, authorized: true});
+        if(Types.ObjectId.isValid(req.params.userId)){
+            await User.findOne({_id: req.params.userId}).exec((err, data) => {
+                if(err){
+                    console.log(err);
+                    return next(err);
                 }
                 else{
-                    console.log("BBB");
-                    return res.status(200).send({userId: data._id, nick: data.nick, message: data.message, authorized: false});
+                    if(req.isLogin === true && data._id.equals(req.userId)){
+                        console.log("AAAA");
+                        return res.status(200).json({userId: data._id, nick: data.nick, message: data.message, authorized: true});
+                    }
+                    else{
+                        console.log("BBB");
+                        return res.status(200).json({userId: data._id, nick: data.nick, message: data.message, authorized: false});
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            return res.status(400).json({message: "Bad Request"});
+        }
     }
     catch(err){
         console.log(err);

@@ -122,7 +122,7 @@ const kakaoLogin = async(req, res, next) => {
     }
     catch(err){
         console.log(err);
-        return res.next(err);
+        return next(err);
     }
 }
 
@@ -138,6 +138,7 @@ const kakaoCallback = async(req, res, next) => {
           }
         });
         if(tokenInfo.data.access_token){
+            console.log("TOKEN INFO: ", tokenInfo);
             console.log("TOKEN:", tokenInfo.data.access_token);
           const userInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
             headers: {
@@ -185,7 +186,7 @@ const kakaoCallback = async(req, res, next) => {
     catch(err){
       if(err){
         console.log(err);
-        return res.send(err);
+        return next(err);
       }
     }
   }

@@ -1,6 +1,6 @@
 const Message = require('../models/message');
 const User = require('../models/user');
-const mongoose = require('mongoose');
+const { Types } = require('mongoose');
 
 const getMessages = async (req, res, next) => {
     try{
@@ -22,8 +22,8 @@ const getMessages = async (req, res, next) => {
 
 const getMessagesByUserId = async(req, res, next) => {
     try{
-        if(req.isLogin === true){
-            await User.findOne({_id: req.params.userId}).populate('message').exec((err, data) => {
+        if(Types.ObjectId.isValid(req.params.userId)){
+            await User.findOne({_id: req.params.userId}).lean().populate('message', '_id paperImage').exec((err, data) => {
                 if(err){
                     console.log(err);
                     return next(err);
@@ -32,17 +32,12 @@ const getMessagesByUserId = async(req, res, next) => {
                     return res.status(400).json({message: "The user does not exist"});
                 }
                 else{
-                    if(data._id.equals(req.userId)){
-                        return res.status(200).json(data.message);
-                    }
-                    else{
-                        return res.status(401).json({message: "Unauthorized"});
-                    }
+                    return res.status(200).json(data.message);
                 }
             });
         }
         else{
-            return res.status(401).json({message: "Unauthorized"});
+            return res.status(400).json({message: "Bad Request"});
         }
     }
     catch(err){
