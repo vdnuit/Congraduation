@@ -98,8 +98,13 @@ const createMessage = async(req, res, next) => {
 
 const deleteMessage = async(req, res, next) => {
     try{
-        await Message.findOneAndDelete({_id: req.params.messageId});
-        res.status(200).json({message: "Successfully deleted"});
+        if(Types.ObjectId.isValid()){
+            await Message.findOneAndDelete({_id: req.params.messageId});
+            res.status(200).json({message: "Successfully deleted"});
+        }
+        else{
+            res.status(400).json({message: "Bad Request"});
+        }
     }
     catch(err){
         console.log(err);

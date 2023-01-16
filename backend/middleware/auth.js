@@ -64,33 +64,15 @@ const auth = async (req, res, next) => {
                 const accessToken = req.cookies.accessToken;
                 const refreshToken = req.cookies.refreshToken;
                 console.log("yaa");
-                const accessTokenInfo = await axios({
-                    method:'get',
-                    url:'https://kapi.kakao.com/v1/user/access_token_info',
+                const isValidAccessToken = await axios.get('https://kapi.kakao.com/v1/user/access_token_info', {
                     headers:{
-                      'Authorization': `Bearer ${accessToken}`
-                    }
+                        'Authorization': `Bearer ${accessToken}`
+                      }
                 });
+                console.log("hereyab", isValidAccessToken);
                 console.log("yab");
-                // GET/POST /v2/user/me HTTP/1.1
-                // Host: kapi.kakao.com
-                // Authorization: Bearer ${ACCESS_TOKEN}/KakaoAK ${APP_ADMIN_KEY}
-                // Content-type: application/x-www-form-urlencoded;charset=utf-8
 
-                // const refreshTokenInfo = await axios({
-                //     method:'post',
-                //     url:'https://kauth.kakao.com/oauth/token/',
-                //     headers:{
-                //       'Content-Type': "application/x-www-form-urlencoded"
-                //     },
-                //     params:{
-                //         grant_type:'refresh_token',
-                //         client_id: process.env.KAKAO_ID,
-                //         refresh_token: refreshToken
-                //     }
-                // });
-                // console.log("HERE:", refreshTokenInfo.data);
-                if(accessTokenInfo.data){
+                if(isValidAccessToken.status === 200 && isValidAccessToken.data){
                     const userInfo = await axios({
                         method:'get',
                         url:'https://kapi.kakao.com/v2/user/me',
@@ -107,7 +89,38 @@ const auth = async (req, res, next) => {
                     req.isLogin = true;
                     return next();
                 }
+                else if(isValidAccessToken.status === 401){
+                    const isValidRefreshToken = await axios.get('https://kapi.kakao.com/v1/user/access_token_info', {
+                        headers:{
+                            'Authorization': `Bearer ${refreshToken}`
+                          }
+                    });
+                    console.log("KAKAO: REFRESH_TOKEN_CHECK");
+                    if(isValidRefreshToken.status === 200 && isValidRefreshToken.data){
+                        const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
+                            params: {
+                                grant_type: 'refresh_token',
+                                client_id: process.env.KAKAO_ID,
+                                refresh_token: refreshToken
+                            }
+                        });
+                        req.isLogin = true;
+                        res.cookie(tokenInfo.data.access_token, {httpOnly: true});
+                        res.cookie(tokenInfo.data.refresh_token, {httpOnly: true});
+                        return next();
+                    }
+                    else if(isValidRefreshToken.status === 401){
+                        req.isLogin = false;
+                        return next();
+                    }
+                }
                 else{
+                    console.error("Something is wrong with kakao token, please try again");
+                    res.clearCookie('accessToken');
+                    res.clearCookie('refreshToken');
+                    res.clearCookie('_id');
+                    res.clearCookie('nick');
+                    res.clearCookie('provider');
                     req.isLogin = false;
                     return next();
                 }
@@ -117,8 +130,23 @@ const auth = async (req, res, next) => {
                 return next(err);
             }
         }
+        else{
+            console.log("HERE");
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
+            res.clearCookie('_id');
+            res.clearCookie('nick');
+            res.clearCookie('provider');
+            req.isLogin = false;
+            return res.status(400).json({message: "Bad Request - Field \"provider\" must exist"});
+        }
     }
     else{
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.clearCookie('_id');
+        res.clearCookie('nick');
+        res.clearCookie('provider');
         req.isLogin = false;
         return next();
     }

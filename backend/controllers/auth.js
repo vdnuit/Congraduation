@@ -137,41 +137,36 @@ const kakaoCallback = async(req, res, next) => {
             code: req.query.code
           }
         });
-        if(tokenInfo.data.access_token){
+        const accessToken = tokenInfo.data.access_token;
+        const refreshToken = tokenInfo.data.refresh_token;
+        if(accessToken){
             console.log("TOKEN INFO: ", tokenInfo);
-            console.log("TOKEN:", tokenInfo.data.access_token);
+            console.log("TOKEN:", accessToken);
           const userInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
             headers: {
-              Authorization: `Bearer ${tokenInfo.data.access_token}`,
+              Authorization: `Bearer ${accessToken}`,
             }
           });
+          console.log("HEYHEY", userInfo);
           if(userInfo.data){
             let exUser = null;
             exUser = await User.findOne({ // find user
               userId: userInfo.data.id, provider: 'kakao'
             });
             if(exUser === null){
-              const newUser = await User.create({
-                userId: userInfo.data.id,
-                nick: userInfo.data.kakao_account.profile.nickname,
-                provider: 'kakao',
-            });
-            const accessToken = tokenInfo.data.access_token;
-            // const accessToken = createToken('AccessKey', newUser._id, userInfo.data.kakao_account.profile.nickname, user.provider);
-            const refreshToken = createToken('RefreshKey');
-            Token.create({userId: newUser._id, token: refreshToken, createdAt: new Date(Date.now())});
-            return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
+                const newUser = await User.create({
+                    userId: userInfo.data.id,
+                    nick: userInfo.data.kakao_account.profile.nickname,
+                    provider: 'kakao',
+                });
+                return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
             }
             else{
-              const accessToken = tokenInfo.data.access_token
-              // const accessToken = createToken('AccessKey', exUser._id, exUser.nick, exUser.provider);
-              const refreshToken = createToken('RefreshKey');
-              Token.create({userId: exUser._id, token: refreshToken, createdAt: new Date(Date.now())});
               return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: exUser.userId, nick: exUser.nick, _id: exUser._id});
             }
           }
           else{
-            return res.status(401).json({message: "Unauthorized"});
+            return res.status(400).json({message: "Bad Request"});
           }
         }
         else{
@@ -180,7 +175,7 @@ const kakaoCallback = async(req, res, next) => {
             res.clearCookie('_id');
             res.clearCookie('nick');
             res.clearCookie('provider');
-            return res.status(401).json({message: "Unauthorized"});
+            return res.status(400).json({message: "Bad Request"});
         }
       }
     catch(err){
