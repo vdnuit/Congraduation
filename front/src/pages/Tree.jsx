@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ImageMap from 'image-map';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ownerNameAtom, countAtom, isLoginAtom } from '../Atom';
+import { ownerNameAtom, countAtom, isLoginAtom, temporaryTreeAtom } from '../Atom';
 import TreeNight from '../assets/treenight.png';
 import TreeDay from '../assets/treeday.png';
 import TreeSunset from '../assets/treesunset.png';
@@ -117,6 +117,7 @@ const Treezone = styled.map`
 
 const params = new URL(window.location.href).pathname;
 export const userObjectId = params.substring(6);
+console.log(userObjectId);
 
 function Time() {
     const today = new Date();
@@ -143,7 +144,7 @@ function Button() {
     if (Login) {
         return (
             <Buttons>
-                <StyledLink to={{ pathname: `/list/*` }}>
+                <StyledLink to={{ pathname: `/list/${userObjectId}` }}>
                     <h2>받은 쪽지 목록</h2>
                 </StyledLink>
                 <StyledLink>
@@ -174,23 +175,34 @@ function Tree() {
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
+    const setCount = useSetRecoilState(countAtom);
     const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLogin = useSetRecoilState(isLoginAtom);
+    const setLeaves = useSetRecoilState(temporaryTreeAtom);
     const getUser = () => {
         axios
-            .get(`http://localhost:8000/api/v1/users/${userObjectId}`, { withCredentials: true })
-            .then((response) => {
-                console.log(response.data);
-                if (response.status === 200) {
-                    if (response.data.authorized) {
-                        setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-                        setLogin(true);
-                    } else if (!response.data.authorized) {
-                        setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-                    }
+        .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
+        .then((response)=> {
+            console.log(response.data);
+            if(response.status === 200){
+                axios
+                .get(`http://localhost:8000/api/v1/messages/${userObjectId}`, {withCredentials: true})
+                .then((res) => {
+                    setLeaves(res.data);
+                });
+                if(response.data.authorized){
+                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+                    setLogin(true);
+                    setCount(response.data.message.length);
+                    console.log(response.data);
+                } else if(!response.data.authorized){
+                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+                    setCount(response.data.message.length);
                 }
-            });
-    };
+            }
+        })
+    }
+    
     useEffect(() => {
         ImageMap('img[usemap]');
     }, []);
@@ -212,7 +224,7 @@ function Tree() {
             </Count>
 
             <Time />
-            <Link to={{ pathname: `/list/* ` }}>
+            {Login ? <Link to={{ pathname: `/list/${userObjectId} `}}>
                 <Treezone name="treemap">
                     <area
                         aria-hidden="true"
@@ -222,7 +234,7 @@ function Tree() {
                         coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364"
                     />
                 </Treezone>
-            </Link>
+            </Link> : null}
             <TreeComponent />
             <Button />
         </Container>

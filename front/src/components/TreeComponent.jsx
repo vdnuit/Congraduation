@@ -1,3 +1,5 @@
+/* eslint no-underscore-dangle: 0 */
+
 import { React, useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
@@ -49,7 +51,7 @@ function TreeComponent(){
     
     return (
         <div>
-            {leaves.map((leaf)=><Img src={leaf.icon} innerWidth={innerWidth}/>)}
+            {leaves.map((leaf)=><Img src={leaf.paperImage} key={leaf._id} innerWidth={innerWidth}/>)}
         </div>
     )
 }
