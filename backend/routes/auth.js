@@ -11,8 +11,8 @@ const Token = require('../models/token');
 passportConfig();
 authRouter.post('/login', signin);
 authRouter.get('/logout', auth, signout);
-authRouter.get('/kakao', passport.authenticate('kakao'));
-authRouter.get('/kaka', kakaoLogin);
+// authRouter.get('/kakao', passport.authenticate('kakao'));
+authRouter.get('/kakao', kakaoLogin);
 authRouter.get('/kakao/callback', kakaoCallback);
 
 module.exports = authRouter;

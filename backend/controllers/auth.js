@@ -110,15 +110,17 @@ const signout = async (req, res, next) => {
 const kakaoLogin = async(req, res, next) => {
     try{
         console.log("HERE!");
-        const loginInfo = await axios.get('https://kauth.kakao.com/oauth/authorize', {
-            params: {
-                client_id: process.env.KAKAO_ID,
-                redirect_uri: process.env.REDIRECT_URL,
-                response_type: 'code'
-            }
-        });
-        console.log(loginInfo);
-        res.send(loginInfo.data);
+        // const loginInfo = await axios.get('https://kauth.kakao.com/oauth/authorize',
+        // {
+        //     params: {
+        //         client_id: process.env.KAKAO_ID,
+        //         redirect_uri: process.env.REDIRECT_URL,
+        //         response_type: 'code'
+        //     }
+        // });
+        // console.log(loginInfo);
+        const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_ID}&redirect_uri=${process.env.REDIRECT_URL}&response_type=code`
+        res.redirect(kakaoURL);
     }
     catch(err){
         console.log(err);
@@ -133,7 +135,7 @@ const kakaoCallback = async(req, res, next) => {
           params: {
             grant_type: 'authorization_code',
             client_id: process.env.KAKAO_ID,
-            redirect_uri: 'http://localhost:3000/auth/kakao/callback',
+            redirect_uri: process.env.REDIRECT_URL,
             code: req.query.code
           }
         });
@@ -159,10 +161,11 @@ const kakaoCallback = async(req, res, next) => {
                     nick: userInfo.data.kakao_account.profile.nickname,
                     provider: 'kakao',
                 });
-                return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: userInfo.data.id, nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
+                return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
             }
             else{
-              return res.json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', userId: exUser.userId, nick: exUser.nick, _id: exUser._id});
+                console.log("debug1");
+              return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: exUser.nick, _id: exUser._id});
             }
           }
           else{
