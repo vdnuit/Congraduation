@@ -68,7 +68,7 @@ const Div = styled.div`
     justify-content: center;
 `;
 
-const Kakao = styled.div`
+const Kakao = styled.a`
     width: 100%;
     text-align: center;
 `;
@@ -108,15 +108,6 @@ function LogIn() {
         })
         .catch(()=>alert("인증 정보가 유효하지 않습니다."))   
     };
-    
-    const KakaoRedirect = () => {
-        axios
-        .get("http://localhost:8000/api/v1/auth/kakao", {withCredentials: true})
-        .then((response) => {
-            console.log(response);
-    })
-        
-    }
 
 
     return (
@@ -141,7 +132,7 @@ function LogIn() {
                     <StyledLink onClick={handleSubmit(handleLogin)}>
                         <h2>로그인</h2>
                     </StyledLink>
-                    <Kakao onClick={KakaoRedirect}>
+                    <Kakao href="http://localhost:8000/api/v1/auth/kakao">
                         <Img src={KakaoImg} alt="kakaoImg" />
                     </Kakao>
                 </Div>
