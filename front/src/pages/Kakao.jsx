@@ -2,7 +2,6 @@
 
 import { React, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { Cookies } from "react-cookie";
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
@@ -46,7 +45,6 @@ const Announce = styled.div`
 function Kakao() {
     const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLogin = useSetRecoilState(isLoginAtom);
-    const navigate = useNavigate();
     const cookies = new Cookies();
     const setCookie = (name, value, option) => { cookies.set(name, value, { ...option });
     };
@@ -70,7 +68,8 @@ function Kakao() {
                 setCookie('nick', NICK, { path: "/", sameSite: "strict", });
                 setOwnerName({ _id: ID,  nick: NICK });
                 setLogin(true);
-                navigate(`/tree/${ID}`);
+                window.location.href = `http://localhost:3000/tree/${ID}`
+                
             } else {
                 alert(response.statusText);
             }
@@ -80,10 +79,11 @@ function Kakao() {
 
     useEffect(() => {
         if(code){
-            KakaoLogin(code)
+            KakaoLogin()
         };
     },[code])
 
+    
     return (
         <Container>
                 <Empty>

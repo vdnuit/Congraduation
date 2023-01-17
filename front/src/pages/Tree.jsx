@@ -131,6 +131,7 @@ function Time() {
 
 const params = new URL(window.location.href).pathname;
 export const userObjectId = params.substring(6);
+console.log(userObjectId);
 
 function Button() {
     const navigate = useNavigate();
@@ -208,11 +209,9 @@ function Tree() {
     useEffect(() => {
         ImageMap('img[usemap]');
     }, []);
-
+    
     useEffect(() => {
-        if(userObjectId!=='kakao/callback'){
-            getUser();
-        }
+        getUser();
     }, []);
 
     const clickHandler = (title) => {
