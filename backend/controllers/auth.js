@@ -7,13 +7,11 @@ const Token = require('../models/token');
 // 로컬 유저 로그인
 const createToken = (type, bodyId='', bodyNick='', bodyProvider='') => {
     if(type === 'AccessKey'){
-        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "1m"});
-        console.log(accessToken);
+        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "30m"});
         return accessToken;
     }
     else if(type === 'RefreshKey'){
         const refreshToken = jwt.sign({}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "14d"});
-        console.log(refreshToken);
         return refreshToken;
     }
 }
@@ -80,7 +78,6 @@ const signout = async (req, res, next) => {
                         }
                     }
                     );
-                    // return res.redirect(`https://kauth.kakao.com/oauth/logout?client_id=${process.env.KAKAO_ID}&logout_redirect_uri=${process.env.LOGOUT_REDIRECT_URL}`);
                 }
                 catch(err){
                     console.log(err);
@@ -103,22 +100,8 @@ const signout = async (req, res, next) => {
     }
 };
 
-
-// GET /oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code HTTP/1.1
-// Host: kauth.kakao.com
-
 const kakaoLogin = async(req, res, next) => {
     try{
-        console.log("HERE!");
-        // const loginInfo = await axios.get('https://kauth.kakao.com/oauth/authorize',
-        // {
-        //     params: {
-        //         client_id: process.env.KAKAO_ID,
-        //         redirect_uri: process.env.REDIRECT_URL,
-        //         response_type: 'code'
-        //     }
-        // });
-        // console.log(loginInfo);
         const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_ID}&redirect_uri=${process.env.REDIRECT_URL}&response_type=code`
         res.redirect(kakaoURL);
     }
@@ -142,14 +125,11 @@ const kakaoCallback = async(req, res, next) => {
         const accessToken = tokenInfo.data.access_token;
         const refreshToken = tokenInfo.data.refresh_token;
         if(accessToken){
-            console.log("TOKEN INFO: ", tokenInfo);
-            console.log("TOKEN:", accessToken);
           const userInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             }
           });
-          console.log("HEYHEY", userInfo);
           if(userInfo.data){
             let exUser = null;
             exUser = await User.findOne({ // find user
@@ -164,7 +144,6 @@ const kakaoCallback = async(req, res, next) => {
                 return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
             }
             else{
-                console.log("debug1");
               return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: exUser.nick, _id: exUser._id});
             }
           }
