@@ -64,7 +64,7 @@ const getUserById = async(req, res, next) => {
                     return next(err);
                 }
                 else{
-                    if(req.isLogin === true && data._id.equals(req.userId)){
+                    if(req.isLogin === true && data._id.equals(req.userId)){ // url의 params와 인증된 userId 비교 후 전송
                         console.log("AAAA");
                         return res.status(200).json({userId: data._id, nick: data.nick, message: data.message, authorized: true});
                     }
