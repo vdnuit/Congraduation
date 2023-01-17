@@ -46,9 +46,9 @@ const signin = (req, res, next) => {
                 const refreshToken = createToken('RefreshKey');
                 Token.create({userId: user._id, token: refreshToken, createdAt: new Date(Date.now())});
                 res.cookie("provider", "local");
-                res.cookie("accessToken", accessToken, {httpOnly: true});
                 res.cookie("_id", user._id);
                 res.cookie("nick", user.nick);
+                res.cookie("accessToken", accessToken, {httpOnly: true});
                 return res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({_id: user._id, nick: user.nick});
             });
         })(req,res,next);
