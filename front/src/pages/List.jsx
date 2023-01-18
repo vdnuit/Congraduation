@@ -7,9 +7,6 @@ import Leaf from '../components/Leaf';
 import { StyledLink } from './Main';
 
 const Container = styled.div`
-    position: absolute;
-    top: 62px;
-    left: 0px;
     width: 100%;
     max-width: 500px;
     height: 93vh;
@@ -35,9 +32,6 @@ const Count = styled.div`
 `;
 
 const Empty = styled.div`
-    position: absolute;
-    left: 30px;
-    top: 100px;
     width: 70%;
     height: 12.5%;
     margin-left: 3%;
@@ -89,6 +83,11 @@ const Grid = styled.div`
 
 `;
 
+export const clip = () => {
+    navigator.clipboard.writeText(window.location.href);
+    console.log("done")
+}
+
 function List() {
     const count = useRecoilValue(countAtom);
     const leaves = useRecoilValue(temporaryTreeAtom);
@@ -100,7 +99,7 @@ function List() {
                     <Announce>쪽지를 받을 수 있도록 링크를 공유해보세요!</Announce>
                 </Empty>
                 <Div>
-                    <StyledLink>
+                    <StyledLink onClick={clip}>
                         <h2>공유하기</h2>
                     </StyledLink>
                 </Div>

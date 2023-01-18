@@ -214,6 +214,7 @@ function Tree() {
         axios
         .get(`/api/v1/users/myInfo`)
         .then((response) => {
+            console.log(response);
             if(response.status === 200){
                 setOwnerName({_id: response.data._id, nick: response.data.nick });
                 setLogin(true);
@@ -229,11 +230,11 @@ function Tree() {
     
     useEffect(() => {
         getUser();
-    }, []);
+    });
 
     useEffect(() => {
         myInfo();
-    }, []);
+    },[]);
 
     const clickHandler = (title) => {
         if (Login) {

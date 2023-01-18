@@ -98,9 +98,9 @@ function LogIn() {
         }, {withCredentials: true})
         .then((response)=>{
             if(response.status === 200){
-                console.log(response);
+                console.log("왜안돼");
                 const { accessToken } = response.data;
-                axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
                 setOwnerName({ _id: response.data._id,  nick: response.data.nick });
                 setLogin(true);
                 navigate(`/tree/${response.data._id}`);
