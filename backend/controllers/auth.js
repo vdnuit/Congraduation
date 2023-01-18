@@ -138,12 +138,10 @@ const kakaoCallback = async(req, res, next) => {
                     nick: userInfo.data.kakao_account.profile.nickname,
                     provider: 'kakao',
                 }); // 카카오는, 액세스 토큰 쿠키 만들 필요 없음
-                return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
+                return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', _id: newUser._id});
             }
             else{
-                console.log("KAKAOKAKAO");
-                console.log(accessToken);
-              return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: exUser.nick, _id: exUser._id});
+              return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', _id: exUser._id});
             }
           }
           else{
