@@ -28,30 +28,26 @@ const signup = async(req, res, next) => {
     }
 }
 
-const getUser = async(req, res, next) => {
+const getMyInfo = async(req, res, next) => {
     try{
-        if(req.isLogin === true){
-            await User.find({_id: req.userId}).exec((err, data) => {
-                if(err){
-                    console.log(err);
-                    return next(err);
-                }
-                else {
-                    if(req.userId === data._id){
-                        res.status(200).json(data);
-                    }
-                }
-            });
+        if(req.isLogin === true) {
+            const user = await User.findOne({_id: req.userId});
+            if(user) {
+                res.status(200).json({userId: user._id, selfId: user.userId, nick: user.nick, provider: user.provider});
+            }
+            else {
+                res.status(401).json({message: "Unauthorized"});
+            }
         }
-        else{
-            res.status(401).json({message: 'Unauthorized'});
+        else {
+            res.status(401).json({message: "Unauthorized"});
         }
     }
     catch(err){
         console.log(err);
         return next(err);
     }
-};
+}
 
 const getUserById = async(req, res, next) => {
     try{
@@ -64,14 +60,7 @@ const getUserById = async(req, res, next) => {
                     return next(err);
                 }
                 else{
-                    if(req.isLogin === true && data._id.equals(req.userId)){ // url의 params와 인증된 userId 비교 후 전송
-                        console.log("AAAA");
-                        return res.status(200).json({userId: data._id, nick: data.nick, message: data.message, authorized: true});
-                    }
-                    else{
-                        console.log("BBB");
-                        return res.status(200).json({userId: data._id, nick: data.nick, message: data.message, authorized: false});
-                    }
+                    return res.status(200).json({userId: data._id, nick: data.nick, message: data.message});
                 }
             });
         }
@@ -161,7 +150,7 @@ const deleteKakaoUserById = async(req, res, next) => {
 
 module.exports = {
     signup,
-    getUser,
+    getMyInfo,
     getUserById,
     deleteUser,
 }

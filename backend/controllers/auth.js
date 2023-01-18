@@ -7,7 +7,7 @@ const Token = require('../models/token');
 // 로컬 유저 로그인
 const createToken = (type, bodyId='', bodyNick='', bodyProvider='') => {
     if(type === 'AccessKey'){
-        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "30m"});
+        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "5m"});
         return accessToken;
     }
     else if(type === 'RefreshKey'){
@@ -49,7 +49,7 @@ const signin = (req, res, next) => {
                 res.cookie("_id", user._id);
                 res.cookie("nick", user.nick);
                 res.cookie("accessToken", accessToken, {httpOnly: true});
-                return res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({_id: user._id, nick: user.nick});
+                return res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({accessToken: accessToken, _id: user._id, nick: user.nick});
             });
         })(req,res,next);
     }
@@ -140,7 +140,7 @@ const kakaoCallback = async(req, res, next) => {
                     userId: userInfo.data.id,
                     nick: userInfo.data.kakao_account.profile.nickname,
                     provider: 'kakao',
-                });
+                }); // 카카오는, 액세스 토큰 쿠키 만들 필요 없음
                 return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
             }
             else{
@@ -169,10 +169,67 @@ const kakaoCallback = async(req, res, next) => {
   }
 }; // redirect URI (Access token) [fail, success]
 
+const getRefreshToken = async(req, res, next) => {
+    try{
+        if(req.cookies.refreshToken) {
+            if(req.cookies.provider === 'local'){
+                const refreshToken = await Token.findOne({token: req.cookies.refreshToken});
+                if(refreshToken){ // 리프레쉬 토큰 존재 -> 재발급
+                    const user = await User.findOne({_id: refreshToken.userId});
+                    const accessToken = jwt.sign({id: user._id, nick: user.nick, provider: user.provider}, process.env.JWTSecret, {expiresIn: "5m"});
+                    res.status(200).json({accessToken: accessToken});
+                }
+                else{
+                    res.status(401).json({message: "The refresh token does not exist"});
+                }
+            }
+            else if(req.cookies.provider === 'kakao'){
+                const isValidRefreshToken = await axios.get('https://kapi.kakao.com/v1/user/access_token_info', { // check refreshToken
+                    headers:{
+                        'Authorization': `Bearer ${refreshToken}`
+                      }
+                });
+                console.log("KAKAO: REFRESH_TOKEN_CHECK");
+                if(isValidRefreshToken.status === 200 && isValidRefreshToken.data){ // valid refreshToken
+                    const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
+                        params: {
+                            grant_type: 'refresh_token',
+                            client_id: process.env.KAKAO_ID,
+                            refresh_token: refreshToken
+                        }
+                    });
+                    return res.status(200).json({accessToken: tokenInfo.data.access_token});
+                }
+                else if(isValidRefreshToken.status === 400 || isValidRefreshToken.status === 401){ // invalid refreshToken
+                    return res.status(401).json({message: "The refresh token does not exist"});
+                }
+                else{ // others
+                    console.log("Something is wrong with kakao token, please try again");
+                    return res.status(500).json({message: "Something is wrong with kakao token"});
+                }
+            }
+            else{
+                return res.status(400).json({message: "You must contain provider field in cookie"});
+            }
+        }
+        else{
+            res.status(401).json({message: "The refresh token is empty"});
+        }
+    }
+    catch(err){
+        console.log(err);
+        return next(err);
+    }
+}
+
 module.exports = {
     signin,
     signout,
     kakaoLogin,
     kakaoCallback,
     createToken,
+    getRefreshToken,
 };
+
+
+// 액세스 토큰을 갖고 api 요청하는데, 1) 미들웨어 2) accessToken 확인 후 refresh-token 요청
