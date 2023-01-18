@@ -175,6 +175,7 @@ function Button() {
 
 
 function Tree() {
+    const navigate = useNavigate();
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
@@ -186,22 +187,37 @@ function Tree() {
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
-            console.log(response.data);
+            setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+            setCount(response.data.message.length);
+            setLeaves(response.data.message);
+        })
+    }
+
+    const getToken = () => {
+        axios
+        .get("/api/v1/auth/refresh-token")
+        .then((response)=>{
+            if(response.status===200){
+                const { accessToken } = response.data;
+                axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+                setOwnerName({_id: response.data._id, nick: response.data.nick });
+            }
+            else if(response.status===401){
+                setLogin(false);
+                navigate("/");
+            }
+        })
+    }
+
+    const myInfo = () => {
+        axios
+        .get(`/api/v1/users/myInfo`)
+        .then((response) => {
             if(response.status === 200){
-                axios
-                .get(`http://localhost:8000/api/v1/messages/${userObjectId}`, {withCredentials: true})
-                .then((res) => {
-                    setLeaves(res.data);
-                });
-                if(response.data.authorized){
-                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-                    setLogin(true);
-                    setCount(response.data.message.length);
-                    console.log(response.data);
-                } else if(!response.data.authorized){
-                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-                    setCount(response.data.message.length);
-                }
+                setOwnerName({_id: response.data._id, nick: response.data.nick });
+                setLogin(true);
+            } else if(response.status === 401){
+                getToken();
             }
         })
     }
@@ -212,6 +228,10 @@ function Tree() {
     
     useEffect(() => {
         getUser();
+    }, []);
+
+    useEffect(() => {
+        myInfo();
     }, []);
 
     const clickHandler = (title) => {
@@ -227,7 +247,7 @@ function Tree() {
             </Count>
 
             <Time />
-            {Login ? <Link to={{ pathname: `/list/${userObjectId} `}}>
+            {Login ? <Link to={{ pathname: `/list/${ownerName._id} `}}>
                 <Treezone name="treemap">
                     <area
                         aria-hidden="true"

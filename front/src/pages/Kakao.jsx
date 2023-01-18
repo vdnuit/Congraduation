@@ -56,12 +56,12 @@ function Kakao() {
         .then((response)=>{
             console.log(response);
             if(response.status === 200){
-                const ACCESS_TOKEN = response.data.accessToken;
+                const { accessToken } = response.data.accessToken;
+                axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
                 const PROVIDER = "kakao";
                 const REFRESH_TOKEN = response.data.refreshToken;
                 const ID = response.data._id;
                 const NICK = response.data.nick;
-                setCookie('accessToken', ACCESS_TOKEN, { path: "/", sameSite: "strict", });
                 setCookie('provider',PROVIDER, { path: "/", sameSite: "strict", });
                 setCookie('refreshToken', REFRESH_TOKEN, { path: "/", sameSite: "strict", });
                 setCookie('_id', ID, { path: "/", sameSite: "strict", });

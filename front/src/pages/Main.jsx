@@ -1,14 +1,16 @@
+/* eslint no-underscore-dangle: 0 */
+
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import React from 'react';
-import { useRecoilValue } from 'recoil';
-import { userObjectId } from './Tree';
+import { React, useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import axios from 'axios';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
 import CapImg from '../assets/capImg.png';
 import SnowImg from '../assets/snowbackground.png';
 import InstaImg from '../assets/instaImg.png';
-import { isLoginAtom } from '../Atom';
+import { isLoginAtom, ownerNameAtom } from '../Atom';
 
 const Container = styled.div`
     z-index: -1;
@@ -97,14 +99,17 @@ const Snow = styled.img`
     max-width: 500px;
 `;
 
+
+
 function Button() {
     const Login = useRecoilValue(isLoginAtom);
+    const ownerName = useRecoilValue(ownerNameAtom);
     if(Login){
         return (
             <Box>
                 <Cap src={CapImg} />
                 <Logo src={LogoImg} />
-                <StyledLink to={{ pathname: `/tree/${userObjectId}` }}>
+                <StyledLink to={{ pathname: `/tree/${ownerName._id}` }}>
                     <h2>트리로 이동</h2>
                 </StyledLink>
                 <Insta>
@@ -132,6 +137,39 @@ function Button() {
 }
 
 function Main() {
+    const setLogin = useSetRecoilState(isLoginAtom);
+    const setOwnerName = useSetRecoilState(ownerNameAtom);
+    const getToken = () => {
+        axios
+            .get("/api/auth/refresh-token")
+            .then((response)=>{
+                if(response.status===200){
+                    const { accessToken } = response.data;
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+                    setOwnerName({_id: response.data._id, nick: response.data.nick });
+                }
+                else if(response.status===401){
+                    setLogin(false);
+                }
+            })
+    }
+
+    const myInfo = () => {
+        axios
+        .get(`/api/v1/users/myInfo`)
+        .then((response) => {
+            if(response.status === 200){
+                setOwnerName({_id: response.data._id, nick: response.data.nick });
+                setLogin(true);
+            } else if(response.status === 401){
+                getToken();
+            }
+        })
+    }
+        useEffect(() => {
+            myInfo();
+        });
+
     return (
         <Container>
             <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
