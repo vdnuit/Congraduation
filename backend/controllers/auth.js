@@ -63,10 +63,7 @@ const signout = async (req, res, next) => {
     try{
         if(req.isLogin == true){
             if(req.cookies.provider === 'local'){
-                res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
-                res.clearCookie('_id');
-                res.clearCookie('nick');
                 return res.clearCookie('provider').status(200).json({message: "Logout successful"});
             }
             else if(req.cookies.provider === 'kakao'){
@@ -74,7 +71,7 @@ const signout = async (req, res, next) => {
                     const data = await axios.get('https://kapi.kakao.com/v1/user/logout',
                     {
                         headers: {
-                            Authorization: `Bearer ${req.cookies.accessToken}`
+                            Authorization: `Bearer ${req.accessToken}`
                         }
                     }
                     );
@@ -144,6 +141,8 @@ const kakaoCallback = async(req, res, next) => {
                 return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: userInfo.data.kakao_account.profile.nickname, _id: newUser._id});
             }
             else{
+                console.log("KAKAOKAKAO");
+                console.log(accessToken);
               return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', nick: exUser.nick, _id: exUser._id});
             }
           }

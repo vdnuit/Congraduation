@@ -31,8 +31,10 @@ const signup = async(req, res, next) => {
 const getMyInfo = async(req, res, next) => {
     try{
         if(req.isLogin === true) {
+            console.log("HI");
             const user = await User.findOne({_id: req.userId});
             if(user) {
+                console.log("ME");
                 res.status(200).json({userId: user._id, selfId: user.userId, nick: user.nick, provider: user.provider});
             }
             else {

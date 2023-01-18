@@ -6,9 +6,15 @@ const axios = require('axios');
 
 const auth = async (req, res, next) => {
     console.log("AUTH");
-    console.log(req.cookies);
     req.isLogin = false;
-    const token = req.headers.authorization.split(' ')[1];
+    console.log(req.headers);
+    let token = null;
+    if(req.headers.authorization){
+        token = req.headers.authorization.split(' ')[1];
+    }
+    else{
+        return res.status(400).json({message: "Bad request - No authorization header provided"});
+    }
     if(token){
         console.log("TOKEN:", token);
         if(req.cookies.provider === 'local'){
@@ -69,6 +75,7 @@ const auth = async (req, res, next) => {
                     req.selfId = user.userId;
                     req.nick = user.nick;
                     req.provider = 'kakao';
+                    req.accessToken = accessToken;
                     req.isLogin = true;
                     return next(); // successfully access
                 }
