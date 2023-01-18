@@ -10,6 +10,7 @@ const auth = async (req, res, next) => {
     console.log(req.headers);
     let token = null;
     if(req.headers.authorization){
+        console.log("AUTHORIZATION_HEADER");
         token = req.headers.authorization.split(' ')[1];
     }
     else{
@@ -59,7 +60,6 @@ const auth = async (req, res, next) => {
                         'Authorization': `Bearer ${accessToken}`
                       }
                 });
-
                 if(isValidAccessToken.status === 200 && isValidAccessToken.data){ // valid token
                     const userInfo = await axios({ // get user
                         method:'get',
