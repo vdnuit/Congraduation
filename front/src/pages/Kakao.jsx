@@ -57,7 +57,7 @@ function Kakao() {
         .get(`/api/v1/auth/kakao/callback?code=${code}`)
         .then((response)=>{
             if(response.status === 200){
-                const { accessToken } = response.data.accessToken;
+                const { accessToken } = response.data;
                 axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
                 const PROVIDER = "kakao";
                 const REFRESH_TOKEN = response.data.refreshToken;
