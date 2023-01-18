@@ -4,7 +4,7 @@ const {signup, getUserById, deleteUser, getMyInfo} = require('../controllers/use
 const auth = require('../middleware/auth');
 
 userRouter.get('/myInfo', auth, getMyInfo);
-userRouter.get('/:userId', auth, getUserById);
+userRouter.get('/:userId', getUserById);
 userRouter.delete('/:userId', auth, deleteUser);
 userRouter.route('/signup').post(signup);
 

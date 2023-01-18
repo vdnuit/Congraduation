@@ -51,8 +51,6 @@ const getMyInfo = async(req, res, next) => {
 
 const getUserById = async(req, res, next) => {
     try{
-        console.log(req.isLogin);
-        console.log(req.userId);
         if(Types.ObjectId.isValid(req.params.userId)){
             await User.findOne({_id: req.params.userId}).lean().populate('message', '_id paperImage').exec((err, data) => {
                 if(err){
