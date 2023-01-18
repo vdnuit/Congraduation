@@ -13,9 +13,6 @@ const auth = async (req, res, next) => {
         console.log("AUTHORIZATION_HEADER");
         token = req.headers.authorization.split(' ')[1];
     }
-    else{
-        return res.status(400).json({message: "Bad request - No authorization header provided"});
-    }
     if(token){
         console.log("TOKEN:", token);
         if(req.cookies.provider === 'local'){
