@@ -7,7 +7,6 @@ import reset from 'styled-reset';
 import { useSetRecoilState } from 'recoil';
 import { ownerNameAtom, isLoginAtom } from './Atom';
 import Router from './Router';
-import { userObjectId } from "./pages/Tree";
 
 import InterTTF from './assets/Inter.ttf';
 import JuaTTF from './assets/Jua.ttf';
@@ -32,25 +31,37 @@ ${reset}
 function App() {
     const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLogin = useSetRecoilState(isLoginAtom);
-    const userinfo = () => {
+    const getToken = () => {
         axios
-        .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
-        .then((response)=> {
-            console.log(response.data);
+        .get("/api/v1/auth/refresh-token")
+        .then((response)=>{
             if(response.status === 200){
-                if(response.data.authorized){
-                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-                    setLogin(true);
-                } else if(!response.data.authorized){
-                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-                }
+                const { accessToken } = response.data;
+                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+                setOwnerName({_id: response.data._id, nick: response.data.nick });
+            }
+            else if(response.status===401){
+                setLogin(false);
+            }
+        })
+    };
+
+    const myInfo = () => {
+        axios
+        .get(`/api/v1/users/myInfo`)
+        .then((response) => {
+            if(response.status === 200){
+                setOwnerName({_id: response.data._id, nick: response.data.nick });
+                setLogin(true);
+            } else if(response.status === 401){
+                getToken();
             }
         })
     }
-    
+
     useEffect(() => {
-        userinfo();
-    })
+        myInfo();
+    });
 
     return (
         <>

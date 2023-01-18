@@ -158,6 +158,7 @@ function Main() {
         axios
         .get(`/api/v1/users/myInfo`)
         .then((response) => {
+            console.log("working");
             if(response.status === 200){
                 setOwnerName({_id: response.data._id, nick: response.data.nick });
                 setLogin(true);

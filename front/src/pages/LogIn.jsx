@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 
 import { React } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -81,6 +82,7 @@ const Img = styled.img`
 function LogIn() {
     const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLogin = useSetRecoilState(isLoginAtom);
+    const navigate = useNavigate()
     const {
         register,
         watch,
@@ -96,11 +98,12 @@ function LogIn() {
         }, {withCredentials: true})
         .then((response)=>{
             if(response.status === 200){
+                console.log(response);
                 const { accessToken } = response.data;
-                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+                axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
                 setOwnerName({ _id: response.data._id,  nick: response.data.nick });
                 setLogin(true);
-                window.location.href = `/tree/${response.data._id}`;
+                navigate(`/tree/${response.data._id}`);
             } else {
                 alert(response.statusText);
             }

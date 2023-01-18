@@ -8,6 +8,7 @@ import reportWebVitals from './reportWebVitals';
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

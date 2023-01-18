@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 
 import { React, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Cookies } from "react-cookie";
 import axios from 'axios';
@@ -50,14 +51,14 @@ function Kakao() {
     };
     const params = new URL(window.location.href).searchParams;
     const code = params.get("code");
+    const navigate = useNavigate()
     const KakaoLogin = () => {
         axios
-        .get(`http://localhost:8000/api/v1/auth/kakao/callback?code=${code}`)
+        .get(`/api/v1/auth/kakao/callback?code=${code}`)
         .then((response)=>{
-            console.log(response);
             if(response.status === 200){
                 const { accessToken } = response.data.accessToken;
-                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+                axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
                 const PROVIDER = "kakao";
                 const REFRESH_TOKEN = response.data.refreshToken;
                 const ID = response.data._id;
@@ -68,7 +69,7 @@ function Kakao() {
                 setCookie('nick', NICK, { path: "/", sameSite: "strict", });
                 setOwnerName({ _id: ID,  nick: NICK });
                 setLogin(true);
-                window.location.href = `http://localhost:3000/tree/${ID}`
+                navigate(`/tree/${ID}`);
                 
             } else {
                 alert(response.statusText);

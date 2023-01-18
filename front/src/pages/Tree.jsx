@@ -130,8 +130,7 @@ function Time() {
 }
 
 const params = new URL(window.location.href).pathname;
-export const userObjectId = params.substring(6);
-console.log(userObjectId);
+const userObjectId = params.substring(6);
 
 function Button() {
     const navigate = useNavigate();
@@ -208,6 +207,8 @@ function Tree() {
             }
         })
     }
+
+    console.log(axios.defaults.headers);
 
     const myInfo = () => {
         axios
