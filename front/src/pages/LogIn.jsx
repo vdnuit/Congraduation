@@ -97,7 +97,7 @@ function LogIn() {
         .then((response)=>{
             if(response.status === 200){
                 const { accessToken } = response.data;
-                axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
                 setOwnerName({ _id: response.data._id,  nick: response.data.nick });
                 setLogin(true);
                 window.location.href = `/tree/${response.data._id}`;

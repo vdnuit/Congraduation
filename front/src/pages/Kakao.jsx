@@ -57,7 +57,7 @@ function Kakao() {
             console.log(response);
             if(response.status === 200){
                 const { accessToken } = response.data.accessToken;
-                axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
                 const PROVIDER = "kakao";
                 const REFRESH_TOKEN = response.data.refreshToken;
                 const ID = response.data._id;
