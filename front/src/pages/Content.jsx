@@ -1,6 +1,6 @@
 import { React, useRef, useEffect } from 'react';
 // import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toBlob } from 'html-to-image';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -226,6 +226,7 @@ function Content() {
     const params = useParams();
     const userObjectId = params.userid;
     const messageId = params.messageid;
+    const navigate = useNavigate();
     const getMessage = () => {
         axios
         .get(`api/v1/messages/${userObjectId}/${messageId}`)
@@ -238,7 +239,10 @@ function Content() {
         axios
         .delete(`api/v1/messages/${messageId}`)
         .then((response) => {
-            console.log(response.data.message)
+            if(response.status === 200){
+                alert("삭제되었습니다.");
+                navigate(`/list/${userObjectId}`);
+            }
         })
     }
     const handleShare = async() => {

@@ -141,13 +141,20 @@ function Button() {
     const makeAccount = () => {
         navigate('/signup/*');
     };
+
+    const clipboard = (event) => {
+        event.preventDefault();
+        navigator.clipboard.writeText(window.location.href);
+        alert("링크가 복사되었습니다.");
+    }
+
     if (Login) {
         return (
             <Buttons>
                 <StyledLink to={{ pathname: `/list/${userObjectId}` }}>
                     <h2>받은 쪽지 목록</h2>
                 </StyledLink>
-                <StyledLink>
+                <StyledLink onClick={clipboard}>
                     <h3>공유하기</h3>
                 </StyledLink>
                 <Dday>쪽지 오픈 D-7</Dday>
@@ -175,7 +182,6 @@ function Button() {
 function Tree() {
     const userObjectId = useParams().id
     console.log(userObjectId);
-    const navigate = useNavigate();
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
@@ -210,7 +216,6 @@ function Tree() {
         .catch((err) => {
             if(err.response && err.response.status === 401){
                 setLogin(false);
-                navigate("/");
             }
         })
     }
