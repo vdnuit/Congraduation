@@ -56,6 +56,19 @@ const auth = async (req, res, next) => {
                     headers:{
                         'Authorization': `Bearer ${accessToken}`
                       }
+                }).catch((err) => {
+                    if(err.response.status === 401){
+                        console.log("access token 401");
+                        return res.status(401).json({message: "Token is expired"});
+                    }
+                    else if(err.response.status === 400){
+                        console.log("access token 400");
+                        return res.status(400).json({message: "Token does not exist"});
+                    }
+                    else{
+                        console.log("Something is wrong with kakao token, please try again");
+                        return res.status(500).json({message: "Something is wrong with kakao token, please try again"})
+                    }
                 });
                 if(isValidAccessToken.status === 200 && isValidAccessToken.data){ // valid token
                     const userInfo = await axios({ // get user
@@ -75,18 +88,6 @@ const auth = async (req, res, next) => {
                     req.accessToken = accessToken;
                     req.isLogin = true;
                     return next(); // successfully access
-                }
-                else if(isValidAccessToken.status === 401){ // invalid token
-                    console.log("HEY HERE");
-                    return res.status(401).json({message: "Token is expired"});
-                }
-                else if(isValidAccessToken.status === 400){ // invalid token
-                    console.log("HEY HERE2");
-                    return res.status(400).json({message: "Token does not exist"});
-                }
-                else{ // others
-                    console.log("Something is wrong with kakao token, please try again");
-                    return res.status(500).json({message: "Something is wrong with kakao token, please try again"})
                 }
             }
             catch(err){

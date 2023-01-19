@@ -191,6 +191,7 @@ const getRefreshToken = async(req, res, next) => {
                         }
                 });
                 if(tokenInfo.status === 200) {
+                    console.log("SUCCESS TO RETURN ACCESS TOKEN");
                     return res.status(200).json({accessToken: tokenInfo.data.access_token});
                 }
                 else if(tokenInfo.status === 400 || tokenInfo.status === 401){ // invalid refreshToken
