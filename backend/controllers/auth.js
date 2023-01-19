@@ -189,23 +189,24 @@ const getRefreshToken = async(req, res, next) => {
                             client_id: process.env.KAKAO_ID,
                             refresh_token: refreshToken
                         }
+                }).catch((err) => {
+                    if(err.response.status === 401 || err.response.status === 400){
+                        res.clearCookie('refreshToken');
+                        res.clearCookie('provider');
+                        res.clearCookie('_id');
+                        return res.status(401).json({message: "The refresh token does not exist"});
+                    }
+                    else{
+                        console.log("Something is wrong with kakao token, please try again");
+                        res.clearCookie('refreshToken');
+                        res.clearCookie('provider');
+                        res.clearCookie('_id');
+                        return res.status(500).json({message: "Something is wrong with kakao token"});
+                    }
                 });
                 if(tokenInfo.status === 200) {
                     console.log("SUCCESS TO RETURN ACCESS TOKEN");
                     return res.status(200).json({accessToken: tokenInfo.data.access_token});
-                }
-                else if(tokenInfo.status === 400 || tokenInfo.status === 401){ // invalid refreshToken
-                    res.clearCookie('refreshToken');
-                    res.clearCookie('provider');
-                    res.clearCookie('_id');
-                    return res.status(401).json({message: "The refresh token does not exist"});
-                }
-                else{ // others
-                    console.log("Something is wrong with kakao token, please try again");
-                    res.clearCookie('refreshToken');
-                    res.clearCookie('provider');
-                    res.clearCookie('_id');
-                    return res.status(500).json({message: "Something is wrong with kakao token"});
                 }
             }
             else{

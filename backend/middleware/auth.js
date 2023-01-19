@@ -100,6 +100,7 @@ const auth = async (req, res, next) => {
         }
     }
     else{
+        console.log("HERE MAN");
         return res.status(401).json({message: "Unauthorized"});
     }
 };
