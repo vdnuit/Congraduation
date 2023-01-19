@@ -1,7 +1,10 @@
-import { React } from 'react';
-import { Link } from 'react-router-dom';
+/* eslint no-underscore-dangle: 0 */
+
+import { React, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import axios from 'axios';
 import { countAtom, temporaryTreeAtom } from '../Atom';
 import Leaf from '../components/Leaf';
 import { StyledLink } from './Main';
@@ -89,8 +92,24 @@ export const clip = () => {
 }
 
 function List() {
+    const params = useParams();
     const count = useRecoilValue(countAtom);
     const leaves = useRecoilValue(temporaryTreeAtom);
+    const setLeaves = useSetRecoilState(temporaryTreeAtom);
+    const getMessage = () => {
+        axios
+        .get(`/api/messages/${params.id}`)
+        .then((response) => {
+            if(response.status === 200){
+                setLeaves(response.data);
+            }
+        })
+    }
+
+    useEffect(() => {
+        getMessage()
+    },[])
+
     if (count === 0) {
         return (
             <Container>
@@ -111,8 +130,8 @@ function List() {
             <Count>받은 쪽지 수 {count}</Count>
             <Grid>
                 {leaves.map((leaf) => (
-                    <Link to = {{ pathname : `/content/${leaf.id}`}}>
-                        <Leaf key={leaf.id} id={leaf.id} icon={leaf.icon} />
+                    <Link to = {{ pathname : `/content/${params.id}/${leaf._id}`}}>
+                        <Leaf key={leaf._id} id={leaf._id} icon={leaf.paperImage} />
                     </Link>
                 ))}
             </Grid>

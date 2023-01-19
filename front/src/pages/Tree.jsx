@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Cookies } from 'react-cookie';
 import ImageMap from 'image-map';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ownerNameAtom, countAtom, isLoginAtom, temporaryTreeAtom } from '../Atom';
@@ -193,6 +194,9 @@ function Tree() {
     }
 
     const getToken = () => {
+        const cookies = new Cookies()
+        const refreshToken = cookies.get("refreshToken");
+        axios.defaults.headers.common.Authorization = `Bearer ${refreshToken}`;
         axios
         .get("/api/v1/auth/refresh-token")
         .then((response)=>{
@@ -201,8 +205,9 @@ function Tree() {
                 axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
                 setOwnerName({_id: response.data._id, nick: response.data.nick });
             }
-            else if(response.status===401){
-                setLogin(false);
+        })
+        .catch((err) => {
+            if(err.response && err.response.status === 401){
                 navigate("/");
             }
         })

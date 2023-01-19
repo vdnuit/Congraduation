@@ -1,14 +1,19 @@
-import React, { useRef } from 'react';
+import { React, useRef, useEffect } from 'react';
 // import { useForm } from 'react-hook-form';
-
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import { toBlob } from 'html-to-image';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { ownerNameAtom, temporaryTreeAtom } from '../Atom';
+import { leafAtom, ownerNameAtom } from '../Atom';
 import trash from '../assets/trash.png';
+// import TreeNight from '../assets/treenight.png';
 
 const Container = styled.div`
     width: 100%;
+    position: absolute;
+    top: 63px;
+    left: 0px;
     max-width: 500px;
     display: flex;
     flex-direction: column;
@@ -52,6 +57,41 @@ const Container = styled.div`
         margin-bottom: 50px;
     }
 `;
+
+/* const ImageContainer = styled.div`
+    z-index: -1;
+
+    position: absolute;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+`;
+
+const Box = styled.div`
+    background: rgba(255, 255, 255, 0.25);
+    border: 0.3px solid #ffffff;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(17.5px);
+    border-radius: 10px;
+    margin: 8% 5%;
+    width: 90%;
+    height: 180vw;
+    max-height: 800px;
+    text-align: center;
+    margin-top 100px;
+`;
+
+const TreeBackground = styled.img`
+    position: absolute;
+    top: 62px;
+    left: 0px;
+
+    z-index: -1;
+    width: 100%;
+    max-width: 500px;
+`; */
+
 const GreyBox = styled.div`
     background: #ffffff;
     padding: 10px;
@@ -158,11 +198,41 @@ const Button = styled.button`
     padding: 4px 12px;
     gap: 4px;
     `
+/* function Image() {
+    const Leaf = useRecoilValue(leafAtom);
+    return (
+        <ImageContainer>
+            <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
+            <Box>
+                <Div>
+                    <GreyBox>
+                        <p>{Leaf.topic}</p>
+                    </GreyBox>
+                </Div>
+                <GreyBox>
+                    <p>{Leaf.content}</p>
+                </GreyBox>
+                <h4>From. {Leaf.senderNickName}</h4>
+            </Box>
+        </ImageContainer>
+    );
+} */
     
 function Content() {
     const ownerName = useRecoilValue(ownerNameAtom);
-    const leaves = useRecoilValue(temporaryTreeAtom);
+    const setLeaf = useSetRecoilState(leafAtom);
+    const Leaf = useRecoilValue(leafAtom);
     const imageRef = useRef(null);
+    const params = useParams();
+    const userObjectId = params.userid;
+    const messageId = params.messageid;
+    const getMessage = () => {
+        axios
+        .get(`api/v1/messages/${userObjectId}/${messageId}`)
+        .then((response) => {
+            setLeaf(response.data);
+        })
+    }
     const handleShare = async() => {
         const newFile = await toBlob(imageRef.current);
         const data = {
@@ -185,12 +255,17 @@ function Content() {
         }
     }
 
+
+    useEffect(() => {
+        getMessage()
+    }, [])
+
     return (
         <Container>
             <div ref={imageRef}>
                 <Div>
                     <GreyBox>
-                        <p>{leaves[0].question}</p>
+                        <p>{Leaf.topic}</p>
                     </GreyBox>
                 </Div>
 
@@ -199,9 +274,9 @@ function Content() {
                     <Button type="button"><Img src={trash} alt="trash"/>삭제</Button>
                 </h2>
                 <GreyBox>
-                    <p>{leaves[0].message}</p>
+                    <p>{Leaf.content}</p>
                 </GreyBox>
-                <h4>From. {leaves[0].writer}</h4>
+                <h4>From. {Leaf.senderNickName}</h4>
             </div>
             <ButtonDiv>
                 <StyledButton type="button" onClick={handleShare}>스토리 공유하기</StyledButton>
