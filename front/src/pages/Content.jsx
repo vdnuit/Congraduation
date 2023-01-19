@@ -233,6 +233,14 @@ function Content() {
             setLeaf(response.data);
         })
     }
+
+    const deleteMessage = () => {
+        axios
+        .delete(`api/v1/messages/${messageId}`)
+        .then((response) => {
+            console.log(response.data.message)
+        })
+    }
     const handleShare = async() => {
         const newFile = await toBlob(imageRef.current);
         const data = {
@@ -271,7 +279,7 @@ function Content() {
 
                 <h2>
                     <p>To. {ownerName.nick}</p>
-                    <Button type="button"><Img src={trash} alt="trash"/>삭제</Button>
+                    <Button type="button" onClick={deleteMessage}><Img src={trash} alt="trash"/>삭제</Button>
                 </h2>
                 <GreyBox>
                     <p>{Leaf.content}</p>
