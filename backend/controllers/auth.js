@@ -166,13 +166,16 @@ const getRefreshToken = async(req, res, next) => {
         if(req.cookies.refreshToken) {
             const refreshToken = req.cookies.refreshToken;
             if(req.cookies.provider === 'local'){
-                const refreshToken = await Token.findOne({token: refreshToken});
-                if(refreshToken){ // 리프레쉬 토큰 존재 -> 재발급
-                    const user = await User.findOne({_id: refreshToken.userId});
+                const token = await Token.findOne({token: refreshToken});
+                if(token){ // 리프레쉬 토큰 존재 -> 재발급
+                    const user = await User.findOne({_id: token.userId});
                     const accessToken = jwt.sign({id: user._id, nick: user.nick, provider: user.provider}, process.env.JWTSecret, {expiresIn: "5m"});
                     res.status(200).json({accessToken: accessToken});
                 }
                 else{
+                    res.clearCookie('refreshToken');
+                    res.clearCookie('provider');
+                    res.clearCookie('_id');
                     res.status(401).json({message: "The refresh token does not exist"});
                 }
             }
@@ -191,18 +194,30 @@ const getRefreshToken = async(req, res, next) => {
                     return res.status(200).json({accessToken: tokenInfo.data.access_token});
                 }
                 else if(tokenInfo.status === 400 || tokenInfo.status === 401){ // invalid refreshToken
+                    res.clearCookie('refreshToken');
+                    res.clearCookie('provider');
+                    res.clearCookie('_id');
                     return res.status(401).json({message: "The refresh token does not exist"});
                 }
                 else{ // others
                     console.log("Something is wrong with kakao token, please try again");
+                    res.clearCookie('refreshToken');
+                    res.clearCookie('provider');
+                    res.clearCookie('_id');
                     return res.status(500).json({message: "Something is wrong with kakao token"});
                 }
             }
             else{
+                res.clearCookie('refreshToken');
+                res.clearCookie('provider');
+                res.clearCookie('_id');
                 return res.status(400).json({message: "You must contain provider field in cookie"});
             }
         }
         else{
+            res.clearCookie('refreshToken');
+            res.clearCookie('provider');
+            res.clearCookie('_id');
             res.status(401).json({message: "The refresh token is empty"});
         }
     }
