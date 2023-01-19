@@ -115,6 +115,7 @@ const kakaoCallback = async(req, res, next) => {
         });
         const accessToken = tokenInfo.data.access_token;
         const refreshToken = tokenInfo.data.refresh_token;
+        console.log("YOUR REFRESHTOKEN:", refreshToken);
         if(accessToken){
           const userInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
             headers: {
@@ -176,23 +177,20 @@ const getRefreshToken = async(req, res, next) => {
                 }
             }
             else if(req.cookies.provider === 'kakao'){
-                const isValidRefreshToken = await axios.get('https://kapi.kakao.com/v1/user/access_token_info', { // check refreshToken
-                    headers:{
-                        'Authorization': `Bearer ${refreshToken}`
-                      }
-                });
+                console.log("KAKAO_REFRESHTOKEN");
+                console.log(refreshToken);
                 console.log("KAKAO: REFRESH_TOKEN_CHECK");
-                if(isValidRefreshToken.status === 200 && isValidRefreshToken.data){ // valid refreshToken
-                    const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
+                const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
                         params: {
                             grant_type: 'refresh_token',
                             client_id: process.env.KAKAO_ID,
                             refresh_token: refreshToken
                         }
-                    });
+                });
+                if(tokenInfo.status === 200) {
                     return res.status(200).json({accessToken: tokenInfo.data.access_token});
                 }
-                else if(isValidRefreshToken.status === 400 || isValidRefreshToken.status === 401){ // invalid refreshToken
+                else if(tokenInfo.status === 400 || tokenInfo.status === 401){ // invalid refreshToken
                     return res.status(401).json({message: "The refresh token does not exist"});
                 }
                 else{ // others

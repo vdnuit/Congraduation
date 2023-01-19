@@ -14,6 +14,6 @@ authRouter.get('/logout', auth, signout);
 // authRouter.get('/kakao', passport.authenticate('kakao'));
 authRouter.get('/kakao', kakaoLogin);
 authRouter.get('/kakao/callback', kakaoCallback);
-authRouter.get('/refresh-token', auth, getRefreshToken);
+authRouter.get('/refresh-token', getRefreshToken);
 
 module.exports = authRouter;
