@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 
 import { React, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import axios from 'axios';
@@ -22,9 +22,9 @@ const Container = styled.div`
 
 const Count = styled.div`
     position: absolute;
-    width: 25%;
+    width: 100%;
     height: 2.5%;
-    left: 30px;
+    left: 16px;
     top: 88px;
     font-family: 'Jua';
     font-style: normal;
@@ -73,20 +73,25 @@ const StyledGrid = styled.div`
     background-color: #f5f5f5;
 `;
 
-const Grid = styled.div`
+const Flex = styled.div`
     position: absolute;
-    width: 100%;
-    max-width: 500px;
     top: 120px;
+    width: 97.5%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+`
+
+const Grid = styled.div`
+    width: 94.55%;
     display: grid;
-    grid-template-rows: repeat(auto-fill, 1fr);
     grid-template-columns: repeat(3, 1fr);
-    gap: 4%;
-    margin: 0 auto;
+    grid-column-gap: 7.5%;
+    grid-row-gap: 6.5%;
 
 `;
 
-export const clip = () => {
+const clip = () => {
     navigator.clipboard.writeText(window.location.href);
     console.log("done")
 }
@@ -127,14 +132,16 @@ function List() {
     }
     return (
         <StyledGrid>
-            <Count>받은 쪽지 수 {count}</Count>
-            <Grid>
-                {leaves.map((leaf) => (
-                    <Link to = {{ pathname : `/content/${params.id}/${leaf._id}`}}>
+            <Count>
+                받은 쪽지 수 {count}
+            </Count>
+            <Flex>
+                <Grid>
+                    {leaves.map((leaf) => (
                         <Leaf key={leaf._id} id={leaf._id} icon={leaf.paperImage} />
-                    </Link>
-                ))}
-            </Grid>
+                    ))}
+                </Grid>
+            </Flex>
         </StyledGrid>
     );
 }

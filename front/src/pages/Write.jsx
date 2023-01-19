@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilValue, useRecoilState } from 'recoil';
@@ -144,9 +144,10 @@ const Circle = styled.div`
         max-height: 50px;
     }
 `;
-const params = new URL(window.location.href).pathname;
-export const userObjectId = params.substring(6);
+
 function Write() {
+    const params = useParams();
+    const userObjectId = params.id;
     const sendMessage = (dict) => {
         console.log(dict);
         console.log(dict.writer);
