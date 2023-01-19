@@ -203,11 +203,13 @@ function Tree() {
             if(response.status===200){
                 const { accessToken } = response.data;
                 axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
-                setOwnerName({_id: response.data._id, nick: response.data.nick });
+                console.log(response.data)
+                setLogin(true);
             }
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
+                setLogin(false);
                 navigate("/");
             }
         })

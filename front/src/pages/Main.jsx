@@ -1,9 +1,10 @@
 /* eslint no-underscore-dangle: 0 */
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { React, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { Cookies } from 'react-cookie';
 import axios from 'axios';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
@@ -139,37 +140,46 @@ function Button() {
 function Main() {
     const setLogin = useSetRecoilState(isLoginAtom);
     const setOwnerName = useSetRecoilState(ownerNameAtom);
+    const cookies = new Cookies()
+    const navigate = useNavigate();
     const getToken = () => {
         axios
-            .get("/api/auth/refresh-token")
-            .then((response)=>{
-                if(response.status===200){
-                    const { accessToken } = response.data;
-                    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
-                    setOwnerName({_id: response.data._id, nick: response.data.nick });
-                }
-                else if(response.status===401){
-                    setLogin(false);
-                }
-            })
+        .get("/api/v1/auth/refresh-token")
+        .then((response)=>{
+            console.log(response)
+            if(response.status===200){
+                const refreshToken = cookies.get("refreshToken");
+                axios.defaults.headers.common.Authorization = `Bearer ${refreshToken}`;
+                setOwnerName({_id: response.data._id, nick: response.data.nick });
+                setLogin(true);
+            }
+        })
+        .catch((err) => {
+            if(err.response && err.response.status === 401){
+                setLogin(false);
+                navigate("/");
+            }
+        })
     }
 
     const myInfo = () => {
         axios
         .get(`/api/v1/users/myInfo`)
         .then((response) => {
-            console.log("working");
             if(response.status === 200){
-                setOwnerName({_id: response.data._id, nick: response.data.nick });
+                setOwnerName({_id: response.data.userId, nick: response.data.nick });
                 setLogin(true);
-            } else if(response.status === 401){
+            }
+        })
+        .catch((err) => {
+            if(err.response && err.response.status === 401){
                 getToken();
             }
         })
     }
         useEffect(() => {
             myInfo();
-        });
+        }, []);
 
     return (
         <Container>

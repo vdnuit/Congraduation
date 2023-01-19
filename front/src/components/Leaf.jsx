@@ -28,7 +28,7 @@ function Leaf({ id, icon }) {
     return (
         <Box>
             <Link to={`/content/${params.id}/${id}`}>
-                <Img src={icon} alt={id} />
+                <Img src={icon} alt={id} key={id} />
             </Link>
         </Box>
     );

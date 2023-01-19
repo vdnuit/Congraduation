@@ -98,7 +98,7 @@ function List() {
     const setLeaves = useSetRecoilState(temporaryTreeAtom);
     const getMessage = () => {
         axios
-        .get(`/api/messages/${params.id}`)
+        .get(`/api/v1/messages/${params.id}`)
         .then((response) => {
             if(response.status === 200){
                 setLeaves(response.data);
