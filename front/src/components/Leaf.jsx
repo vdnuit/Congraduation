@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
 const Box = styled.div`
@@ -24,9 +24,10 @@ const Img = styled.img`
 `;
 
 function Leaf({ id, icon }) {
+    const params = useParams()
     return (
         <Box>
-            <Link to={'/content/*'}>
+            <Link to={`/content/${params.id}/${id}`}>
                 <Img src={icon} alt={id} />
             </Link>
         </Box>
@@ -34,7 +35,7 @@ function Leaf({ id, icon }) {
 }
 
 Leaf.propTypes = {
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     icon: PropTypes.string.isRequired
 };
 

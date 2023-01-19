@@ -18,6 +18,11 @@ export const temporaryTreeAtom = atom({
     default: []
 });
 
+export const leafAtom = atom({
+    key: 'leaf',
+    default: []
+});
+
 export const countAtom = atom({
     key: 'count',
     default: 0

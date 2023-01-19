@@ -22,9 +22,9 @@ function Router() {
                 <Route path="/auth/kakao/callback" element={<Kakao />} />
 
                 <Route path="/tree/:id" element={<Tree />} errorElement={<Main />} />
-                <Route path="/write/*" element={<Write />} errorElement={<Main />} />
-                <Route path="/list/*" element={<List />} errorElement={<Main />} />
-                <Route path="/content/*" element={<Content />} errorElement={<Main />} />
+                <Route path="/write/:id" element={<Write />} errorElement={<Main />} />
+                <Route path="/list/:id" element={<List />} errorElement={<Main />} />
+                <Route path="/content/:userid/:messageid" element={<Content />} errorElement={<Main />} />
             </Routes>
             {/* <Footer /> */}
         </BrowserRouter>
