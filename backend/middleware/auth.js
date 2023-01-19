@@ -77,9 +77,11 @@ const auth = async (req, res, next) => {
                     return next(); // successfully access
                 }
                 else if(isValidAccessToken.status === 401){ // invalid token
+                    console.log("HEY HERE");
                     return res.status(401).json({message: "Token is expired"});
                 }
                 else if(isValidAccessToken.status === 400){ // invalid token
+                    console.log("HEY HERE2");
                     return res.status(400).json({message: "Token does not exist"});
                 }
                 else{ // others

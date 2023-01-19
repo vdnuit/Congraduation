@@ -22,7 +22,6 @@ const signin = (req, res, next) => {
             if(authError){
                 console.log(authError);
                 res.clearCookie('provider');
-                res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
                 res.clearCookie('_id');
                 res.clearCookie('nick');
@@ -36,7 +35,6 @@ const signin = (req, res, next) => {
                 if(err){
                     console.log(err);
                     res.clearCookie('provider');
-                    res.clearCookie('accessToken');
                     res.clearCookie('refreshToken');
                     res.clearCookie('_id');
                     res.clearCookie('nick');
@@ -46,9 +44,6 @@ const signin = (req, res, next) => {
                 const refreshToken = createToken('RefreshKey');
                 Token.create({userId: user._id, token: refreshToken, createdAt: new Date(Date.now())});
                 res.cookie("provider", "local");
-                res.cookie("_id", user._id);
-                res.cookie("nick", user.nick);
-                res.cookie("accessToken", accessToken, {httpOnly: true});
                 return res.cookie("refreshToken", refreshToken, {httpOnly: true}).status(200).json({accessToken: accessToken, _id: user._id, nick: user.nick});
             });
         })(req,res,next);
@@ -80,7 +75,6 @@ const signout = async (req, res, next) => {
                     console.log(err);
                     return next(err);
                 }
-                res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
                 res.clearCookie('_id');
                 res.clearCookie('nick');
