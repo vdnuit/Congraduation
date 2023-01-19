@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import ImageMap from 'image-map';
@@ -129,12 +129,10 @@ function Time() {
     return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap" />;
 }
 
-const params = new URL(window.location.href).pathname;
-const userObjectId = params.substring(6);
 
 function Button() {
     const navigate = useNavigate();
-
+    const userObjectId = useParams().id;
     const Login = useRecoilValue(isLoginAtom);
     const writeNote = () => {
         navigate(`/write/${userObjectId}`);
@@ -174,6 +172,8 @@ function Button() {
 
 
 function Tree() {
+    const userObjectId = useParams().id
+    console.log(userObjectId);
     const navigate = useNavigate();
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
@@ -218,7 +218,11 @@ function Tree() {
             if(response.status === 200){
                 setOwnerName({_id: response.data._id, nick: response.data.nick });
                 setLogin(true);
-            } else if(response.status === 401){
+            }
+        })
+        .catch((err) => {
+            if(err.response && err.response.status === 401){
+                console.log("401")
                 getToken();
             }
         })
@@ -230,7 +234,7 @@ function Tree() {
     
     useEffect(() => {
         getUser();
-    });
+    },[]);
 
     useEffect(() => {
         myInfo();

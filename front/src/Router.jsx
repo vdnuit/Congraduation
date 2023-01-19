@@ -21,7 +21,7 @@ function Router() {
                 <Route path="/login/*" element={<LogIn />} errorElement={<Main />} />
                 <Route path="/auth/kakao/callback" element={<Kakao />} />
 
-                <Route path="/tree/*" element={<Tree />} errorElement={<Main />} />
+                <Route path="/tree/:id" element={<Tree />} errorElement={<Main />} />
                 <Route path="/write/*" element={<Write />} errorElement={<Main />} />
                 <Route path="/list/*" element={<List />} errorElement={<Main />} />
                 <Route path="/content/*" element={<Content />} errorElement={<Main />} />
