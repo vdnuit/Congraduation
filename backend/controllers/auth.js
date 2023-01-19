@@ -169,8 +169,9 @@ const kakaoCallback = async(req, res, next) => {
 const getRefreshToken = async(req, res, next) => {
     try{
         if(req.cookies.refreshToken) {
+            const refreshToken = req.cookies.refreshToken;
             if(req.cookies.provider === 'local'){
-                const refreshToken = await Token.findOne({token: req.cookies.refreshToken});
+                const refreshToken = await Token.findOne({token: refreshToken});
                 if(refreshToken){ // 리프레쉬 토큰 존재 -> 재발급
                     const user = await User.findOne({_id: refreshToken.userId});
                     const accessToken = jwt.sign({id: user._id, nick: user.nick, provider: user.provider}, process.env.JWTSecret, {expiresIn: "5m"});

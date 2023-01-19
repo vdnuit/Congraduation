@@ -50,8 +50,8 @@ const auth = async (req, res, next) => {
         }
         else if(req.cookies.provider === 'kakao'){
             try{
-                console.log(req.cookies.accessToken);
                 const accessToken = token;
+                console.log("HERES TOKEN:", accessToken);
                 const isValidAccessToken = await axios.get('https://kapi.kakao.com/v1/user/access_token_info', { // check accessToken
                     headers:{
                         'Authorization': `Bearer ${accessToken}`
