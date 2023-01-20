@@ -116,17 +116,30 @@ const Treezone = styled.map`
 `;
 
 
-
+// myinfo랑 param id랑 비교
 function Time() {
     const today = new Date();
     const hours = today.getHours();
-    if (hours >= 20 || hours <= 5) {
-        return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
+    const Login = useRecoilValue(isLoginAtom);
+    const userObjectId = useParams().id;
+    if (Login._id === userObjectId){
+        if (hours >= 20 || hours <= 5) {
+            return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
+        }
+        if (hours <= 16 && hours >= 9) {
+            return <TreeBackground src={TreeDay} alt="낮 배경 은행나무" useMap="#treemap" />;
+        }
+        return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap" />;
     }
-    if (hours <= 16 && hours >= 9) {
-        return <TreeBackground src={TreeDay} alt="낮 배경 은행나무" useMap="#treemap" />;
+    if (Login._id !== userObjectId){
+        if (hours >= 20 || hours <= 5) {
+            return <TreeBackground src={TreeNight} alt="밤 배경 은행나무"/>;
+        }
+        if (hours <= 16 && hours >= 9) {
+            return <TreeBackground src={TreeDay} alt="낮 배경 은행나무"/>;
+        }
+        return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무"/>;
     }
-    return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap" />;
 }
 
 
@@ -147,7 +160,7 @@ function Button() {
         alert("링크가 복사되었습니다.");
     }
 
-    if (Login) {
+    if (Login._id === userObjectId) {
         return (
             <Buttons>
                 <StyledLink to={{ pathname: `/list/${userObjectId}` }}>
@@ -160,21 +173,36 @@ function Button() {
             </Buttons>
         );
     }
-    return (
-        <Buttons>
-            <button type="button" onClick={writeNote}>
-                쪽지 남기기
-            </button>
-            <button
-                type="button"
-                onClick={makeAccount}
-                style={{ backgroundColor: '#ffffff', color: '#7c7c7c' }}
-            >
-                나도 계정 만들기
-            </button>
-            <Dday>쪽지 오픈 D-7</Dday>
-        </Buttons>
-    );
+    if (Login._id && Login._id !== userObjectId) {
+        return (
+            <Buttons>
+                <button type="button" onClick={writeNote}>
+                    쪽지 남기기
+                </button>
+                <button
+                    type="button"
+                    onClick={makeAccount}
+                    style={{ backgroundColor: '#ffffff', color: '#7c7c7c' }}
+                >
+                    나도 계정 만들기
+                </button>
+                <Dday>쪽지 오픈 D-7</Dday>
+            </Buttons>
+        );
+    }
+    if (!Login._id){
+        return (
+            <Buttons>
+                <button type="button" onClick={writeNote}>
+                    쪽지 남기기
+                </button>
+                <StyledLink to={{ pathname: `/tree/${Login._id}` }}>
+                    <h3>내 트리로 가기</h3>
+                </StyledLink>
+                <Dday>쪽지 오픈 D-7</Dday>
+            </Buttons>
+        );
+    }
 }
 
 
@@ -209,7 +237,7 @@ function Tree() {
 
 
     const clickHandler = (title) => {
-        if (Login) {
+        if (Login._id === userObjectId) {
             console.log(title);
         }
     };

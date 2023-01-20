@@ -30,7 +30,6 @@ ${reset}
  `;
 
 function App() {
-    const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLogin = useSetRecoilState(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
     const getToken = () => {
@@ -47,8 +46,7 @@ function App() {
                 axios
                 .get(`/api/v1/users/myInfo`)
                 .then((res) => {
-                    setOwnerName({_id: res.data.userId, nick: res.data.nick });
-                    setLogin(true);
+                    setLogin({_id: response.data.userId, nick: response.data.nick });
                     console.log(res);
                     console.log(ownerName._id)
                 })
@@ -69,8 +67,7 @@ function App() {
         .then((response) => {
             console.log(response);
             if(response.status === 200){
-                setOwnerName({_id: response.data.userId, nick: response.data.nick });
-                setLogin(true);
+                setLogin({_id: response.data.userId, nick: response.data.nick });
             }
         })
         .catch((err) => {

@@ -2,14 +2,17 @@ import { atom } from 'recoil';
 
 export const isLoginAtom = atom({
     key: 'isLogin',
-    default: false
+    default: {
+        _id: '',
+        nick: ''
+    }
 });
 
 export const ownerNameAtom = atom({
     key: 'ownerName',
     default: {
-        _id: '',
-        nick: ''
+        _id: undefined,
+        nick: undefined
     }
 });
 
