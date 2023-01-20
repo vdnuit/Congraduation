@@ -269,7 +269,7 @@ function Content() {
 
 
     useEffect(() => {
-        getMessage()
+        setTimeout(getMessage, 500);
     }, [])
 
     return (

@@ -99,6 +99,7 @@ const clip = () => {
 function List() {
     const params = useParams();
     const count = useRecoilValue(countAtom);
+    const setCount = useSetRecoilState(countAtom);
     const leaves = useRecoilValue(temporaryTreeAtom);
     const setLeaves = useSetRecoilState(temporaryTreeAtom);
     const getMessage = () => {
@@ -107,12 +108,14 @@ function List() {
         .then((response) => {
             if(response.status === 200){
                 setLeaves(response.data);
+                setCount(response.data.length);
             }
         })
     }
+    
 
     useEffect(() => {
-        getMessage()
+        setTimeout(getMessage, 300);
     },[])
 
     if (count === 0) {

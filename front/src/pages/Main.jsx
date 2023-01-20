@@ -1,11 +1,9 @@
 /* eslint no-underscore-dangle: 0 */
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { React, useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { Cookies } from 'react-cookie';
-import axios from 'axios';
+import { React } from 'react';
+import { useRecoilValue } from 'recoil';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
 import CapImg from '../assets/capImg.png';
@@ -105,6 +103,7 @@ const Snow = styled.img`
 function Button() {
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
+    console.log(ownerName);
     if(Login){
         return (
             <Box>
@@ -138,49 +137,6 @@ function Button() {
 }
 
 function Main() {
-    const setLogin = useSetRecoilState(isLoginAtom);
-    const setOwnerName = useSetRecoilState(ownerNameAtom);
-    const cookies = new Cookies()
-    const navigate = useNavigate();
-    const getToken = () => {
-        axios
-        .get("/api/v1/auth/refresh-token")
-        .then((response)=>{
-            console.log(response)
-            if(response.status===200){
-                const refreshToken = cookies.get("refreshToken");
-                axios.defaults.headers.common.Authorization = `Bearer ${refreshToken}`;
-                setOwnerName({_id: response.data._id, nick: response.data.nick });
-                setLogin(true);
-            }
-        })
-        .catch((err) => {
-            if(err.response && err.response.status === 401){
-                setLogin(false);
-                navigate("/");
-            }
-        })
-    }
-
-    const myInfo = () => {
-        axios
-        .get(`/api/v1/users/myInfo`)
-        .then((response) => {
-            if(response.status === 200){
-                setOwnerName({_id: response.data.userId, nick: response.data.nick });
-                setLogin(true);
-            }
-        })
-        .catch((err) => {
-            if(err.response && err.response.status === 401){
-                getToken();
-            }
-        })
-    }
-        useEffect(() => {
-            myInfo();
-        }, []);
-
     return (
         <Container>
             <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />

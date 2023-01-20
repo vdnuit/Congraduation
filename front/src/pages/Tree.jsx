@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Cookies } from 'react-cookie';
 import ImageMap from 'image-map';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ownerNameAtom, countAtom, isLoginAtom, temporaryTreeAtom } from '../Atom';
@@ -187,7 +186,6 @@ function Tree() {
     const count = useRecoilValue(countAtom);
     const setCount = useSetRecoilState(countAtom);
     const setOwnerName = useSetRecoilState(ownerNameAtom);
-    const setLogin = useSetRecoilState(isLoginAtom);
     const setLeaves = useSetRecoilState(temporaryTreeAtom);
     const getUser = () => {
         axios
@@ -199,46 +197,7 @@ function Tree() {
         })
     }
 
-    const getToken = () => {
-        const cookies = new Cookies()
-        const refreshToken = cookies.get("refreshToken");
-        axios.defaults.headers.common.Authorization = `Bearer ${refreshToken}`;
-        axios
-        .get("/api/v1/auth/refresh-token")
-        .then((response)=>{
-            if(response.status===200){
-                const { accessToken } = response.data;
-                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
-                console.log(response.data)
-                setLogin(true);
-            }
-        })
-        .catch((err) => {
-            if(err.response && err.response.status === 401){
-                setLogin(false);
-            }
-        })
-    }
-
-    console.log(axios.defaults.headers);
-
-    const myInfo = () => {
-        axios
-        .get(`/api/v1/users/myInfo`)
-        .then((response) => {
-            console.log(response);
-            if(response.status === 200){
-                setOwnerName({_id: response.data._id, nick: response.data.nick });
-                setLogin(true);
-            }
-        })
-        .catch((err) => {
-            if(err.response && err.response.status === 401){
-                console.log("401")
-                getToken();
-            }
-        })
-    }
+    
     
     useEffect(() => {
         ImageMap('img[usemap]');
@@ -248,9 +207,6 @@ function Tree() {
         getUser();
     },[]);
 
-    useEffect(() => {
-        myInfo();
-    },[]);
 
     const clickHandler = (title) => {
         if (Login) {
