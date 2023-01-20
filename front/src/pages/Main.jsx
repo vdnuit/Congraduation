@@ -9,7 +9,7 @@ import LogoImg from '../assets/logoImg.png';
 import CapImg from '../assets/capImg.png';
 import SnowImg from '../assets/snowbackground.png';
 import InstaImg from '../assets/instaImg.png';
-import { isLoginAtom, ownerNameAtom } from '../Atom';
+import { isLoginAtom } from '../Atom';
 
 const Container = styled.div`
     z-index: -1;
@@ -102,14 +102,13 @@ const Snow = styled.img`
 
 function Button() {
     const Login = useRecoilValue(isLoginAtom);
-    const ownerName = useRecoilValue(ownerNameAtom);
-    console.log(ownerName);
+    console.log(Login);
     if(Login){
         return (
             <Box>
                 <Cap src={CapImg} />
                 <Logo src={LogoImg} />
-                <StyledLink to={{ pathname: `/tree/${ownerName._id}` }}>
+                <StyledLink to={{ pathname: `/tree/${Login.userId}` }}>
                     <h2>트리로 이동</h2>
                 </StyledLink>
                 <Insta>

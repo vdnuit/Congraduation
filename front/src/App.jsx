@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 
 import { createGlobalStyle } from 'styled-components';
-import { React, useEffect } from 'react';
+import { React } from 'react';
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 import reset from 'styled-reset';
@@ -46,7 +46,7 @@ function App() {
                 axios
                 .get(`/api/v1/users/myInfo`)
                 .then((res) => {
-                    setLogin({_id: response.data.userId, nick: response.data.nick });
+                    setLogin({userId: response.data.userId, nick: response.data.nick });
                     console.log(res);
                     console.log(ownerName._id)
                 })
@@ -59,7 +59,6 @@ function App() {
         })
     }
 
-    console.log(axios.defaults.headers);
 
     const myInfo = () => {
         axios
@@ -67,7 +66,7 @@ function App() {
         .then((response) => {
             console.log(response);
             if(response.status === 200){
-                setLogin({_id: response.data.userId, nick: response.data.nick });
+                setLogin({userId: response.data.userId, nick: response.data.nick });
             }
         })
         .catch((err) => {
@@ -78,10 +77,9 @@ function App() {
         })
     }
 
-    useEffect(() => {
+
         console.log("app");
         myInfo();
-    }, []);
 
     
     return (

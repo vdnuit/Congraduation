@@ -122,7 +122,7 @@ function Time() {
     const hours = today.getHours();
     const Login = useRecoilValue(isLoginAtom);
     const userObjectId = useParams().id;
-    if (Login._id === userObjectId){
+    if (Login.userId === userObjectId){
         if (hours >= 20 || hours <= 5) {
             return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
         }
@@ -131,7 +131,7 @@ function Time() {
         }
         return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap" />;
     }
-    if (Login._id !== userObjectId){
+    if (Login.userId !== userObjectId){
         if (hours >= 20 || hours <= 5) {
             return <TreeBackground src={TreeNight} alt="밤 배경 은행나무"/>;
         }
@@ -159,8 +159,10 @@ function Button() {
         navigator.clipboard.writeText(window.location.href);
         alert("링크가 복사되었습니다.");
     }
-
-    if (Login._id === userObjectId) {
+    
+    console.log(Login.userId)
+    console.log(userObjectId)
+    if (Login.userId === userObjectId) {
         return (
             <Buttons>
                 <StyledLink to={{ pathname: `/list/${userObjectId}` }}>
@@ -173,7 +175,20 @@ function Button() {
             </Buttons>
         );
     }
-    if (Login._id && Login._id !== userObjectId) {
+    if (Login.userId && Login.userId !== userObjectId) {
+        return (
+            <Buttons>
+                <button type="button" onClick={writeNote}>
+                    쪽지 남기기
+                </button>
+                <StyledLink to={{ pathname: `/tree/${Login.userId}` }}>
+                    <h3>공유하기</h3>
+                </StyledLink>
+                <Dday>쪽지 오픈 D-7</Dday>
+            </Buttons>
+        );
+    }
+    if (!Login.userId){
         return (
             <Buttons>
                 <button type="button" onClick={writeNote}>
@@ -186,19 +201,6 @@ function Button() {
                 >
                     나도 계정 만들기
                 </button>
-                <Dday>쪽지 오픈 D-7</Dday>
-            </Buttons>
-        );
-    }
-    if (!Login._id){
-        return (
-            <Buttons>
-                <button type="button" onClick={writeNote}>
-                    쪽지 남기기
-                </button>
-                <StyledLink to={{ pathname: `/tree/${Login._id}` }}>
-                    <h3>내 트리로 가기</h3>
-                </StyledLink>
                 <Dday>쪽지 오픈 D-7</Dday>
             </Buttons>
         );
@@ -237,7 +239,7 @@ function Tree() {
 
 
     const clickHandler = (title) => {
-        if (Login._id === userObjectId) {
+        if (Login.userId === userObjectId) {
             console.log(title);
         }
     };
@@ -249,7 +251,7 @@ function Tree() {
             </Count>
 
             <Time />
-            {Login ? <Link to={{ pathname: `/list/${ownerName._id} `}}>
+            {Login.userId === userObjectId ? <Link to={{ pathname: `/list/${ownerName._id} `}}>
                 <Treezone name="treemap">
                     <area
                         aria-hidden="true"
