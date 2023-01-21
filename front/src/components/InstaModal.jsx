@@ -21,19 +21,20 @@ const Background = styled.div`
 const Modal = styled.div`
   z-index: 999;
   position: absolute;
-  top: 65vh;
+  top: 50vh;
   left: 45%;
   transform: translate(-50%, -50%);
+  border-radius: 10px;
   margin: 5% 5%;
   width: 80%;
-  height: 100%;
+  height: 85%;
   max-width: 400px;
   text-align: center;
 `
 
 const ModalDiv = styled.div`
     width: 100%;
-    height: 77%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,7 +42,7 @@ const ModalDiv = styled.div`
 
 const TreeBackground = styled.img`
     position: absolute;
-    top: 35%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: -1;
@@ -53,7 +54,9 @@ const TreeBackground = styled.img`
 const Container = styled.div`
     z-index: -1;
     width: 90%;
-    height: 90%;
+    height: 85%;
+    position: absolute;
+    top: 7%;
 `;
 
 const Box = styled.div`
@@ -117,7 +120,7 @@ const Buttons = styled.div`
     align-items: center;
     text-align: center;
     position: absolute;
-    top: 70%;
+    top: 92%;
     width: 100%;
 `;
 
