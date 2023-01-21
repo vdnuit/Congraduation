@@ -182,7 +182,7 @@ function Button() {
                     쪽지 남기기
                 </button>
                 <StyledLink to={{ pathname: `/tree/${Login.userId}` }}>
-                    <h3>공유하기</h3>
+                    <h3>내 트리로 가기</h3>
                 </StyledLink>
                 <Dday>쪽지 오픈 D-7</Dday>
             </Buttons>

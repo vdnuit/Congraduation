@@ -147,22 +147,6 @@ const StyledButton = styled.button`
     height: 3.5rem;
 `;
 
-const StyledBtn = styled.button`
-    text-decoration: none;
-    border: none;
-    background: #ffffff;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 100px;
-    font-family: 'Jua';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 30px;
-    text-align: center;
-    color: #7c7c7c;
-    width: 67.5%;
-    height: 3.5rem;
-`;
 
 const Div = styled.div`
     margin-top: 3rem;
@@ -292,7 +276,6 @@ function Content() {
             </div>
             <ButtonDiv>
                 <StyledButton type="button" onClick={handleShare}>스토리 공유하기</StyledButton>
-                <StyledBtn type="button">이미지 다운로드</StyledBtn>
             </ButtonDiv>
         </Container>
     );
