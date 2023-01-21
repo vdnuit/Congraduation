@@ -160,8 +160,8 @@ function Button() {
         alert("링크가 복사되었습니다.");
     }
     
-    console.log(Login.userId)
-    console.log(userObjectId)
+    console.log(Login.userId);
+    console.log(userObjectId);
     if (Login.userId === userObjectId) {
         return (
             <Buttons>

@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { StyledLink } from './Tree';
-import { ownerNameAtom, isLoginAtom } from '../Atom';
+import { isLoginAtom } from '../Atom';
 import KakaoImg from '../assets/kakao_login_medium_narrow.png';
 
 const Container = styled.div`
@@ -80,7 +80,6 @@ const Img = styled.img`
 `
 
 function LogIn() {
-    const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLogin = useSetRecoilState(isLoginAtom);
     const navigate = useNavigate()
     const {
@@ -101,8 +100,7 @@ function LogIn() {
                 console.log("왜안돼");
                 const { accessToken } = response.data;
                 axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-                setOwnerName({ _id: response.data._id,  nick: response.data.nick });
-                setLogin(true);
+                setLogin({ userId: response.data._id,  nick: response.data.nick });
                 navigate(`/tree/${response.data._id}`);
             } else {
                 alert(response.statusText);

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Cookies } from "react-cookie";
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
-import { ownerNameAtom, isLoginAtom } from '../Atom';
+import { isLoginAtom } from '../Atom';
 
 const Container = styled.div`
     width: 100%;
@@ -44,7 +44,6 @@ const Announce = styled.div`
 `;
 
 function Kakao() {
-    const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLogin = useSetRecoilState(isLoginAtom);
     const cookies = new Cookies();
     const setCookie = (name, value, option) => { cookies.set(name, value, { ...option });
@@ -68,8 +67,7 @@ function Kakao() {
                 setCookie('refreshToken', REFRESH_TOKEN, { path: "/", sameSite: "strict", });
                 setCookie('_id', ID, { path: "/", sameSite: "strict", });
                 setCookie('nick', NICK, { path: "/", sameSite: "strict", });
-                setOwnerName({ _id: ID,  nick: NICK });
-                setLogin(true);
+                setLogin({ userId: ID,  nick: NICK });
                 navigate(`/tree/${ID}`);
                 
             } else {

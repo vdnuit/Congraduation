@@ -1,12 +1,12 @@
 /* eslint no-underscore-dangle: 0 */
 
 import { createGlobalStyle } from 'styled-components';
-import { React } from 'react';
+import { React, useEffect } from 'react';
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 import reset from 'styled-reset';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { ownerNameAtom, isLoginAtom } from './Atom';
+import { isLoginAtom } from './Atom';
 import Router from './Router';
 
 import InterTTF from './assets/Inter.ttf';
@@ -31,7 +31,7 @@ ${reset}
 
 function App() {
     const setLogin = useSetRecoilState(isLoginAtom);
-    const ownerName = useRecoilValue(ownerNameAtom);
+    const Login = useRecoilValue(isLoginAtom);
     const getToken = () => {
         const cookies = new Cookies()
         const refreshToken = cookies.get("refreshToken");
@@ -46,9 +46,9 @@ function App() {
                 axios
                 .get(`/api/v1/users/myInfo`)
                 .then((res) => {
-                    setLogin({userId: response.data.userId, nick: response.data.nick });
-                    console.log(res);
-                    console.log(ownerName._id)
+                    setLogin({userId: res.data.userId, nick: res.data.nick });
+                    console.log(res.data.userId);
+                    console.log(Login);
                 })
             }
         })
@@ -78,8 +78,10 @@ function App() {
     }
 
 
-        console.log("app");
+        useEffect(() => {
+            console.log("app");
         myInfo();
+        }, [])
 
     
     return (
