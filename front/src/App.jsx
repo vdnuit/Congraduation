@@ -47,14 +47,14 @@ function App() {
                 .get(`/api/v1/users/myInfo`)
                 .then((res) => {
                     setLogin({userId: res.data.userId, nick: res.data.nick });
-                    console.log(res.data.userId);
+                    console.log(res.data);
                     console.log(Login);
                 })
             }
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
-                setLogin(false);
+                setLogin({userId: undefined, nick: undefined});
             }
         })
     }

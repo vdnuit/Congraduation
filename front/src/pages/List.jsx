@@ -91,10 +91,6 @@ const Grid = styled.div`
 
 `;
 
-const clip = () => {
-    navigator.clipboard.writeText(window.location.href);
-    console.log("done")
-}
 
 function List() {
     const params = useParams();
@@ -111,6 +107,11 @@ function List() {
                 setCount(response.data.length);
             }
         })
+    }
+
+    const clip = () => {
+        navigator.clipboard.writeText(window.location.href);
+        alert("링크가 복사되었습니다.");
     }
     
 
