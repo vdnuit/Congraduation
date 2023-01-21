@@ -1,10 +1,11 @@
 /* eslint no-underscore-dangle: 0 */
 
-import { React, useEffect } from 'react';
+import { React, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import axios from 'axios';
+import LeafSpinner from '../components/LeafSpinner';
 import { countAtom, temporaryTreeAtom } from '../Atom';
 import Leaf from '../components/Leaf';
 import { StyledLink } from './Main';
@@ -91,34 +92,13 @@ const Grid = styled.div`
 
 `;
 
-
-function List() {
-    const params = useParams();
+function UI() {
     const count = useRecoilValue(countAtom);
-    const setCount = useSetRecoilState(countAtom);
     const leaves = useRecoilValue(temporaryTreeAtom);
-    const setLeaves = useSetRecoilState(temporaryTreeAtom);
-    const getMessage = () => {
-        axios
-        .get(`/api/v1/messages/${params.id}`)
-        .then((response) => {
-            if(response.status === 200){
-                setLeaves(response.data);
-                setCount(response.data.length);
-            }
-        })
-    }
-
     const clip = () => {
         navigator.clipboard.writeText(window.location.href);
         alert("링크가 복사되었습니다.");
     }
-    
-
-    useEffect(() => {
-        setTimeout(getMessage, 300);
-    },[])
-
     if (count === 0) {
         return (
             <Container>
@@ -148,6 +128,38 @@ function List() {
             </Flex>
         </StyledGrid>
     );
+}
+
+
+function List() {
+    const [ loading, setLoading ] = useState(true);
+    const params = useParams();
+    const setCount = useSetRecoilState(countAtom);
+    const setLeaves = useSetRecoilState(temporaryTreeAtom);
+    const getMessage = () => {
+        setLoading(true);
+        axios
+        .get(`/api/v1/messages/${params.id}`)
+        .then((response) => {
+            if(response.status === 200){
+                setLeaves(response.data);
+                setCount(response.data.length);
+            }
+        })
+        .then(setLoading(false))
+    }
+    
+
+    useEffect(() => {
+        setTimeout(getMessage, 500);
+    },[])
+
+    return(
+        <div>
+            { loading? <LeafSpinner/> : <UI/>}
+        </div>
+    )
+
 }
 
 export default List;

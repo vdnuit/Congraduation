@@ -1,12 +1,13 @@
 /* eslint no-underscore-dangle: 0 */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import ImageMap from 'image-map';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ownerNameAtom, countAtom, isLoginAtom, temporaryTreeAtom } from '../Atom';
+import TreeSpinner from '../components/TreeSpinner';
 import TreeNight from '../assets/treenight.png';
 import TreeDay from '../assets/treeday.png';
 import TreeSunset from '../assets/treesunset.png';
@@ -209,6 +210,8 @@ function Button() {
 
 
 function Tree() {
+    const [loading, setLoading] = useState(true);
+    console.log(loading);
     const userObjectId = useParams().id
     console.log(userObjectId);
     const Login = useRecoilValue(isLoginAtom);
@@ -217,7 +220,9 @@ function Tree() {
     const setCount = useSetRecoilState(countAtom);
     const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLeaves = useSetRecoilState(temporaryTreeAtom);
-    const getUser = () => {
+    const getUser = async () => {
+        setLoading(true);
+        console.log(loading);
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
@@ -225,6 +230,7 @@ function Tree() {
             setCount(response.data.message.length);
             setLeaves(response.data.message);
         })
+        .then(setLoading(false))
     }
 
     
@@ -245,26 +251,30 @@ function Tree() {
     };
 
     return (
-        <Container>
-            <Count>
-                {ownerName.nick} 님의 나무에 {count}개의 메시지
-            </Count>
+        <div>
+            { loading ? <TreeSpinner /> : 
+            <Container>
+                <Count>
+                    {ownerName.nick} 님의 나무에 {count}개의 메시지
+                </Count>
 
-            <Time />
-            {Login.userId === userObjectId ? <Link to={{ pathname: `/list/${ownerName._id} `}}>
-                <Treezone name="treemap">
-                    <area
-                        aria-hidden="true"
-                        onClick={() => clickHandler('tree')}
-                        shape="poly"
-                        alt="tree"
-                        coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364"
-                    />
-                </Treezone>
-            </Link> : null}
-            <TreeComponent />
-            <Button />
-        </Container>
+                <Time />
+                {Login.userId === userObjectId ? <Link to={{ pathname: `/list/${ownerName._id} `}}>
+                    <Treezone name="treemap">
+                        <area
+                            aria-hidden="true"
+                            onClick={() => clickHandler('tree')}
+                            shape="poly"
+                            alt="tree"
+                            coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364"
+                        />
+                    </Treezone>
+                </Link> : null}
+                <TreeComponent />
+                <Button />
+            </Container>}
+        </div>
+        
     );
 }
 

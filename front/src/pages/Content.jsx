@@ -1,10 +1,11 @@
-import { React, useRef, useEffect } from 'react';
+import { React, useRef, useEffect, useState } from 'react';
 // import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toBlob } from 'html-to-image';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import LeafSpinner from '../components/LeafSpinner';
 import { leafAtom, ownerNameAtom } from '../Atom';
 import trash from '../assets/trash.png';
 // import TreeNight from '../assets/treenight.png';
@@ -203,6 +204,7 @@ const Button = styled.button`
 } */
     
 function Content() {
+    const [ loading, setLoading ] = useState(true);
     const ownerName = useRecoilValue(ownerNameAtom);
     const setLeaf = useSetRecoilState(leafAtom);
     const Leaf = useRecoilValue(leafAtom);
@@ -212,11 +214,13 @@ function Content() {
     const messageId = params.messageid;
     const navigate = useNavigate();
     const getMessage = () => {
+        setLoading(true);
         axios
         .get(`api/v1/messages/${userObjectId}/${messageId}`)
         .then((response) => {
             setLeaf(response.data);
         })
+        .then(setLoading(false))
     }
 
     const deleteMessage = () => {
@@ -257,7 +261,10 @@ function Content() {
     }, [])
 
     return (
-        <Container>
+        <div>
+            { loading ? <LeafSpinner/>
+            :
+            <Container>
             <div ref={imageRef}>
                 <Div>
                     <GreyBox>
@@ -278,6 +285,8 @@ function Content() {
                 <StyledButton type="button" onClick={handleShare}>스토리 공유하기</StyledButton>
             </ButtonDiv>
         </Container>
+        }
+        </div>
     );
 }
 

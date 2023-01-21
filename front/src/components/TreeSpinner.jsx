@@ -1,15 +1,11 @@
-/* eslint no-underscore-dangle: 0 */
-
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { React } from 'react';
-import { useRecoilValue } from 'recoil';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
 import CapImg from '../assets/capImg.png';
 import SnowImg from '../assets/snowbackground.png';
-import InstaImg from '../assets/instaImg.png';
-import { isLoginAtom } from '../Atom';
+import Spinner from '../assets/Spinner.gif';
 
 const Container = styled.div`
     z-index: -1;
@@ -51,24 +47,7 @@ const Logo = styled.img`
     width: 95%;
     margin-bottom: 8vh;
 `;
-const Insta = styled.div`
-    margin: 30px;
-    img {
-        height: 32px;
-        width: 32px;
-    }
-    p {
-        font-family: 'Jua';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 12px;
-        line-height: 15px;
 
-        text-align: center;
-
-        color: #072a60;
-    }
-`;
 export const StyledLink = styled(Link)`
     text-decoration: none;
     h2 {
@@ -98,51 +77,22 @@ const Snow = styled.img`
     max-width: 500px;
 `;
 
+const Img = styled.img`
+    width: 20%;
+`;
 
-
-function Button() {
-    const Login = useRecoilValue(isLoginAtom);
-    console.log(Login);
-    if(Login.userId){
-        return (
-            <Box>
-                <Cap src={CapImg} />
-                <Logo src={LogoImg} />
-                <StyledLink to={{ pathname: `/tree/${Login.userId}` }}>
-                    <h2>트리로 이동</h2>
-                </StyledLink>
-                <Insta>
-                    <img src={InstaImg} alt="인스타그램 로고" />
-                    <p>@congraduation_skku</p>
-                </Insta>
-            </Box>
-        )
-    } return (
-        <Box>
-            <Cap src={CapImg} />
-            <Logo src={LogoImg} />
-            <StyledLink to={{ pathname: `/login/*` }}>
-                <h2>로그인</h2>
-            </StyledLink>
-            <StyledLink to={{ pathname: `/signup/*` }}>
-                <h2>회원가입</h2>
-            </StyledLink>
-            <Insta>
-                <img src={InstaImg} alt="인스타그램 로고" />
-                <p>@congraduation_skku</p>
-            </Insta>
-        </Box>
-    )
-}
-
-function Main() {
+function TreeSpinner() {
     return (
         <Container>
             <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-            <Button />
+            <Box>
+                <Cap src={CapImg} />
+                <Logo src={LogoImg} />
+                <Img src={Spinner} alt="로딩중" />
+            </Box>
             <Snow src={SnowImg} alt="눈 내리는 배경" />
         </Container>
     );
 }
 
-export default Main;
+export default TreeSpinner;
