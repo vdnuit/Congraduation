@@ -81,11 +81,21 @@ function SignUp() {
         register,
         watch,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        setError,
     } = useForm();
     const navigate = useNavigate();
-    const handleRegister = () => {
-        axios
+    const handleRegister = (data) => {
+        if(data.password !== data.password1){
+            setError(
+                "password1",
+                {message: " 비밀번호가 다릅니다"},
+                {shouldFocus: true}
+            );
+        }
+
+        if(data.password === data.password1){
+            axios
         .post("http://localhost:8000/api/v1/users/signup", {
             userId: watch().ID,
             password: watch().password,
@@ -99,6 +109,7 @@ function SignUp() {
             navigate(`/`);
         })
         .catch(()=>alert("중복된 사용자 정보입니다. 다시 한번 확인해주세요.")) 
+        }
     }
     
     return (
@@ -108,6 +119,19 @@ function SignUp() {
                 <p>아이디와 비밀번호를 기억해주세요!</p>
             </Warn>
             <Form onSubmit={handleSubmit(handleRegister)}>
+
+                <div>
+                    <Span>닉네임</Span>
+                    <Error>{errors?.nickname?.message}</Error>
+                </div>
+                <Input
+                    {...register('nickname', {
+                        required: true,
+                        minLength: { value: 1, message: '닉네임을 작성해주세요.' },
+                    })}
+                    placeholder="닉네임을 입력하세요"
+                />
+
                 <div>
                     <Span>아이디</Span>
                     <Error>{errors?.ID?.message}</Error>
@@ -140,15 +164,14 @@ function SignUp() {
                 />
 
                 <div>
-                    <Span>닉네임</Span>
-                    <Error>{errors?.nickname?.message}</Error>
+                    <Span>비밀번호 확인</Span>
+                    <Error>{errors?.password1?.message}</Error>
                 </div>
-                <Input
-                    {...register('nickname', {
+                <Input type="password" 
+                    {...register('password1', {
                         required: true,
-                        minLength: { value: 1, message: '닉네임을 작성해주세요.' },
                     })}
-                    placeholder="닉네임을 입력하세요"
+                    placeholder="비밀번호를 한 번 더 입력하세요"
                 />
 
                 <Div>
