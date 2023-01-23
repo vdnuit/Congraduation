@@ -104,6 +104,13 @@ const GreyBox = styled.div`
         line-height: 17px;
         color: #000000;
         width: 100%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 10;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-all;
     }
 `;
 

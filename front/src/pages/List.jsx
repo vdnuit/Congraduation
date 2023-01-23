@@ -65,7 +65,7 @@ const Div = styled.div`
 const StyledGrid = styled.div`
     width: 100%;
     max-width: 500px;
-    height: 93vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

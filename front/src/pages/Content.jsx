@@ -14,9 +14,9 @@ import trash from '../assets/trash.png';
 const Container = styled.div`
     width: 100%;
     position: absolute;
-
+    min-height: 100vh;
     z-index: 10;
-    top: 63px;
+    top: 0px;
     left: 0px;
     max-width: 500px;
     display: flex;
