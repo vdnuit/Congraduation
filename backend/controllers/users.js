@@ -3,6 +3,22 @@ const Message = require('../models/message');
 const bcrypt = require('bcrypt');
 const { Types } = require('mongoose');
 
+const checkPassword = async (originalPassword, inputPassword) => {
+    try {
+        const compareResult = await bcrypt.compare(originalPassword, inputPassword);
+        if(compareResult){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    catch(err) {
+        console.log(err);
+        return next(err);
+    }
+}
+
 // 로컬 유저 회원가입
 const signup = async(req, res, next) => {
     try{
@@ -30,14 +46,15 @@ const signup = async(req, res, next) => {
 
 const getMyInfo = async(req, res, next) => {
     try{
+        console.log("[GET MY INFO]");
         if(req.isLogin === true) {
-            console.log("HI");
             const user = await User.findOne({_id: req.userId});
             if(user) {
-                console.log("ME");
+                console.log("AUTHORIZED USER INFO HAS BEEN RETURNED SUCCESSFULLY!");
                 res.status(200).json({userId: user._id, selfId: user.userId, nick: user.nick, provider: user.provider});
             }
             else {
+                console.log("FAIELD TO RETURN AUTHORIZED USER INFO");
                 res.status(401).json({message: "Unauthorized"});
             }
         }
@@ -65,6 +82,7 @@ const getUserById = async(req, res, next) => {
             });
         }
         else {
+            console.log("USER ID NOT VALID");
             return res.status(400).json({message: "Bad Request"});
         }
     }
@@ -77,19 +95,24 @@ const getUserById = async(req, res, next) => {
 const deleteUser = async(req, res, next) => {
     try{
         if(req.isLogin === true){
-            if(req.provider === 'local'){
+            if(req.provider === 'local' && req.body.password){
                 const user = await User.findOne({_id: req.params.userId});
                 if(user && user._id.equals(req.userId)){
-                    await User.deleteOne({_id: user.id});
-                    await Message.deleteMany({receiverId: user.id});
-                    res.clearCookie('accessToken');
-                    res.clearCookie('refreshToken');
-                    res.clearCookie('provider');
-                    return res.status(200).json({message: "Successfully deleted"});
+                    if(checkPassword(user.password, req.body.password)) {
+                        await User.deleteOne({_id: user.id});
+                        await Message.deleteMany({receiverId: user.id});
+                        res.clearCookie('accessToken');
+                        res.clearCookie('refreshToken');
+                        res.clearCookie('provider');
+                        return res.status(200).json({message: "Successfully deleted"});
+                    }
+                    else{
+                        return res.status(400).json({message: "Password incorrect"});
+                    }
                 }
                 else{
                     return res.status(401).json({message: "Unauthorized"});
-                }   
+                }
             }
             else if(req.provider === 'kakao'){
                 try {

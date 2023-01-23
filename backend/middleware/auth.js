@@ -5,26 +5,29 @@ const User = require('../models/user');
 const axios = require('axios');
 
 const auth = async (req, res, next) => {
-    console.log("AUTH");
+    console.log("[AUTH]");
     req.isLogin = false;
-    console.log(req.headers);
     let token = null;
     if(req.headers.authorization){
-        console.log("AUTHORIZATION_HEADER");
+        console.log("SUCCESSFULLY GET AUTHORIZATION HEADER");
         token = req.headers.authorization.split(' ')[1];
     }
+    else{
+        console.log("FAILED TO GET AUTHORIZATION HEADER");
+    }
     if(token){
-        console.log("TOKEN:", token);
+        console.log("VERIFYING TOKEN:", token);
         if(req.cookies.provider === 'local'){
-            console.log("here0");
+            console.log("[LOCAL]");
             try{
                 jwt.verify(token, process.env.JWTSecret, async(err, decoded) => {
                     if(err){
-                        console.log("here1");
                         if(err instanceof jwt.TokenExpiredError){ // 토큰 만료
+                            console.log("TOKEN IS EXPIRED");
                             return res.status(401).json({message: "Access token expired"});
                         }
                         else if(err instanceof jwt.JsonWebTokenError){
+                            console.log("NO TOKEN PROVIDED");
                             return res.status(400).json({message: "Token is required"});
                         }
                         else{
@@ -33,8 +36,7 @@ const auth = async (req, res, next) => {
                         }
                     }
                     else{
-                        console.log("here2");
-                        console.log(decoded);
+                        console.log("TOKEN VERIFIED!");
                         req.userId = decoded.id;
                         req.nick = decoded.nick;
                         req.provider = decoded.provider;
@@ -50,8 +52,9 @@ const auth = async (req, res, next) => {
         }
         else if(req.cookies.provider === 'kakao'){
             try{
+                console.log("[KAKAO]");
                 const accessToken = token;
-                console.log("HERES TOKEN:", accessToken);
+                console.log("VERIFYING TOKEN:", accessToken);
                 const isValidAccessToken = await axios.get('https://kapi.kakao.com/v1/user/access_token_info', { // check accessToken
                     headers:{
                         'Authorization': `Bearer ${accessToken}`
@@ -71,15 +74,14 @@ const auth = async (req, res, next) => {
                     }
                 });
                 if(isValidAccessToken.status === 200 && isValidAccessToken.data){ // valid token
+                    console.log("TOKEN VERIFIED!");
                     const userInfo = await axios({ // get user
                         method:'get',
                         url:'https://kapi.kakao.com/v2/user/me',
                         headers:{
                             'Authorization': `Bearer ${accessToken}`
                         }
-                    })
-                    console.log("yay");
-                    console.log("this is", userInfo.data.id);
+                    });
                     const user = await User.findOne({userId: userInfo.data.id});
                     req.userId = user._id;
                     req.selfId = user.userId;
@@ -100,7 +102,7 @@ const auth = async (req, res, next) => {
         }
     }
     else{
-        console.log("HERE MAN");
+        console.log("UNAUTHORIZED DUE TO EMPTY TOKEN...");
         return res.status(401).json({message: "Unauthorized"});
     }
 };

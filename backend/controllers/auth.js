@@ -18,13 +18,13 @@ const createToken = (type, bodyId='', bodyNick='', bodyProvider='') => {
 
 const signin = (req, res, next) => {
     try{
+        res.clearCookie('provider');
+        res.clearCookie('refreshToken');
+        res.clearCookie('_id');
+        res.clearCookie('nick');
         passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
             if(authError){
                 console.log(authError);
-                res.clearCookie('provider');
-                res.clearCookie('refreshToken');
-                res.clearCookie('_id');
-                res.clearCookie('nick');
                 return next(authError);
             }
             if(!user){
@@ -36,8 +36,6 @@ const signin = (req, res, next) => {
                     console.log(err);
                     res.clearCookie('provider');
                     res.clearCookie('refreshToken');
-                    res.clearCookie('_id');
-                    res.clearCookie('nick');
                     return next(err);
                 }
                 const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
@@ -103,6 +101,7 @@ const kakaoLogin = async(req, res, next) => {
 }
 
 const kakaoCallback = async(req, res, next) => {
+    console.log("[KAKAO CALLBACK]");
     if(req.query.code){
       try{
         const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
@@ -163,11 +162,16 @@ const kakaoCallback = async(req, res, next) => {
 
 const getRefreshToken = async(req, res, next) => {
     try{
+        console.log("[REFRESH TOKEN]");
         if(req.cookies.refreshToken) {
+            console.log("CHECKING REFRESH TOKEN IN COOKIE...");
             const refreshToken = req.cookies.refreshToken;
             if(req.cookies.provider === 'local'){
+                console.log("[LOCAL]")
                 const token = await Token.findOne({token: refreshToken});
+                console.log("CHECKING IF THERE IS REFRESH TOKEN...");
                 if(token){ // 리프레쉬 토큰 존재 -> 재발급
+                    console.log("NEW ACCESS TOKEN PROVIDED!");
                     const user = await User.findOne({_id: token.userId});
                     const accessToken = jwt.sign({id: user._id, nick: user.nick, provider: user.provider}, process.env.JWTSecret, {expiresIn: "5m"});
                     res.status(200).json({accessToken: accessToken});
@@ -180,9 +184,8 @@ const getRefreshToken = async(req, res, next) => {
                 }
             }
             else if(req.cookies.provider === 'kakao'){
-                console.log("KAKAO_REFRESHTOKEN");
-                console.log(refreshToken);
-                console.log("KAKAO: REFRESH_TOKEN_CHECK");
+                console.log("[KAKAO]")
+                console.log("CHECKING IF THERE IS REFRESH TOKEN...");
                 const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
                         params: {
                             grant_type: 'refresh_token',
@@ -191,6 +194,7 @@ const getRefreshToken = async(req, res, next) => {
                         }
                 }).catch((err) => {
                     if(err.response.status === 401 || err.response.status === 400){
+                        console.log("REFRESH TOKEN IS NOT OR NO LONGER VALID");
                         res.clearCookie('refreshToken');
                         res.clearCookie('provider');
                         res.clearCookie('_id');
@@ -205,7 +209,7 @@ const getRefreshToken = async(req, res, next) => {
                     }
                 });
                 if(tokenInfo.status === 200) {
-                    console.log("SUCCESS TO RETURN ACCESS TOKEN");
+                    console.log("NEW ACCESS TOKEN PROVIDED!");
                     return res.status(200).json({accessToken: tokenInfo.data.access_token});
                 }
             }
@@ -217,6 +221,7 @@ const getRefreshToken = async(req, res, next) => {
             }
         }
         else{
+            console.log("NO REFRESH TOKEN IN COOKIE");
             res.clearCookie('refreshToken');
             res.clearCookie('provider');
             res.clearCookie('_id');
@@ -229,12 +234,42 @@ const getRefreshToken = async(req, res, next) => {
     }
 }
 
+const checkPassword = async(req, res, next) => {
+    try {
+        let user = null;
+        const { password } = req.body;
+        if(req.userId && req.provider === 'local' ) {
+            user = await User.findOne({_id: req.userId});
+            if(user !== null){
+                const compareResult = await bcrypt.compare(password, user.password);
+                if(compareResult){
+                    res.status(200).json({message: "Account verified"});
+                }
+                else{
+                    res.status(401).json({message: "Password incorrect"});
+                }
+            }
+            else {
+                res.status(400).json({message: "Bad request - The user does not exist"});
+            }
+        }
+        else {
+            res.status(400).json({message: "Bad request - userId and provider are required"});
+        }
+    }
+    catch(err) {
+        console.log(err);
+        return next(err);
+    }
+}
+
 module.exports = {
     signin,
     signout,
     kakaoLogin,
     kakaoCallback,
     createToken,
+    checkPassword,
     getRefreshToken,
 };
 

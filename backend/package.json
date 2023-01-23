@@ -21,6 +21,7 @@
     "express-async-error": "^0.0.2",
     "express-async-errors": "^3.1.1",
     "express-session": "^1.17.3",
+    "jest": "^29.3.1",
     "jsonwebtoken": "^8.5.1",
     "moment-timezone": "^0.5.40",
     "mongoose": "^6.7.2",
@@ -28,6 +29,7 @@
     "passport-jwt": "^4.0.0",
     "passport-kakao": "^1.0.1",
     "passport-local": "^1.0.0",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "supertest": "^6.3.3"
   }
 }
