@@ -15,15 +15,13 @@ const Container = styled.div`
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     background-color: #f5f5f5;
     height: 100vh;
 `;
 
 const Form = styled.form`
-    position: absolute;
-    top: 150px;
+    margin-top: 150px;
     width: 70%;
     display: flex;
     flex-direction: column;
