@@ -6,16 +6,16 @@ import { useRecoilValue } from 'recoil';
 import { temporaryTreeAtom } from '../Atom';
 
 const startX = 26;
-const startY = 28;
+const startY = 60;
 const WIDTH = 50;
-const HEIGHT = 37;
+const HEIGHT = 60;
 
 function randomX(){
     return `${(Math.random()*WIDTH)+startX}%`
 }
 
 function randomY(){
-    return `${(Math.random()*HEIGHT)+startY}%`
+    return `${(Math.random()*HEIGHT)+startY}vw`
 }
 
 function BigRandomX(){
