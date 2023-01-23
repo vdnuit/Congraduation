@@ -106,7 +106,7 @@ function LogIn() {
                 alert(response.statusText);
             }
         })
-        .catch(()=>alert("인증 정보가 유효하지 않습니다."))   
+        .catch(()=>alert("아이디와 비밀번호를 확인해주세요."))   
     };
 
 
