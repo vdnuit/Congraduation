@@ -2,10 +2,10 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import axios from 'axios';
-import { ownerNameAtom, countAtom } from '../Atom';
+import { ownerNameAtom } from '../Atom';
 import ColorSelect from '../components/ColorSelect';
 import ShuffleImg from '../assets/shuffle.png';
 
@@ -148,6 +148,8 @@ const Circle = styled.div`
 function Write() {
     const params = useParams();
     const userObjectId = params.id;
+
+    const navigate = useNavigate();
     const sendMessage = (dict) => {
         console.log(dict);
         console.log(dict.writer);
@@ -168,13 +170,13 @@ function Write() {
                     // 재전송 요청 띄우기
                     console.log(response.data);
                 }
+                navigate(`/tree/${userObjectId}`);
             });
     };
     const [icon, setIcon] = useState();
 
     const [selectOpen, setSelectOpen] = useState(true);
     const { register, watch } = useForm();
-    const navigate = useNavigate();
     const IconChecked = (current) => {
         setIcon(current);
     };
@@ -182,7 +184,6 @@ function Write() {
     useEffect(() => {
         console.log(icon);
     }, [icon]);
-    const [count, setCount] = useRecoilState(countAtom);
     const questions = [
         `${ownerName.nick}님이 좋아하는 것은?`,
         `${ownerName.nick}님과 함께한 가장 즐거웠던 추억은?`,
@@ -249,9 +250,7 @@ function Write() {
             question: questions[index],
             icon: `https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon${icon}.png?raw=true`
         };
-        setCount(count + 1);
         sendMessage(dict);
-        navigate(`/tree/${userObjectId}`);
         return 1;
     };
     const showSelect = () => {
