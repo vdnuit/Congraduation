@@ -94,10 +94,12 @@ const getUserById = async(req, res, next) => {
 
 const deleteUser = async(req, res, next) => {
     try{
+        console.log("HERE", req.body);
         if(req.isLogin === true){
             if(req.provider === 'local' && req.body.password){
                 const user = await User.findOne({_id: req.params.userId});
                 if(user && user._id.equals(req.userId)){
+                    console.log("WHY!")
                     if(checkPassword(user.password, req.body.password)) {
                         await User.deleteOne({_id: user.id});
                         await Message.deleteMany({receiverId: user.id});
@@ -107,6 +109,7 @@ const deleteUser = async(req, res, next) => {
                         return res.status(200).json({message: "Successfully deleted"});
                     }
                     else{
+                        console.log("PASSWORD INCORRECT");
                         return res.status(400).json({message: "Password incorrect"});
                     }
                 }
