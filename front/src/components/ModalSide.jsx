@@ -79,16 +79,15 @@ function ModalSide({ setModalOpen }) {
 
             console.log(pinput);
             axios
-                .post(`http://localhost:8000/api/v1/auth/check-password`, {
-                    withCredentials: true,
-                    password: pinput
-                })
+                .post("/api/v1/auth/check-password",
+                    {password: pinput}
+                )
                 .then((response) => {
                     console.log(response.status);
 
                     if (response.status === 200) {
                         axios
-                            .delete(`http://localhost:8000/api/v1/users/${isLogin.userId}`, {})
+                            .delete(`http://localhost:8000/api/v1/users/${isLogin.userId}`)
                             .then((res) => {
                                 console.log(res.status);
                                 if (res.status === 200) {

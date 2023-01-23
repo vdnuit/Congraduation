@@ -13,7 +13,6 @@ import { StyledLink } from './Main';
 const Container = styled.div`
     width: 100%;
     max-width: 500px;
-    height: 93vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -94,7 +93,6 @@ const Flex = styled.div`
 const Grid = styled.div`
     position: absolute;
     width: 94.55%;
-    height: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 7.5%;

@@ -57,6 +57,11 @@ const Container = styled.div`
         margin-right: 10px;
         margin-top: 5px;
         margin-bottom: 50px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space:nowrap;
     }
 `;
 
@@ -87,12 +92,19 @@ const GreyBox = styled.div`
         width: 100%;
     }
     p {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 10;
+        overflow: hidden;
         border: none;
         font-family: 'Inter';
         font-style: normal;
         font-weight: 400;
         font-size: 14px;
         line-height: 17px;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-all;
         color: #000000;
         width: 100%;
     }
