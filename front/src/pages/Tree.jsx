@@ -30,8 +30,8 @@ const Dday = styled.p`
     text-align: center;
 `;
 const TreeBackground = styled.img`
-    position: absolute;
-    top: 62px;
+    // position: absolute;
+    margin-top: -63px;
     left: 0px;
 
     z-index: -1;
@@ -39,8 +39,9 @@ const TreeBackground = styled.img`
     max-width: 500px;
 `;
 const Buttons = styled.div`
-    position: fixed;
-    bottom: 20px;
+    // position: absolute;
+    margin-top: -190px;
+    // bottom: 20px;
     text-align: center;
     width: 100%;
     max-width: 500px;
@@ -116,7 +117,6 @@ const Treezone = styled.map`
     height: auto;
 `;
 
-
 // myinfo랑 param id랑 비교
 function Time() {
     const today = new Date();
@@ -128,7 +128,7 @@ function Time() {
         ImageMap('img[usemap]');
     }, []);
 
-    if (Login.userId === userObjectId){
+    if (Login.userId === userObjectId) {
         if (hours >= 20 || hours <= 5) {
             return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
         }
@@ -137,17 +137,16 @@ function Time() {
         }
         return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap" />;
     }
-    if (Login.userId !== userObjectId){
+    if (Login.userId !== userObjectId) {
         if (hours >= 20 || hours <= 5) {
-            return <TreeBackground src={TreeNight} alt="밤 배경 은행나무"/>;
+            return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />;
         }
         if (hours <= 16 && hours >= 9) {
-            return <TreeBackground src={TreeDay} alt="낮 배경 은행나무"/>;
+            return <TreeBackground src={TreeDay} alt="낮 배경 은행나무" />;
         }
-        return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무"/>;
+        return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" />;
     }
 }
-
 
 function Button() {
     const navigate = useNavigate();
@@ -163,9 +162,9 @@ function Button() {
     const clipboard = (event) => {
         event.preventDefault();
         navigator.clipboard.writeText(window.location.href);
-        alert("링크가 복사되었습니다.");
-    }
-    
+        alert('링크가 복사되었습니다.');
+    };
+
     if (Login.userId === userObjectId) {
         return (
             <Buttons>
@@ -187,7 +186,9 @@ function Button() {
                 </button>
                 <button
                     type="button"
-                    onClick={()=>{navigate(`/tree/${Login.userId}`)}}
+                    onClick={() => {
+                        navigate(`/tree/${Login.userId}`);
+                    }}
                     style={{ backgroundColor: '#ffffff', color: '#7c7c7c' }}
                 >
                     내 트리로 가기
@@ -196,7 +197,7 @@ function Button() {
             </Buttons>
         );
     }
-    if (!Login.userId){
+    if (!Login.userId) {
         return (
             <Buttons>
                 <button type="button" onClick={writeNote}>
@@ -215,11 +216,10 @@ function Button() {
     }
 }
 
-
 function Tree() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    const userObjectId = useParams().id
+    const userObjectId = useParams().id;
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
@@ -229,64 +229,65 @@ function Tree() {
     const getUser = async () => {
         setLoading(true);
         axios
-        .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
-        .then((response)=> {
-            if(response.status === 200){
-                setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-                setCount(response.data.message.length);
-                setLeaves(response.data.message);
-                setTimeout(() => setLoading(false),500);
-            }
-        })
-        .catch((err) => {
-            if(err.response.status === 400){
-                alert("존재하지 않는 트리입니다.");
-                navigate('/');
-            }
-        })
-    }
+            .get(`http://localhost:8000/api/v1/users/${userObjectId}`, { withCredentials: true })
+            .then((response) => {
+                if (response.status === 200) {
+                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+                    setCount(response.data.message.length);
+                    setLeaves(response.data.message);
+                    setTimeout(() => setLoading(false), 500);
+                }
+            })
+            .catch((err) => {
+                if (err.response.status === 400) {
+                    alert('존재하지 않는 트리입니다.');
+                    navigate('/');
+                }
+            });
+    };
 
-    
-    
     useEffect(() => {
         getUser();
-    },[]);
-
+    }, []);
 
     const clickHandler = (title) => {
         if (Login.userId === userObjectId) {
-            console.log(title)
+            console.log(title);
         }
     };
 
-
     return (
         <div>
-            { loading ? <TreeSpinner /> : 
-            <Container>
-                <Count>
-                    {ownerName.nick} 님의 나무에 {count}개의 메시지
-                </Count>
+            {loading ? (
+                <TreeSpinner />
+            ) : (
+                <>
+                    <Container>
+                        <Count>
+                            {ownerName.nick} 님의 나무에 {count}개의 메시지
+                        </Count>
 
-                <Time />
-                {Login.userId === userObjectId ? <Link to={{ pathname: `/list/${ownerName._id}`}}>
-                    <Treezone name="treemap">
-                        <area
-                            aria-hidden="true"
-                            onClick={() => clickHandler('tree')}
-                            shape="poly"
-                            alt="tree"
-                            coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364"
-                        />
-                    </Treezone>
-                </Link> : null}
-                <TreeComponent />
-                <Button />
-            </Container>}
+                        <Time />
+                        {Login.userId === userObjectId ? (
+                            <Link to={{ pathname: `/list/${ownerName._id}` }}>
+                                <Treezone name="treemap">
+                                    <area
+                                        aria-hidden="true"
+                                        onClick={() => clickHandler('tree')}
+                                        shape="poly"
+                                        alt="tree"
+                                        coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364"
+                                    />
+                                </Treezone>
+                            </Link>
+                        ) : null}
+                        <TreeComponent />
+                    </Container>
+                    <Button />
+                </>
+            )}
         </div>
-        
     );
 }
-
 
 export default Tree;

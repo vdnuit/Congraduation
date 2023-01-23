@@ -88,16 +88,16 @@ const Flex = styled.div`
     ::-webkit-scrollbar {
         display: none;
     }
-`
+`;
 
 const Grid = styled.div`
     position: absolute;
+    z-index: 10;
     width: 94.55%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 7.5%;
     grid-row-gap: 4%;
-
 `;
 
 function UI() {
@@ -105,8 +105,8 @@ function UI() {
     const leaves = useRecoilValue(temporaryTreeAtom);
     const clip = () => {
         navigator.clipboard.writeText(window.location.href);
-        alert("링크가 복사되었습니다.");
-    }
+        alert('링크가 복사되었습니다.');
+    };
     if (count === 0) {
         return (
             <Container>
@@ -124,9 +124,7 @@ function UI() {
     }
     return (
         <StyledGrid>
-            <Count>
-                받은 쪽지 수 {count}
-            </Count>
+            <Count>받은 쪽지 수 {count}</Count>
             <Flex>
                 <Grid>
                     {leaves.map((leaf) => (
@@ -138,43 +136,36 @@ function UI() {
     );
 }
 
-
 function List() {
     const params = useParams();
-    const navigate = useNavigate()
-    const [ loading, setLoading ] = useState(true);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const Login = useRecoilValue(isLoginAtom);
     const setCount = useSetRecoilState(countAtom);
     const setLeaves = useSetRecoilState(temporaryTreeAtom);
     const getMessage = () => {
-        if(Login.userId === params.id){
+        if (Login.userId === params.id) {
             setLoading(true);
             axios
-            .get(`/api/v1/messages/${params.id}`)
-            .then((response) => {
-                if(response.status === 200){
-                    setLeaves(response.data);
-                    setCount(response.data.length);
-                }
-            })
-            .then(setLoading(false))
+                .get(`/api/v1/messages/${params.id}`)
+                .then((response) => {
+                    if (response.status === 200) {
+                        setLeaves(response.data);
+                        setCount(response.data.length);
+                    }
+                })
+                .then(setLoading(false));
         }
-        if(Login.userId !== params.id){
+        if (Login.userId !== params.id) {
             navigate('/');
         }
-    }
-    
+    };
 
     useEffect(() => {
         setTimeout(getMessage, 500);
-    },[])
+    }, []);
 
-    return(
-        <div>
-            { loading? <LeafSpinner/> : <UI/>}
-        </div>
-    )
-
+    return <div>{loading ? <LeafSpinner /> : <UI />}</div>;
 }
 
 export default List;

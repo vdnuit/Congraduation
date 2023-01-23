@@ -243,6 +243,7 @@ function Write() {
 
     const SubmitEvent = () => {
         if (watch().message === '' || watch().writer === '') {
+            alert("편지와 작성자 분의 성함을 모두 적어주세요!")
             return 0;
         }
         const dict = {
@@ -300,7 +301,7 @@ function Write() {
 
                 <h2>From.</h2>
                 <GreyBox>
-                    <input {...register('writer')} placeholder="닉네임을 입력하세요" />
+                    <input {...register('writer')} placeholder="작성자 분의 이름을 입력하세요" />
                 </GreyBox>
             </form>
             <StyledButton
