@@ -3,6 +3,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Token = require('../models/token');
+const bcrypt = require('bcrypt');
 
 // 로컬 유저 로그인
 const createToken = (type, bodyId='', bodyNick='', bodyProvider='') => {
@@ -16,12 +17,14 @@ const createToken = (type, bodyId='', bodyNick='', bodyProvider='') => {
     }
 }
 
+const delCookie = (res) => {
+    res.clearCookie('provider');
+    res.clearCookie('refreshToken');
+}
+
 const signin = (req, res, next) => {
     try{
-        res.clearCookie('provider');
-        res.clearCookie('refreshToken');
-        res.clearCookie('_id');
-        res.clearCookie('nick');
+        delCookie(res);
         passport.authenticate('local', (authError, user, info) => { // done()을 통해 인자가 불려옴
             if(authError){
                 console.log(authError);
@@ -34,8 +37,7 @@ const signin = (req, res, next) => {
             req.login(user, {session: false}, (err) => { // {session:false}
                 if(err){
                     console.log(err);
-                    res.clearCookie('provider');
-                    res.clearCookie('refreshToken');
+                    delCookie(res);
                     return next(err);
                 }
                 const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
@@ -56,8 +58,8 @@ const signout = async (req, res, next) => {
     try{
         if(req.isLogin == true){
             if(req.cookies.provider === 'local'){
-                res.clearCookie('refreshToken');
-                return res.clearCookie('provider').status(200).json({message: "Logout successful"});
+                delCookie(res);
+                return res.status(200).json({message: "Logout successful"});
             }
             else if(req.cookies.provider === 'kakao'){
                 try {
@@ -73,10 +75,8 @@ const signout = async (req, res, next) => {
                     console.log(err);
                     return next(err);
                 }
-                res.clearCookie('refreshToken');
-                res.clearCookie('_id');
-                res.clearCookie('nick');
-                return res.clearCookie('provider').status(200).json({message: "Logout successful"});
+                delCookie(res);
+                return res.status(200).json({message: "Logout successful"});
             }
         }
         else{
@@ -143,11 +143,7 @@ const kakaoCallback = async(req, res, next) => {
           }
         }
         else{
-            res.clearCookie('accessToken');
-            res.clearCookie('refreshToken');
-            res.clearCookie('_id');
-            res.clearCookie('nick');
-            res.clearCookie('provider');
+            delCookie(res);
             return res.status(400).json({message: "Bad Request"});
         }
       }
@@ -177,9 +173,7 @@ const getRefreshToken = async(req, res, next) => {
                     res.status(200).json({accessToken: accessToken});
                 }
                 else{
-                    res.clearCookie('refreshToken');
-                    res.clearCookie('provider');
-                    res.clearCookie('_id');
+                    delCookie(res);
                     res.status(401).json({message: "The refresh token does not exist"});
                 }
             }
@@ -195,16 +189,12 @@ const getRefreshToken = async(req, res, next) => {
                 }).catch((err) => {
                     if(err.response.status === 401 || err.response.status === 400){
                         console.log("REFRESH TOKEN IS NOT OR NO LONGER VALID");
-                        res.clearCookie('refreshToken');
-                        res.clearCookie('provider');
-                        res.clearCookie('_id');
+                        delCookie(res);
                         return res.status(401).json({message: "The refresh token does not exist"});
                     }
                     else{
                         console.log("Something is wrong with kakao token, please try again");
-                        res.clearCookie('refreshToken');
-                        res.clearCookie('provider');
-                        res.clearCookie('_id');
+                        delCookie(res);
                         return res.status(500).json({message: "Something is wrong with kakao token"});
                     }
                 });
@@ -214,17 +204,13 @@ const getRefreshToken = async(req, res, next) => {
                 }
             }
             else{
-                res.clearCookie('refreshToken');
-                res.clearCookie('provider');
-                res.clearCookie('_id');
+                delCookie(res);
                 return res.status(400).json({message: "You must contain provider field in cookie"});
             }
         }
         else{
             console.log("NO REFRESH TOKEN IN COOKIE");
-            res.clearCookie('refreshToken');
-            res.clearCookie('provider');
-            res.clearCookie('_id');
+            delCookie(res);
             res.status(401).json({message: "The refresh token is empty"});
         }
     }
@@ -246,7 +232,7 @@ const checkPassword = async(req, res, next) => {
                     res.status(200).json({message: "Account verified"});
                 }
                 else{
-                    res.status(401).json({message: "Password incorrect"});
+                    res.status(400).json({message: "Password incorrect"});
                 }
             }
             else {

@@ -19,6 +19,11 @@ const checkPassword = async (originalPassword, inputPassword) => {
     }
 }
 
+const delCookie = (res) => {
+    res.clearCookie('provider');
+    res.clearCookie('refreshToken');
+}
+
 // 로컬 유저 회원가입
 const signup = async(req, res, next) => {
     try{
@@ -70,11 +75,15 @@ const getMyInfo = async(req, res, next) => {
 
 const getUserById = async(req, res, next) => {
     try{
+        console.log("GET USER ID");
         if(Types.ObjectId.isValid(req.params.userId)){
             await User.findOne({_id: req.params.userId}).lean().populate('message', '_id paperImage').exec((err, data) => {
                 if(err){
                     console.log(err);
                     return next(err);
+                }
+                else if(data === null) {
+                    return res.status(400).json({message: "Bad request"});
                 }
                 else{
                     return res.status(200).json({userId: data._id, nick: data.nick, message: data.message});
@@ -94,79 +103,48 @@ const getUserById = async(req, res, next) => {
 
 const deleteUser = async(req, res, next) => {
     try{
-        console.log("HERE", req.body);
-        if(req.isLogin === true){
-            if(req.provider === 'local' && req.body.password){
+        if(Types.ObjectId.isValid(req.params.userId)){
+            if(req.provider === 'local'){
                 const user = await User.findOne({_id: req.params.userId});
-                if(user && user._id.equals(req.userId)){
-                    console.log("WHY!")
-                    if(checkPassword(user.password, req.body.password)) {
+                if(user._id.equals(req.userId)){
                         await User.deleteOne({_id: user.id});
                         await Message.deleteMany({receiverId: user.id});
-                        res.clearCookie('accessToken');
-                        res.clearCookie('refreshToken');
-                        res.clearCookie('provider');
+                        delCookie(res);
                         return res.status(200).json({message: "Successfully deleted"});
-                    }
-                    else{
-                        console.log("PASSWORD INCORRECT");
-                        return res.status(400).json({message: "Password incorrect"});
-                    }
                 }
                 else{
                     return res.status(401).json({message: "Unauthorized"});
                 }
             }
-            else if(req.provider === 'kakao'){
-                try {
-                    const ACCESS_TOKEN = req.cookies.accessToken;
-                    await axios({
-                        method:'post',
-                        url:'https://kapi.kakao.com/v1/user/unlink',
-                        headers:{
-                          'Authorization': `Bearer ${ACCESS_TOKEN}`
-                        }
-                    });
-                    if(user && user._id.equals(req.userId)){
-                        await User.deleteOne({_id: user.id});
-                        await Message.deleteMany({receiverId: user.id});
-                        res.clearCookie('accessToken');
-                        res.clearCookie('refreshToken');
-                        res.clearCookie('provider');
-                        return res.status(200).json({message: "Successfully deleted"});
-                    }
-                }
-                catch(err){
-                    console.log(err);
-                    return next(err);
-                }
-            }
+            // else if(req.provider === 'kakao'){
+            //     try {
+            //         const ACCESS_TOKEN = req.accessToken;
+            //         await axios({
+            //             method:'post',
+            //             url:'https://kapi.kakao.com/v1/user/unlink',
+            //             headers:{
+            //               'Authorization': `Bearer ${ACCESS_TOKEN}`
+            //             }
+            //         });
+            //         if(user && user._id.equals(req.userId)){
+            //             await User.deleteOne({_id: user.id});
+            //             await Message.deleteMany({receiverId: user.id});
+            //             delCookie(res);
+            //             return res.status(200).json({message: "Successfully deleted"});
+            //         }
+            //     }
+            //     catch(err){
+            //         console.log(err);
+            //         return next(err);
+            //     }
+            // }
             else{
                 return res.status(400).json({message: "Bad Request"});
             }
         }
-        else{
-            return res.status(401).json({message: 'Unauthorized'});
+        else {
+            return res.status(400).json({message: "Bad Request"});
         }
-    }
-    catch(err){
-        console.log(err);
-        return next(err);
-    }
-}
-
-const deleteKakaoUserById = async(req, res, next) => {
-    try {
-        const ACCESS_TOKEN = req.cookies.accessToken;
-        await axios({
-            method:'post',
-            url:'https://kapi.kakao.com/v1/user/unlink',
-            headers:{
-              'Authorization': `Bearer ${ACCESS_TOKEN}`
-            }
-        });
-
-        
     }
     catch(err){
         console.log(err);

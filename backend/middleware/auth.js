@@ -5,6 +5,7 @@ const User = require('../models/user');
 const axios = require('axios');
 
 const auth = async (req, res, next) => {
+    console.log(req.body);
     console.log("[AUTH]");
     req.isLogin = false;
     let token = null;
