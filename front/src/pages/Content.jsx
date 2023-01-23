@@ -1,3 +1,5 @@
+/* eslint no-underscore-dangle: 0 */
+
 import { React, useRef, useEffect, useState } from 'react';
 // import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -6,7 +8,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import LeafSpinner from '../components/LeafSpinner';
 import InstaModal from '../components/InstaModal';
-import { leafAtom, ownerNameAtom } from '../Atom';
+import { leafAtom, ownerNameAtom, isLoginAtom } from '../Atom';
 import trash from '../assets/trash.png';
 
 const Container = styled.div`
@@ -154,6 +156,7 @@ function Content() {
     const [ loading, setLoading ] = useState(true);
     const [ modalOpen, setModalOpen ] = useState(false);
     const ownerName = useRecoilValue(ownerNameAtom);
+    const Login = useRecoilValue(isLoginAtom);
     const setLeaf = useSetRecoilState(leafAtom);
     const Leaf = useRecoilValue(leafAtom);
     const imageRef = useRef(null);
@@ -162,13 +165,18 @@ function Content() {
     const messageId = params.messageid;
     const navigate = useNavigate();
     const getMessage = () => {
-        setLoading(true);
-        axios
-        .get(`api/v1/messages/${userObjectId}/${messageId}`)
-        .then((response) => {
-            setLeaf(response.data);
-        })
-        .then(setLoading(false))
+        if(Login.userId === userObjectId){
+            setLoading(true);
+            axios
+            .get(`api/v1/messages/${userObjectId}/${messageId}`)
+            .then((response) => {
+                setLeaf(response.data);
+            })
+            .then(setLoading(false))
+        }
+        if(Login.userId !== userObjectId){
+            navigate('/');
+        }
     }
 
     const deleteMessage = () => {

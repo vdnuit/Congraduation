@@ -1,12 +1,12 @@
 /* eslint no-underscore-dangle: 0 */
 
 import { React, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import axios from 'axios';
 import LeafSpinner from '../components/LeafSpinner';
-import { countAtom, temporaryTreeAtom } from '../Atom';
+import { countAtom, temporaryTreeAtom, isLoginAtom } from '../Atom';
 import Leaf from '../components/Leaf';
 import { StyledLink } from './Main';
 
@@ -75,20 +75,30 @@ const StyledGrid = styled.div`
 `;
 
 const Flex = styled.div`
-    position: absolute;
+    position: relative;
     top: 120px;
     width: 97.5%;
+    height: 80vh;
+    overflow: auto;
     max-width: 500px;
     display: flex;
     justify-content: center;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `
 
 const Grid = styled.div`
+    position: absolute;
     width: 94.55%;
+    height: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 7.5%;
-    grid-row-gap: 6.5%;
+    grid-row-gap: 4%;
 
 `;
 
@@ -132,21 +142,28 @@ function UI() {
 
 
 function List() {
-    const [ loading, setLoading ] = useState(true);
     const params = useParams();
+    const navigate = useNavigate()
+    const [ loading, setLoading ] = useState(true);
+    const Login = useRecoilValue(isLoginAtom);
     const setCount = useSetRecoilState(countAtom);
     const setLeaves = useSetRecoilState(temporaryTreeAtom);
     const getMessage = () => {
-        setLoading(true);
-        axios
-        .get(`/api/v1/messages/${params.id}`)
-        .then((response) => {
-            if(response.status === 200){
-                setLeaves(response.data);
-                setCount(response.data.length);
-            }
-        })
-        .then(setLoading(false))
+        if(Login.userId === params.id){
+            setLoading(true);
+            axios
+            .get(`/api/v1/messages/${params.id}`)
+            .then((response) => {
+                if(response.status === 200){
+                    setLeaves(response.data);
+                    setCount(response.data.length);
+                }
+            })
+            .then(setLoading(false))
+        }
+        if(Login.userId !== params.id){
+            navigate('/');
+        }
     }
     
 
