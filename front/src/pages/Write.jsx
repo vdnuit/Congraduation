@@ -251,7 +251,7 @@ function Write() {
         };
         setCount(count + 1);
         sendMessage(dict);
-        navigate(`/tree/*`);
+        navigate(`/tree/${userObjectId}`);
         return 1;
     };
     const showSelect = () => {
