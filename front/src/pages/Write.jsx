@@ -301,7 +301,8 @@ function Write() {
 
                 <h2>From.</h2>
                 <GreyBox>
-                    <input {...register('writer')} placeholder="작성자 분의 이름을 입력하세요" />
+                    <input {...register('writer')} placeholder="작성자 분의 이름을
+                     입력하세요" />
                 </GreyBox>
             </form>
             <StyledButton
