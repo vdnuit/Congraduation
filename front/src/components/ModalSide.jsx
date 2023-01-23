@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Cookies } from 'react-cookie';
 import { useRecoilState } from 'recoil';
 import { isLoginAtom } from '../Atom';
-import ModalOkay from './ModalOkay';
 
 const Container = styled.div`
     width: 197px;
@@ -36,40 +36,68 @@ const Button = styled.button`
 `;
 
 function ModalSide({ setModalOpen }) {
-    const [okayOpen, setOkayOpen] = useState(false);
-    const [okay, setOkay] = useState(false);
     const navigate = useNavigate();
+    const cookies = new Cookies();
     const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
     const closeModal = () => {
-        console.log(okay);
         setModalOpen(false);
     };
     const onLogOut = () => {
         axios
-        .get("http://localhost:8000/api/v1/auth/logout", {withCredentials: true} )
-        .then((response)=>{
-            if(response.status === 200){
-                closeModal(false);
-                setIsLogin({userId: undefined, nick: undefined});
-                alert("로그아웃 되었습니다.");
-                navigate(`/`);
-            } else {
-                alert(response.statusText);
-            }
-        })
+            .get('http://localhost:8000/api/v1/auth/logout', { withCredentials: true })
+            .then((response) => {
+                if (response.status === 200) {
+                    closeModal(false);
+                    setIsLogin({ userId: undefined, nick: undefined });
+                    alert('로그아웃 되었습니다.');
+                    navigate(`/`);
+                } else {
+                    alert(response.statusText);
+                }
+            });
     };
     const onLogIn = () => {
         navigate(`/login/*`);
         closeModal(false);
     };
-    const onDelete = () => {
-        setOkayOpen(!okayOpen);
-    };
+
     const onCreate = () => {
         navigate(`/signup/*`);
         closeModal(false);
     };
+    const onPrompt = () => {
+        const pinput = prompt('회원 탈퇴를 위해 비밀번호를 입력해주세요.');
+        if (cookies.get('provider') === 'kakao') {
+            alert(
+                '카카오 로그인 회원탈퇴는 카카오톡>설정>카카오계정>연결된 서비스 관리에서 탈퇴해주세요!'
+            );
+            isLogin.userId = undefined;
+            isLogin.nick = undefined;
+            navigate(`/`);
+            closeModal(false);
+        }
+        axios
+            .delete(`http://localhost:8000/api/v1/users/${isLogin.userId}`, {
+                withCredentials: true,
+                password: pinput
+            })
+            .then((response) => {
+                if (response.status === 200) {
+                    alert('회원탈퇴를 완료했습니다.');
+                    isLogin.userId = undefined;
+                    isLogin.nick = undefined;
+                    navigate(`/`);
 
+                    closeModal(false);
+                }
+                alert('회원탈퇴에 실패했습니다.\n다시 시도해주세요!');
+                isLogin.userId = undefined;
+                isLogin.nick = undefined;
+                navigate(`/`);
+
+                closeModal(false);
+            });
+    };
     return (
         <Container>
             {isLogin.userId ? (
@@ -78,16 +106,7 @@ function ModalSide({ setModalOpen }) {
                 <Button onClick={onLogIn}>로그인</Button>
             )}
             {isLogin.userId ? (
-                <>
-                    <Button onClick={onDelete}>계정삭제</Button>
-                    {okayOpen && (
-                        <ModalOkay
-                            setOkayOpen={setOkayOpen}
-                            setOkay={setOkay}
-                            text="정말로 계정을 삭제하시겠습니까?"
-                        />
-                    )}
-                </>
+                <Button onClick={onPrompt}>계정삭제</Button>
             ) : (
                 <Button onClick={onCreate}>계정 만들기</Button>
             )}
