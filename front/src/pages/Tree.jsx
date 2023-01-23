@@ -123,6 +123,11 @@ function Time() {
     const hours = today.getHours();
     const Login = useRecoilValue(isLoginAtom);
     const userObjectId = useParams().id;
+
+    useEffect(() => {
+        ImageMap('img[usemap]');
+    }, []);
+
     if (Login.userId === userObjectId){
         if (hours >= 20 || hours <= 5) {
             return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
@@ -161,8 +166,6 @@ function Button() {
         alert("링크가 복사되었습니다.");
     }
     
-    console.log(Login.userId);
-    console.log(userObjectId);
     if (Login.userId === userObjectId) {
         return (
             <Buttons>
@@ -216,9 +219,7 @@ function Button() {
 function Tree() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    console.log(loading);
     const userObjectId = useParams().id
-    console.log(userObjectId);
     const Login = useRecoilValue(isLoginAtom);
     const ownerName = useRecoilValue(ownerNameAtom);
     const count = useRecoilValue(countAtom);
@@ -227,7 +228,6 @@ function Tree() {
     const setLeaves = useSetRecoilState(temporaryTreeAtom);
     const getUser = async () => {
         setLoading(true);
-        console.log(loading);
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
@@ -235,6 +235,7 @@ function Tree() {
                 setOwnerName({ _id: response.data.userId, nick: response.data.nick });
                 setCount(response.data.message.length);
                 setLeaves(response.data.message);
+                setTimeout(() => setLoading(false),500);
             }
         })
         .catch((err) => {
@@ -243,14 +244,9 @@ function Tree() {
                 navigate('/');
             }
         })
-        .then(setLoading(false))
     }
 
     
-    
-    useEffect(() => {
-        ImageMap('img[usemap]');
-    }, []);
     
     useEffect(() => {
         getUser();
@@ -259,11 +255,10 @@ function Tree() {
 
     const clickHandler = (title) => {
         if (Login.userId === userObjectId) {
-            console.log(title);
+            console.log(title)
         }
     };
 
-    console.log(Login.userId === userObjectId);
 
     return (
         <div>
@@ -274,7 +269,7 @@ function Tree() {
                 </Count>
 
                 <Time />
-                {Login.userId === userObjectId ? <Link to={{ pathname: `/list/${ownerName._id} `}}>
+                {Login.userId === userObjectId ? <Link to={{ pathname: `/list/${ownerName._id}`}}>
                     <Treezone name="treemap">
                         <area
                             aria-hidden="true"

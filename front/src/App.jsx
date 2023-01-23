@@ -5,7 +5,7 @@ import { React, useEffect } from 'react';
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 import reset from 'styled-reset';
-import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { isLoginAtom } from './Atom';
 import Router from './Router';
 
@@ -31,7 +31,6 @@ ${reset}
 
 function App() {
     const setLogin = useSetRecoilState(isLoginAtom);
-    const Login = useRecoilValue(isLoginAtom);
     const getToken = () => {
         const cookies = new Cookies()
         const refreshToken = cookies.get("refreshToken");
@@ -48,7 +47,6 @@ function App() {
                 .then((res) => {
                     setLogin({userId: res.data.userId, nick: res.data.nick });
                     console.log(res.data);
-                    console.log(Login);
                 })
             }
         })
