@@ -2,7 +2,7 @@
 
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { React } from 'react';
+import { React, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
@@ -10,6 +10,7 @@ import CapImg from '../assets/capImg.png';
 import SnowImg from '../assets/snowbackground.png';
 import InstaImg from '../assets/instaImg.png';
 import { isLoginAtom } from '../Atom';
+import TreeSpinner from '../components/TreeSpinner';
 
 const Container = styled.div`
     z-index: -1;
@@ -102,10 +103,9 @@ const Snow = styled.img`
 
 function Button() {
     const Login = useRecoilValue(isLoginAtom);
-
     if(Login.userId){
         return (
-            <Box>
+            <div>
                 <Cap src={CapImg} />
                 <Logo src={LogoImg} />
                 <StyledLink to={{ pathname: `/tree/${Login.userId}` }}>
@@ -115,10 +115,10 @@ function Button() {
                     <img src={InstaImg} alt="인스타그램 로고" />
                     <p>@congraduation_skku</p>
                 </Insta>
-            </Box>
+            </div>
         )
     } return (
-        <Box>
+        <div>
             <Cap src={CapImg} />
             <Logo src={LogoImg} />
             <StyledLink to={{ pathname: `/login/*` }}>
@@ -131,18 +131,36 @@ function Button() {
                 <img src={InstaImg} alt="인스타그램 로고" />
                 <p>@congraduation_skku</p>
             </Insta>
-        </Box>
+        </div>
     )
 }
 
 function Main() {
+    const [loading, setLoading]=useState(true);
+    const changeLoading = () => {
+        setLoading(true);
+        setTimeout(()=>{
+            setLoading(false);
+        }, 500);
+    }
+
+    useEffect(() => {
+        changeLoading();
+    }, [])
 
     return (
+        <div>
+            {loading ? <TreeSpinner/>
+            :
             <Container>
                 <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-                <Button />
+                <Box>
+                    <Button />
+                </Box>
                 <Snow src={SnowImg} alt="눈 내리는 배경" />
             </Container>
+            }
+        </div>
     );
 }
 
