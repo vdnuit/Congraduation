@@ -22,7 +22,7 @@ const Container = styled.div`
 
 const Count = styled.div`
     position: absolute;
-    width: 100%;
+    // width: 100%;
     height: 2.5%;
     left: 16px;
     top: 88px;
@@ -65,7 +65,7 @@ const Div = styled.div`
 const StyledGrid = styled.div`
     width: 100%;
     max-width: 500px;
-    height: 93vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -77,7 +77,15 @@ const Flex = styled.div`
     position: relative;
     top: 120px;
     width: 97.5%;
-    height: 80vh;
+    /* Firefox */
+    height: -moz-calc(100% - 120px);
+    /* WebKit */
+    height: -webkit-calc(100% - 120px);
+    /* Opera */
+    height: -o-calc(100% - 120px);
+    /* Standard */
+    height: calc(100% - 120px);
+    // height: 70vh;
     overflow: auto;
     max-width: 500px;
     display: flex;

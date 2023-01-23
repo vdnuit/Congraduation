@@ -16,9 +16,10 @@ const Container = styled.div`
     position: absolute;
 
     z-index: 10;
-    top: 63px;
+    top: 0px;
     left: 0px;
     max-width: 500px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -63,7 +64,7 @@ const Container = styled.div`
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space:nowrap;
+        white-space: nowrap;
     }
 `;
 
@@ -149,7 +150,6 @@ const Img = styled.img`
 `;
 
 const Button = styled.button`
-    
     background: #072a60;
     border-color: #072a60;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
@@ -215,7 +215,7 @@ function Content() {
                 <LeafSpinner />
             ) : (
                 <Container>
-                    <div ref={imageRef}>
+                    <div style={{marginTop:"60px"}} ref={imageRef}>
                         <Div>
                             <GreyBox>
                                 <p>{Leaf.topic}</p>
