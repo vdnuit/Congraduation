@@ -4,8 +4,7 @@ import { toBlob } from 'html-to-image';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { leafAtom } from '../Atom';
-import TreeNight from '../assets/treenight.png';
-import CapLogo from '../assets/CapLogoImg.png';
+import InstaStory from '../assets/InstaStory.png';
 
 const Background = styled.div`
     position: fixed;
@@ -33,8 +32,10 @@ const Modal = styled.div`
 `
 
 const ModalDiv = styled.div`
+    position: absolute;
+    top: 1%;
     width: 100%;
-    height: 100%;
+    height: 93%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,27 +54,25 @@ const TreeBackground = styled.img`
 
 const Container = styled.div`
     z-index: -1;
-    width: 90%;
-    height: 85%;
+    width: 88%;
+    height: 88%;
     position: absolute;
-    top: 7%;
+    top: 5%;
 `;
 
 const Box = styled.div`
-    background: rgba(255, 255, 255, 0.25);
-    border: 0.3px solid #ffffff;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(17.5px);
-    border-radius: 10px;
-    width: 100%;
-    height: 100%;
+    border-radius: 20px;
+    position: absolute;
+    top: 10%;
+    width: 99%;
+    height: 95%;
     text-align: center;
 `;
 
 const GreyBox = styled.div`
     background: #ffffff;
-    padding: 10px;
-    margin: 10px;
+    padding: 8px;
+    margin: 0 10px;
     border: 1px solid #c8c8c8;
     border-radius: 10px;
     p {
@@ -120,7 +119,7 @@ const Buttons = styled.div`
     align-items: center;
     text-align: center;
     position: absolute;
-    top: 92%;
+    top: 87.5%;
     width: 100%;
 `;
 
@@ -133,19 +132,13 @@ const Button = styled.button`
     font-size: 20px;
     line-height: 25px;
     width: 20%;
-    height: 43px;
+    height: 40px;
     text-align: center;
     border: none;
     color: #ffffff;
     margin: 10px;
 `;
 
-const Img = styled.div`
-    position: absolute;
-    z-index: 50;
-    width: 100px;
-    height: 50px;
-`
 
 
 function InstaModal({ setModalOpen }) {
@@ -182,10 +175,9 @@ function InstaModal({ setModalOpen }) {
         <Background>
             <Modal>
                 <ModalDiv ref={imageRef}>
-                    <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
+                    <TreeBackground src={InstaStory} alt="밤 배경 은행나무" />
                     <Container>
                         <Box>
-                            <Img src={CapLogo} alt="logo"/>
                             <Div>
                                 <GreyBox>
                                     <p>{Leaf.topic}</p>

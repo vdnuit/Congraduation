@@ -102,7 +102,7 @@ const Snow = styled.img`
 
 function Button() {
     const Login = useRecoilValue(isLoginAtom);
-    console.log(Login);
+
     if(Login.userId){
         return (
             <Box>
@@ -136,12 +136,13 @@ function Button() {
 }
 
 function Main() {
+
     return (
-        <Container>
-            <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-            <Button />
-            <Snow src={SnowImg} alt="눈 내리는 배경" />
-        </Container>
+            <Container>
+                <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
+                <Button />
+                <Snow src={SnowImg} alt="눈 내리는 배경" />
+            </Container>
     );
 }
 

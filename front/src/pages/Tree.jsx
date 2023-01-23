@@ -182,9 +182,13 @@ function Button() {
                 <button type="button" onClick={writeNote}>
                     쪽지 남기기
                 </button>
-                <StyledLink to={{ pathname: `/tree/${Login.userId}` }}>
-                    <h3>내 트리로 가기</h3>
-                </StyledLink>
+                <button
+                    type="button"
+                    onClick={()=>{navigate(`/tree/${Login.userId}`)}}
+                    style={{ backgroundColor: '#ffffff', color: '#7c7c7c' }}
+                >
+                    내 트리로 가기
+                </button>
                 <Dday>쪽지 오픈 D-7</Dday>
             </Buttons>
         );
@@ -210,6 +214,7 @@ function Button() {
 
 
 function Tree() {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     console.log(loading);
     const userObjectId = useParams().id
@@ -226,9 +231,17 @@ function Tree() {
         axios
         .get(`http://localhost:8000/api/v1/users/${userObjectId}`, {withCredentials: true})
         .then((response)=> {
-            setOwnerName({ _id: response.data.userId, nick: response.data.nick });
-            setCount(response.data.message.length);
-            setLeaves(response.data.message);
+            if(response.status === 200){
+                setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+                setCount(response.data.message.length);
+                setLeaves(response.data.message);
+            }
+        })
+        .catch((err) => {
+            if(err.response.status === 400){
+                alert("존재하지 않는 트리입니다.");
+                navigate('/');
+            }
         })
         .then(setLoading(false))
     }
@@ -249,6 +262,8 @@ function Tree() {
             console.log(title);
         }
     };
+
+    console.log(Login.userId === userObjectId);
 
     return (
         <div>
