@@ -137,6 +137,7 @@ const Img = styled.img`
 `;
 
 const Button = styled.button`
+    
     background: #072a60;
     border-color: #072a60;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
