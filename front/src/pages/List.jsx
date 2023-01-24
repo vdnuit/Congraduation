@@ -12,6 +12,7 @@ import { StyledLink } from './Main';
 
 const Container = styled.div`
     width: 100%;
+    height: 100vh;
     max-width: 500px;
     display: flex;
     flex-direction: column;
@@ -36,12 +37,10 @@ const Count = styled.div`
 
 const Empty = styled.div`
     width: 70%;
-    height: 12.5%;
     margin-left: 3%;
     margin-top: 10%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
 `;
 
@@ -50,7 +49,7 @@ const Announce = styled.div`
     font-family: 'Jua';
     font-style: normal;
     font-weight: 400;
-    font-size: 24px;
+    font-size: 23px;
     line-height: 150.02%;
     /* or 36px */
     text-align: center;
@@ -120,7 +119,10 @@ function UI() {
             <Container>
                 <Count>받은 쪽지 수 {count}</Count>
                 <Empty>
-                    <Announce>쪽지를 받을 수 있도록 링크를 공유해보세요!</Announce>
+                    <Announce>
+                        <div>쪽지를 받을 수 있도록</div>
+                        <div>링크를 공유해보세요!</div>
+                    </Announce>
                 </Empty>
                 <Div>
                     <StyledLink onClick={clip}>

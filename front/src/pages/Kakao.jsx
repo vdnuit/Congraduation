@@ -65,8 +65,6 @@ function Kakao() {
                 const NICK = response.data.nick;
                 setCookie('provider',PROVIDER, { path: "/", sameSite: "strict", });
                 setCookie('refreshToken', REFRESH_TOKEN, { path: "/", sameSite: "strict", });
-                setCookie('_id', ID, { path: "/", sameSite: "strict", });
-                setCookie('nick', NICK, { path: "/", sameSite: "strict", });
                 setLogin({ userId: ID,  nick: NICK });
                 navigate(`/tree/${ID}`);
                 
