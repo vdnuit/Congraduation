@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ImageMap from 'image-map';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ownerNameAtom, countAtom, isLoginAtom, temporaryTreeAtom } from '../Atom';
+import { ownerNameAtom, countAtom, isLoginAtom, temporaryTreeAtom, dateAtom } from '../Atom';
 import TreeSpinner from '../components/TreeSpinner';
 import TreeNight from '../assets/treenight.png';
 import TreeDay from '../assets/treeday.png';
@@ -150,6 +150,7 @@ function Time() {
 }
 
 function Button() {
+    const date = useRecoilValue(dateAtom);
     const navigate = useNavigate();
     const userObjectId = useParams().id;
     const Login = useRecoilValue(isLoginAtom);
@@ -162,7 +163,8 @@ function Button() {
     const [modalOpen, setModalOpen] = useState(false);
 
     const node = useRef();
-
+    const current = new Date();
+    const dday = Math.round((current - date) / (24 * 60 * 60 * 1000));
     useEffect(() => {
         const clickOutside = (e) => {
             if (modalOpen && node.current && !node.current.contains(e.target)) {
@@ -179,7 +181,13 @@ function Button() {
     const showModal = () => {
         setModalOpen(true);
     };
-
+    const memoList = () => {
+        if (dday >= 0) {
+            navigate(`/list/${userObjectId}`);
+        } else {
+            alert(`쪽지 열람은 ${Math.abs(dday)}일 후에 가능합니다!`);
+        }
+    };
     // const clipboard = (event) => {
     //     event.preventDefault();
     //     navigator.clipboard.writeText(window.location.href);
@@ -189,17 +197,15 @@ function Button() {
     if (Login.userId === userObjectId) {
         return (
             <Buttons>
-                <button type="button">
-                    <StyledLink to={{ pathname: `/list/${userObjectId}` }}>
-                        받은 쪽지 목록
-                    </StyledLink>
+                <button type="button" onClick={memoList}>
+                    받은 쪽지 목록
                 </button>
 
                 <button type="button" onClick={showModal}>
                     공유하기
                 </button>
                 {modalOpen ? <ModalOkay setModalOpen={setModalOpen} /> : null}
-                <Dday>쪽지 오픈 D-7</Dday>
+                <Dday>{dday >= 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
             </Buttons>
         );
     }
@@ -218,7 +224,7 @@ function Button() {
                 >
                     내 트리로 가기
                 </button>
-                <Dday>쪽지 오픈 D-7</Dday>
+                <Dday>{dday > 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
             </Buttons>
         );
     }
@@ -235,7 +241,7 @@ function Button() {
                 >
                     나도 계정 만들기
                 </button>
-                <Dday>쪽지 오픈 D-7</Dday>
+                <Dday>{dday > 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
             </Buttons>
         );
     }

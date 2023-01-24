@@ -33,5 +33,5 @@ export const countAtom = atom({
 
 export const dateAtom = atom({
     key: 'date',
-    default: Math.ceil((new Date(2022, 11, 15) - new Date()) / (1000 * 60 * 60 * 24))
+    default: new Date('2023-02-15')
 });
