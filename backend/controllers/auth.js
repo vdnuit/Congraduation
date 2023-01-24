@@ -56,6 +56,10 @@ const signin = (req, res, next) => {
 
 const signout = async (req, res, next) => {
     try{
+        if(req.isLogin === false) {
+            return res.status(401).json({message: "Unauthorized"});
+        }
+        else {
             if(req.cookies.provider === 'local'){
                 delCookie(res);
                 return res.status(200).json({message: "Logout successful"});
@@ -77,9 +81,11 @@ const signout = async (req, res, next) => {
                 delCookie(res);
                 return res.status(200).json({message: "Logout successful"});
             }
-            else {
+            else { // already blocked by auth.js
                 delCookie(res);
+                return res.status(400).json({message: "Bad request"});
             }
+        }
     }
     catch(err){
         console.log(err);
@@ -167,7 +173,7 @@ const getRefreshToken = async(req, res, next) => {
                 if(token){ // 리프레쉬 토큰 존재 -> 재발급
                     console.log("NEW ACCESS TOKEN PROVIDED!");
                     const user = await User.findOne({_id: token.userId});
-                    const accessToken = jwt.sign({id: user._id, nick: user.nick, provider: user.provider}, process.env.JWTSecret, {expiresIn: "5m"});
+                    const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
                     res.status(200).json({accessToken: accessToken});
                 }
                 else{
@@ -220,25 +226,30 @@ const getRefreshToken = async(req, res, next) => {
 
 const checkPassword = async(req, res, next) => {
     try {
-        let user = null;
-        const { password } = req.body;
-        if(req.userId && req.provider === 'local' ) {
-            user = await User.findOne({_id: req.userId});
-            if(user !== null){
-                const compareResult = await bcrypt.compare(password, user.password);
-                if(compareResult){
-                    res.status(200).json({message: "Account verified"});
+        if(req.isLogin === false) {
+            return res.status(401).json({message: "Unauthorized"});
+        }
+        else {
+            let user = null;
+            const { password } = req.body;
+            if(req.userId && req.provider === 'local' ) {
+                user = await User.findOne({_id: req.userId});
+                if(user !== null){
+                    const compareResult = await bcrypt.compare(password, user.password);
+                    if(compareResult){
+                        res.status(200).json({message: "Account verified"});
+                    }
+                    else{
+                        res.status(400).json({message: "Password incorrect"});
+                    }
                 }
-                else{
-                    res.status(400).json({message: "Password incorrect"});
+                else {
+                    res.status(400).json({message: "Bad request - The user does not exist"});
                 }
             }
             else {
-                res.status(400).json({message: "Bad request - The user does not exist"});
+                res.status(401).json({message: "Unauthorized"});
             }
-        }
-        else {
-            res.status(400).json({message: "Bad request - userId and provider are required"});
         }
     }
     catch(err) {

@@ -47,27 +47,33 @@ const getMessagesByUserId = async(req, res, next) => {
 };
 
 const getMessageByMessageId = async(req, res, next) => {
-    if(req.isLogin === true){
-        await Message.findOne({_id: req.params.messageId}).exec((err, data) => {
-            if(err){
-                console.log(err);
-                return next(err);
-            }
-            else if(data === null){
-                return res.status(400).json({message: "The message does not exist"});
-            }
-            else{
-                if(data.receiverId.equals(req.userId)){
-                    return res.status(200).json(data);
+    try{
+        if(req.isLogin === false) {
+            return res.status(401).json({message: "Unauthorized"});
+        }
+        else {
+            await Message.findOne({_id: req.params.messageId}).exec((err, data) => {
+                if(err){
+                    console.log(err);
+                    return next(err);
+                }
+                else if(data === null){
+                    return res.status(400).json({message: "The message does not exist"}); // 처리 필요
                 }
                 else{
-                    return res.status(401).json({message: "Unauthorized"});
+                    if(data.receiverId.equals(req.userId)){
+                        return res.status(200).json(data);
+                    }
+                    else{
+                        return res.status(401).json({message: "Unauthorized"});
+                    }
                 }
-            }
-        });
+            });
+        }
     }
-    else{
-        return res.status(401).json({message: "Unauthorized"});
+    catch(err) {
+        console.log(err);
+        return next(err);
     }
 }
 
@@ -98,13 +104,17 @@ const createMessage = async(req, res, next) => {
 
 const deleteMessage = async(req, res, next) => {
     try{
-        if(Types.ObjectId.isValid(req.params.messageId)){
-            await Message.findOneAndDelete({_id: req.params.messageId});
-            res.status(200).json({message: "Successfully deleted"});
+        if(req.isLogin === false) {
+            return res.status(401).json({message: "Unauthorized"});
         }
-        else{
-            console.log("HERE MAN");
-            res.status(400).json({message: "Bad Request"});
+        else {
+            if(Types.ObjectId.isValid(req.params.messageId)){
+                await Message.findOneAndDelete({_id: req.params.messageId});
+                res.status(200).json({message: "Successfully deleted"});
+            }
+            else{
+                res.status(400).json({message: "Bad request"});
+            }
         }
     }
     catch(err){

@@ -36,7 +36,10 @@ const signup = async(req, res, next) => {
 const getMyInfo = async(req, res, next) => {
     try{
         console.log("[GET MY INFO]");
-        if(req.isLogin === true) {
+        if(req.isLogin === false) {
+            return res.status(401).json({message: "Unauthorized"});
+        }
+        else {
             const user = await User.findOne({_id: req.userId});
             if(user) {
                 console.log("AUTHORIZED USER INFO HAS BEEN RETURNED SUCCESSFULLY!");
@@ -46,9 +49,6 @@ const getMyInfo = async(req, res, next) => {
                 console.log("FAIELD TO RETURN AUTHORIZED USER INFO");
                 res.status(401).json({message: "Unauthorized"});
             }
-        }
-        else {
-            res.status(401).json({message: "Unauthorized"});
         }
     }
     catch(err){
@@ -87,47 +87,27 @@ const getUserById = async(req, res, next) => {
 
 const deleteUser = async(req, res, next) => {
     try{
-        if(Types.ObjectId.isValid(req.params.userId)){
-            if(req.provider === 'local'){
-                const user = await User.findOne({_id: req.params.userId});
-                if(user._id.equals(req.userId)){
-                        await User.deleteOne({_id: user.id});
-                        await Message.deleteMany({receiverId: user.id});
-                        delCookie(res);
-                        return res.status(200).json({message: "Successfully deleted"});
-                }
-                else{
-                    return res.status(401).json({message: "Unauthorized"});
-                }
-            }
-            // else if(req.provider === 'kakao'){
-            //     try {
-            //         const ACCESS_TOKEN = req.accessToken;
-            //         await axios({
-            //             method:'post',
-            //             url:'https://kapi.kakao.com/v1/user/unlink',
-            //             headers:{
-            //               'Authorization': `Bearer ${ACCESS_TOKEN}`
-            //             }
-            //         });
-            //         if(user && user._id.equals(req.userId)){
-            //             await User.deleteOne({_id: user.id});
-            //             await Message.deleteMany({receiverId: user.id});
-            //             delCookie(res);
-            //             return res.status(200).json({message: "Successfully deleted"});
-            //         }
-            //     }
-            //     catch(err){
-            //         console.log(err);
-            //         return next(err);
-            //     }
-            // }
-            else{
-                return res.status(400).json({message: "Bad Request"});
-            }
+        if(req.isLogin === false) {
+            return res.status(401).json({message: "Unauthorized"});
         }
         else {
-            return res.status(400).json({message: "Bad Request"});
+            if(Types.ObjectId.isValid(req.params.userId)){
+                if(req.provider === 'local'){
+                    const user = await User.findOne({_id: req.params.userId});
+                    if(user._id.equals(req.userId)){
+                            await User.deleteOne({_id: user.id});
+                            await Message.deleteMany({receiverId: user.id});
+                            delCookie(res);
+                            return res.status(200).json({message: "Successfully deleted"});
+                    }
+                    else{
+                        return res.status(401).json({message: "Unauthorized"});
+                    }
+                }
+                else{
+                    return res.status(401).json({message: "Provider field is required"});
+                }
+            }
         }
     }
     catch(err){
