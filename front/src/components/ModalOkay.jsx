@@ -1,5 +1,6 @@
-import React from 'react';
+import { React } from 'react';
 import { PropTypes } from 'prop-types';
+import { toBlob } from 'html-to-image';
 import styled from 'styled-components';
 
 const Background = styled.div`
@@ -63,13 +64,47 @@ const Button = styled.button`
     margin: 10px;
 `;
 
-function ModalOkay({ setOkayOpen }) {
+function ModalOkay({ setModalOpen }) {
     const closeModal = () => {
-        setOkayOpen(false);
+        setModalOpen(false);
     };
     const onOkay = () => {
-        setOkayOpen(false);
+        setModalOpen(false);
     };
+
+    const clipboard = (event) => {
+         event.preventDefault();
+         navigator.clipboard.writeText(window.location.href);
+         alert('링크가 복사되었습니다.');
+         onOkay();
+     };
+
+
+    const handleShare = async() => {
+        const newFile = await toBlob(document.querySelector(".container"));
+        const data = {
+            files: [
+                new File([newFile], 'image.png', {
+                    type: newFile.type,
+                }),
+            ],
+            title: 'Image',
+            text: 'image',
+        };
+
+        try {
+            if(!navigator.canShare(data)){
+                alert("이미지를 공유할 수 없습니다.");
+            }
+            await navigator.share(data);
+            closeModal();
+        } catch(err){
+            console.error(err);
+        }
+    }
+
+    console.log(document.querySelector(".container"));
+
     return (
         <Background>
             <Container>
@@ -81,7 +116,7 @@ function ModalOkay({ setOkayOpen }) {
                     </Text>
                     <Buttons>
                         <Button
-                            onClick={onOkay}
+                            onClick={clipboard}
                             style={{
                                 borderRadius: '10px',
                                 margin: '5px',
@@ -92,7 +127,7 @@ function ModalOkay({ setOkayOpen }) {
                             링크공유
                         </Button>
                         <Button
-                            onClick={closeModal}
+                            onClick={handleShare}
                             style={{
                                 borderRadius: '10px',
                                 margin: '5px',
@@ -110,7 +145,7 @@ function ModalOkay({ setOkayOpen }) {
 }
 
 ModalOkay.propTypes = {
-    setOkayOpen: PropTypes.func.isRequired
+    setModalOpen: PropTypes.func.isRequired
 };
 
 export default ModalOkay;

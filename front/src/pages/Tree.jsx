@@ -128,7 +128,7 @@ function Time() {
     useEffect(() => {
         ImageMap('img[usemap]');
     }, []);
-
+    
     if (Login.userId === userObjectId) {
         if (hours >= 20 || hours <= 5) {
             return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
@@ -176,15 +176,10 @@ function Button() {
             document.removeEventListener('mousedown', clickOutside);
         };
     }, [modalOpen]);
+
     const showModal = () => {
         setModalOpen(true);
     };
-
-    // const clipboard = (event) => {
-    //     event.preventDefault();
-    //     navigator.clipboard.writeText(window.location.href);
-    //     alert('링크가 복사되었습니다.');
-    // };
 
     if (Login.userId === userObjectId) {
         return (
@@ -287,7 +282,7 @@ function Tree() {
                 <TreeSpinner />
             ) : (
                 <>
-                    <Container>
+                    <Container className="container">
                         <Count>
                             {ownerName.nick} 님의 나무에 {count}개의 메시지
                         </Count>
