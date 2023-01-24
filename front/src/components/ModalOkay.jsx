@@ -21,8 +21,8 @@ const Container = styled.div`
     z-index: 999;
 
     margin: 0 auto;
-    max-width: 341px;
-    max-height: 215px;
+    max-width: 290px;
+    max-height: 190px;
     width: 80vw;
     height: 50vw;
     background: #ffffff;
@@ -54,7 +54,6 @@ const Button = styled.button`
     font-family: 'Jua';
     font-style: normal;
     font-weight: 400;
-    font-size: 20px;
     line-height: 25px;
     width: 100px;
     height: 46px;
@@ -64,26 +63,44 @@ const Button = styled.button`
     margin: 10px;
 `;
 
-function ModalOkay({ setOkayOpen, setOkay, text }) {
+function ModalOkay({ setOkayOpen }) {
     const closeModal = () => {
         setOkayOpen(false);
     };
     const onOkay = () => {
-        setOkay(true);
         setOkayOpen(false);
     };
     return (
         <Background>
             <Container>
                 <div>
-                    <Text>{text}</Text>
+                    <Text>
+                        인스타스토리에 공유시
+                        <br />
+                        저장된 이미지를 사용해주세요
+                    </Text>
                     <Buttons>
-                        <Button onClick={onOkay}>확인</Button>
                         <Button
-                            style={{ backgroundColor: '#C8C8C8', color: '#252525' }}
-                            onClick={closeModal}
+                            onClick={onOkay}
+                            style={{
+                                borderRadius: '10px',
+                                margin: '5px',
+                                width: '100px',
+                                fontSize: '15px'
+                            }}
                         >
-                            취소
+                            링크공유
+                        </Button>
+                        <Button
+                            onClick={closeModal}
+                            style={{
+                                borderRadius: '10px',
+                                margin: '5px',
+                                width: '100px',
+                                fontSize: '15px'
+                            }}
+                        >
+                            이미지 저장
                         </Button>
                     </Buttons>
                 </div>
@@ -93,9 +110,7 @@ function ModalOkay({ setOkayOpen, setOkay, text }) {
 }
 
 ModalOkay.propTypes = {
-    setOkayOpen: PropTypes.func.isRequired,
-    setOkay: PropTypes.func.isRequired,
-    text: PropTypes.string.isRequired
+    setOkayOpen: PropTypes.func.isRequired
 };
 
 export default ModalOkay;

@@ -1,6 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -12,6 +12,7 @@ import TreeNight from '../assets/treenight.png';
 import TreeDay from '../assets/treeday.png';
 import TreeSunset from '../assets/treesunset.png';
 import TreeComponent from '../components/TreeComponent';
+import ModalOkay from '../components/ModalOkay';
 
 const Container = styled.div`
     max-width: 500px;
@@ -67,7 +68,7 @@ const Buttons = styled.div`
 `;
 export const StyledLink = styled(Link)`
     text-decoration: none;
-
+    color: white;
     h2 {
         background: #072a60;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
@@ -158,22 +159,46 @@ function Button() {
     const makeAccount = () => {
         navigate('/signup/*');
     };
+    const [modalOpen, setModalOpen] = useState(false);
 
-    const clipboard = (event) => {
-        event.preventDefault();
-        navigator.clipboard.writeText(window.location.href);
-        alert('링크가 복사되었습니다.');
+    const node = useRef();
+
+    useEffect(() => {
+        const clickOutside = (e) => {
+            if (modalOpen && node.current && !node.current.contains(e.target)) {
+                setModalOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', clickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', clickOutside);
+        };
+    }, [modalOpen]);
+    const showModal = () => {
+        setModalOpen(true);
     };
+
+    // const clipboard = (event) => {
+    //     event.preventDefault();
+    //     navigator.clipboard.writeText(window.location.href);
+    //     alert('링크가 복사되었습니다.');
+    // };
 
     if (Login.userId === userObjectId) {
         return (
             <Buttons>
-                <StyledLink to={{ pathname: `/list/${userObjectId}` }}>
-                    <h2>받은 쪽지 목록</h2>
-                </StyledLink>
-                <StyledLink onClick={clipboard}>
-                    <h3>공유하기</h3>
-                </StyledLink>
+                <button type="button">
+                    <StyledLink to={{ pathname: `/list/${userObjectId}` }}>
+                        받은 쪽지 목록
+                    </StyledLink>
+                </button>
+
+                <button type="button" onClick={showModal}>
+                    공유하기
+                </button>
+                {modalOpen ? <ModalOkay setModalOpen={setModalOpen} /> : null}
                 <Dday>쪽지 오픈 D-7</Dday>
             </Buttons>
         );
