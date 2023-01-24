@@ -5,7 +5,7 @@ import Spinner from '../assets/Spinner.gif';
 const Container = styled.div`
     width: 100%;
     max-width: 500px;
-    height: 93vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -28,14 +28,12 @@ const Img = styled.img`
     width: 20%;
 `;
 
-
 function LeafSpinner() {
-    
     return (
         <Container>
-                <Empty>
-                    <Img src={Spinner} alt="로딩중" />
-                </Empty>
+            <Empty>
+                <Img src={Spinner} alt="로딩중" />
+            </Empty>
         </Container>
     );
 }
