@@ -4,8 +4,12 @@ const Token = require('../models/token');
 const User = require('../models/user');
 const axios = require('axios');
 
+const delCookie = (res) => {
+    res.clearCookie('refreshToken');
+    res.clearCookie('provider');
+}
+
 const auth = async (req, res, next) => {
-    console.log(req.body);
     console.log("[AUTH]");
     req.isLogin = false;
     let token = null;
@@ -99,11 +103,13 @@ const auth = async (req, res, next) => {
             }
         }
         else{
-            return res.status(400).json({message: "Bad Request - Field \"provider\" must exist"});
+            delCookie(res);
+            return res.status(401).json({message: "Field \"provider\" must exist"});
         }
     }
     else{
         console.log("UNAUTHORIZED DUE TO EMPTY TOKEN...");
+        delCookie(res);
         return res.status(401).json({message: "Unauthorized"});
     }
 };

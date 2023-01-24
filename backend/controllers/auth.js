@@ -56,7 +56,6 @@ const signin = (req, res, next) => {
 
 const signout = async (req, res, next) => {
     try{
-        if(req.isLogin == true){
             if(req.cookies.provider === 'local'){
                 delCookie(res);
                 return res.status(200).json({message: "Logout successful"});
@@ -78,10 +77,9 @@ const signout = async (req, res, next) => {
                 delCookie(res);
                 return res.status(200).json({message: "Logout successful"});
             }
-        }
-        else{
-            res.status(401).json({message: "Unauthorized"});
-        }
+            else {
+                delCookie(res);
+            }
     }
     catch(err){
         console.log(err);

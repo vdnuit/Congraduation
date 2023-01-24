@@ -3,22 +3,6 @@ const Message = require('../models/message');
 const bcrypt = require('bcrypt');
 const { Types } = require('mongoose');
 
-const checkPassword = async (originalPassword, inputPassword) => {
-    try {
-        const compareResult = await bcrypt.compare(originalPassword, inputPassword);
-        if(compareResult){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    catch(err) {
-        console.log(err);
-        return next(err);
-    }
-}
-
 const delCookie = (res) => {
     res.clearCookie('provider');
     res.clearCookie('refreshToken');
