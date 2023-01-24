@@ -115,7 +115,6 @@ const auth = async (req, res, next) => {
     }
     else{
         console.log("UNAUTHORIZED DUE TO EMPTY TOKEN...");
-        delCookie(res);
         return next();
     }
 };
