@@ -74,7 +74,7 @@ function ModalSide({ setModalOpen }) {
             isLogin.nick = undefined;
             navigate(`/`);
             closeModal(false);
-        } else {
+        } else if (cookies.get('provider') === 'local') {
             const pinput = prompt('회원 탈퇴를 위해 비밀번호를 입력해주세요.');
 
             console.log(pinput);
@@ -117,6 +117,10 @@ function ModalSide({ setModalOpen }) {
                     return 0;
                 });
             }
+        } else {
+            setIsLogin({ userId: undefined, nick: undefined });
+            alert('잘못된 접근입니다. 다시 로그인해주세요.');
+            navigate(`/login/*`);
         }
         return 0;
     };
