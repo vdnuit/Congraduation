@@ -78,13 +78,10 @@ function ModalSide({ setModalOpen }) {
             const pinput = prompt('회원 탈퇴를 위해 비밀번호를 입력해주세요.');
 
             console.log(pinput);
-            axios
-                .post("/api/v1/auth/check-password",
-                    {password: pinput}
-                )
-                .then((response) => {
+            if (pinput != null) {
+                navigate(`/`);
+                axios.post('/api/v1/auth/check-password', { password: pinput }).then((response) => {
                     console.log(response.status);
-
                     if (response.status === 200) {
                         axios
                             .delete(`http://localhost:8000/api/v1/users/${isLogin.userId}`)
@@ -94,7 +91,6 @@ function ModalSide({ setModalOpen }) {
                                     alert('회원탈퇴를 완료했습니다.');
                                     isLogin.userId = undefined;
                                     isLogin.nick = undefined;
-                                    navigate(`/`);
 
                                     closeModal(false);
                                     return 0;
@@ -120,6 +116,7 @@ function ModalSide({ setModalOpen }) {
                     }
                     return 0;
                 });
+            }
         }
         return 0;
     };

@@ -33,8 +33,6 @@ function App() {
     const setLogin = useSetRecoilState(isLoginAtom);
     const getToken = () => {
         const cookies = new Cookies();
-        const setCookie = (name, value, option) => { cookies.set(name, value, { ...option });
-    };
         const refreshToken = cookies.get("refreshToken");
         axios.defaults.headers.common.Authorization = `Bearer ${refreshToken}`;
         axios
@@ -48,8 +46,6 @@ function App() {
                 .get(`/api/v1/users/myInfo`)
                 .then((res) => {
                     setLogin({userId: res.data.userId, nick: res.data.nick });
-                    setCookie("refreshToken",'',0);
-                    setCookie("provider",'',0);
                     console.log(res.data);
                 })
             }
