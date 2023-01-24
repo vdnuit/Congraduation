@@ -79,43 +79,44 @@ function ModalSide({ setModalOpen }) {
             const pinput = prompt('회원 탈퇴를 위해 비밀번호를 입력해주세요.');
 
             console.log(pinput);
+            if (pinput != null) {
+                axios.post('/api/v1/auth/check-password', { password: pinput }).then((response) => {
+                    console.log(response.status);
+                    if (response.status === 200) {
+                        axios
+                            .delete(`http://localhost:8000/api/v1/users/${isLogin.userId}`)
+                            .then((res) => {
+                                console.log(res.status);
+                                if (res.status === 200) {
+                                    alert('회원탈퇴를 완료했습니다.');
+                                    isLogin.userId = undefined;
+                                    isLogin.nick = undefined;
 
-            axios.post('/api/v1/auth/check-password', { password: pinput }).then((response) => {
-                console.log(response.status);
-                if (response.status === 200) {
-                    axios
-                        .delete(`http://localhost:8000/api/v1/users/${isLogin.userId}`)
-                        .then((res) => {
-                            console.log(res.status);
-                            if (res.status === 200) {
-                                alert('회원탈퇴를 완료했습니다.');
+                                    closeModal(false);
+                                    return 0;
+                                }
+
+                                alert('회원탈퇴에 실패했습니다.\n다시 시도해주세요.');
                                 isLogin.userId = undefined;
                                 isLogin.nick = undefined;
+                                navigate(`/`);
 
                                 closeModal(false);
                                 return 0;
-                            }
+                            });
+                    } else {
+                        alert('비밀번호가 일치하지 않습니다.\n다시 시도해주세요!');
+                        isLogin.userId = undefined;
+                        isLogin.nick = undefined;
+                        navigate(`/`);
 
-                            alert('회원탈퇴에 실패했습니다.\n다시 시도해주세요.');
-                            isLogin.userId = undefined;
-                            isLogin.nick = undefined;
-                            navigate(`/`);
+                        closeModal(false);
 
-                            closeModal(false);
-                            return 0;
-                        });
-                } else {
-                    alert('비밀번호가 일치하지 않습니다.\n다시 시도해주세요!');
-                    isLogin.userId = undefined;
-                    isLogin.nick = undefined;
-                    navigate(`/`);
-
-                    closeModal(false);
-
+                        return 0;
+                    }
                     return 0;
-                }
-                return 0;
-            });
+                });
+            }
         }
         return 0;
     };
