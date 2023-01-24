@@ -66,7 +66,6 @@ function ModalSide({ setModalOpen }) {
         closeModal(false);
     };
     const onPrompt = () => {
-        navigate(`/`);
         if (cookies.get('provider') === 'kakao') {
             alert(
                 '카카오 로그인 회원탈퇴는 카카오톡>설정>카카오계정>연결된 서비스 관리에서 탈퇴해주세요!'
@@ -80,6 +79,7 @@ function ModalSide({ setModalOpen }) {
 
             console.log(pinput);
             if (pinput != null) {
+                navigate(`/`);
                 axios.post('/api/v1/auth/check-password', { password: pinput }).then((response) => {
                     console.log(response.status);
                     if (response.status === 200) {
