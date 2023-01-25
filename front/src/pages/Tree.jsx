@@ -264,7 +264,7 @@ function Tree() {
     const getUser = async () => {
         setLoading(true);
         axios
-            .get(`http://localhost:8000/api/v1/users/${userObjectId}`, { withCredentials: true })
+            .get(`/api/v1/users/${userObjectId}`, { withCredentials: true })
             .then((response) => {
                 if (response.status === 200) {
                     setOwnerName({ _id: response.data.userId, nick: response.data.nick });

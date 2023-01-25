@@ -96,7 +96,7 @@ function SignUp() {
 
         if(data.password === data.password1){
             axios
-        .post("http://localhost:8000/api/v1/users/signup", {
+        .post("/api/v1/users/signup", {
             userId: watch().ID,
             password: watch().password,
             nick: watch().nickname

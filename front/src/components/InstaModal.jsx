@@ -72,10 +72,11 @@ const Box = styled.div`
 
 const GreyBox = styled.div`
     background: #ffffff;
+    filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.25));
     padding: 8px;
     margin: 0 10px;
-    border: 1px solid #c8c8c8;
-    border-radius: 1vh;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
     // p {
     //     margin: 5px 0px;
     //     font-family: 'Inter';
