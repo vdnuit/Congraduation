@@ -17,7 +17,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     background-color: #f5f5f5;
-    height: 100vh;
+    padding-bottom: 60px;
 `;
 
 const Form = styled.form`
@@ -76,12 +76,11 @@ const Kakao = styled.a`
 const Img = styled.img`
     width: 46.8%;
     max-width: 234px;
-
-`
+`;
 
 function LogIn() {
     const setLogin = useSetRecoilState(isLoginAtom);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const {
         register,
         watch,
@@ -91,24 +90,27 @@ function LogIn() {
 
     const handleLogin = () => {
         axios
-        .post("/api/v1/auth/login", {
-            id: watch().ID,
-            password: watch().password
-        }, {withCredentials: true})
-        .then((response)=>{
-            if(response.status === 200){
-                console.log("왜안돼");
-                const { accessToken } = response.data;
-                axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-                setLogin({ userId: response.data._id,  nick: response.data.nick });
-                navigate(`/tree/${response.data._id}`);
-            } else {
-                alert(response.statusText);
-            }
-        })
-        .catch(()=>alert("아이디와 비밀번호를 확인해주세요."))   
+            .post(
+                '/api/v1/auth/login',
+                {
+                    id: watch().ID,
+                    password: watch().password
+                },
+                { withCredentials: true }
+            )
+            .then((response) => {
+                if (response.status === 200) {
+                    console.log('왜안돼');
+                    const { accessToken } = response.data;
+                    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+                    setLogin({ userId: response.data._id, nick: response.data.nick });
+                    navigate(`/tree/${response.data._id}`);
+                } else {
+                    alert(response.statusText);
+                }
+            })
+            .catch(() => alert('아이디와 비밀번호를 확인해주세요.'));
     };
-
 
     return (
         <Container>
@@ -123,7 +125,8 @@ function LogIn() {
                     <Span>비밀번호</Span>
                     <Error>{errors?.password?.message}</Error>
                 </div>
-                <Input type="password"
+                <Input
+                    type="password"
                     {...register('password', { required: true })}
                     placeholder="비밀번호를 입력하세요"
                 />

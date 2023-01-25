@@ -16,6 +16,6 @@ module.exports = {
         'import/no-unresolved': 'off',
         'dot-notation': 'off',
         'import/no-dynamic-require': 'off',
-        'global-require': 'off'
+        'global-require': 0
     }
 };

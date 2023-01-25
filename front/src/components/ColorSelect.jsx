@@ -288,7 +288,7 @@ function ColorSelect({ IconChecked, setSelectOpen }) {
                     </Colors>
                 </form>
                 <Note>
-                    <img alt="선택한 쪽지 이미지" src={require(`../assets/icons/icon${value.color}.png`)} />
+                    {/* <img alt="선택한 쪽지 이미지" src={require(`../assets/icons/icon${value.color}.png`)} /> */}
                 </Note>
             </Container>
         </Background>

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Link, useParams } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
-
 const GLink = styled(Link)`
     position: relative;
     width: 100%;
@@ -20,25 +19,28 @@ const GLink = styled(Link)`
 
     &::before {
         display: block;
-        content: "";
+        content: '';
         padding-bottom: 6.05%;
-      }
+    }
 
-      &::after {
+    &::after {
         display: block;
-        content: "";
+        content: '';
         padding-bottom: 6.05%;
-      }
-`
+    }
+`;
 
 const Img = styled.img`
-    width: 65.31%;
-    height: 65.31%;
+    margin-top: 10px;
+    margin-left:5px;
+    margin-bottom:3px;
+    width: 55.31%;
+    // height: 70.31%;
     max-width: 85px;
 `;
 
 function Leaf({ id, icon }) {
-    const params = useParams()
+    const params = useParams();
     return (
         <GLink to={`/content/${params.id}/${id}`}>
             <Img src={icon} alt={id} key={id} />
