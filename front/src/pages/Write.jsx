@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
+/* eslint-disable no-unused-vars */
 import { useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -153,8 +154,6 @@ function Write() {
 
     const navigate = useNavigate();
     const sendMessage = (dict) => {
-        console.log(dict);
-        console.log(dict.writer);
         axios
             .post(`/api/v1/messages/${userObjectId}`, {
                 withCredentials: true,
@@ -165,13 +164,6 @@ function Write() {
                 paperImage: dict.icon
             })
             .then((response) => {
-                if (response.status === 200) {
-                    console.log(response.data);
-                }
-                if (response.status === 500) {
-                    // 재전송 요청 띄우기
-                    console.log(response.data);
-                }
                 navigate(`/tree/${userObjectId}`);
             });
     };
@@ -183,9 +175,6 @@ function Write() {
         setIcon(current);
     };
     const ownerName = useRecoilValue(ownerNameAtom);
-    useEffect(() => {
-        console.log(icon);
-    }, [icon]);
     const questions = [
         `${ownerName.nick}님이 좋아하는 것은?`,
         `${ownerName.nick}님과 함께한 가장 즐거웠던 추억은?`,

@@ -83,7 +83,7 @@ function ModalOkay({ setModalOpen }) {
             }
             await navigator.share(data);
         } catch(err){
-            console.error(err);
+            alert(err);
         }
     }
 
@@ -101,9 +101,6 @@ function ModalOkay({ setModalOpen }) {
          alert('링크가 복사되었습니다.');
          onOkay();
      };
-
-
-    console.log(document.querySelector(".container"));
 
     return (
         <Background>
@@ -127,7 +124,8 @@ function ModalOkay({ setModalOpen }) {
                             링크공유
                         </Button>
                         <Button
-                            onClick={closeModal}
+                            onClick={closeModal
+                            }
                             style={{
                                 borderRadius: '10px',
                                 margin: '5px',

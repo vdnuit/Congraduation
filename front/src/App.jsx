@@ -41,12 +41,10 @@ function App() {
             if(response.status===200){
                 const { accessToken } = response.data;
                 axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
-                console.log(response.data)
                 axios
                 .get(`/api/v1/users/myInfo`)
                 .then((res) => {
                     setLogin({userId: res.data.userId, nick: res.data.nick });
-                    console.log(res.data);
                 })
             }
         })
@@ -62,14 +60,12 @@ function App() {
         axios
         .get(`/api/v1/users/myInfo`)
         .then((response) => {
-            console.log(response);
             if(response.status === 200){
                 setLogin({userId: response.data.userId, nick: response.data.nick });
             }
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
-                console.log("401")
                 getToken();
             }
         })
@@ -77,7 +73,6 @@ function App() {
 
 
         useEffect(() => {
-            console.log("app");
         myInfo();
         }, [])
 

@@ -86,7 +86,6 @@ function ColorSelect({ IconChecked, setSelectOpen }) {
     const [value, setValue] = useState({ color: 0 });
     const { register, watch } = useForm();
     useEffect(() => {
-        console.log(value);
         IconChecked(value.color);
     }, [value]);
     const onChange = () => {

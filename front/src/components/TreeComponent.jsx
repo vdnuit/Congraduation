@@ -38,7 +38,6 @@ const Img = styled.img`
 
 function TreeComponent() {
     const leaves = useRecoilValue(temporaryTreeAtom);
-    // const icons = ['https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon0.png?raw=true','https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon0.png?raw=true','https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon0.png?raw=true'];
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
 
     useEffect(() => {

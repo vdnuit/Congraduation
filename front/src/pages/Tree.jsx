@@ -1,4 +1,5 @@
 /* eslint no-underscore-dangle: 0 */
+/* eslint-disable no-unused-vars */
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -115,7 +116,6 @@ const Treezone = styled.map`
     height: auto;
 `;
 
-// myinfo랑 param id랑 비교
 function Time() {
     const today = new Date();
     const hours = today.getHours();
@@ -126,8 +126,6 @@ function Time() {
     useEffect(() => {
         ImageMap('img[usemap]');
     }, []);
-
-    console.log(dday);
 
     if (Login.userId === userObjectId && dday >= 0) {
         if (hours >= 20 || hours <= 5) {
@@ -189,11 +187,6 @@ function Button() {
             alert(`쪽지 열람은 ${Math.abs(dday)}일 후에 가능합니다!`);
         }
     };
-    // const clipboard = (event) => {
-    //     event.preventDefault();
-    //     navigator.clipboard.writeText(window.location.href);
-    //     alert('링크가 복사되었습니다.');
-    // };
 
     if (Login.userId === userObjectId) {
         return (
@@ -271,7 +264,6 @@ function Tree() {
                     setCount(response.data.message.length);
                     setLeaves(response.data.message);
                     setTimeout(() => setLoading(false), 500);
-                    console.log(response.data.message[2].paperImage);
                 }
             })
             .catch((err) => {
@@ -288,7 +280,7 @@ function Tree() {
 
     const clickHandler = (title) => {
         if (Login.userId === userObjectId) {
-            console.log(title);
+            const name = title;
         }
     };
 

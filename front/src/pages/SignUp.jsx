@@ -101,10 +101,7 @@ function SignUp() {
             password: watch().password,
             nick: watch().nickname
         })
-        .then((response) => {
-            console.log('Well done!');
-            console.log('User profile', response.data.user);
-            console.log('User token', response.data.jwt);
+        .then(() => {
             alert("가입이 완료되었습니다.");
             navigate(`/`);
         })

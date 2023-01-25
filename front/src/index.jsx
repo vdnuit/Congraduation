@@ -6,7 +6,9 @@ import { RecoilRoot } from 'recoil';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-axios.defaults.baseURL = "http://localhost:8000";
+require("dotenv").config({path: "../.env"});
+
+axios.defaults.baseURL = `${process.env.BASEURL}`;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 

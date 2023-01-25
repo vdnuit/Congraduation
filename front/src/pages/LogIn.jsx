@@ -10,6 +10,8 @@ import { StyledLink } from './Tree';
 import { isLoginAtom } from '../Atom';
 import KakaoImg from '../assets/kakao_login_medium_narrow.png';
 
+require("dotenv").config({path: "../../.env"});
+
 const Container = styled.div`
     width: 100%;
     max-width: 500px;
@@ -101,7 +103,6 @@ function LogIn() {
             )
             .then((response) => {
                 if (response.status === 200) {
-                    console.log('왜안돼');
                     const { accessToken } = response.data;
                     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
                     setLogin({ userId: response.data._id, nick: response.data.nick });
@@ -136,7 +137,7 @@ function LogIn() {
                     <StyledLink onClick={handleSubmit(handleLogin)}>
                         <h2>로그인</h2>
                     </StyledLink>
-                    <Kakao href="/api/v1/auth/kakao">
+                    <Kakao href={`${process.env.BASEURL}/api/v1/auth/kakao`}>
                         <Img src={KakaoImg} alt="kakaoImg" />
                     </Kakao>
                 </Div>
