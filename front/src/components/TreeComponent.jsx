@@ -28,9 +28,8 @@ function BigRandomY(){
 
 const Img = styled.img`
     position: absolute;
-    max-width: 64px;
-    max-height: 64px;
-    width: 12.8%;
+    width: 44px;
+    height: 62px;
     left: ${props => (props.innerWidth <= 500) ? randomX : BigRandomX};
     top: ${props => (props.innerWidth <= 500) ? randomY : BigRandomY};
 `;

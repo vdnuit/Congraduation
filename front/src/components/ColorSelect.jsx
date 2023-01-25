@@ -83,7 +83,6 @@ const Note = styled.div`
 function ColorSelect({ IconChecked, setSelectOpen }) {
     const [value, setValue] = useState({ color: 0 });
     const { register, watch } = useForm();
-    const iconURL = `https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon${value.color}.png?raw=true`;
     useEffect(() => {
         console.log(value);
         IconChecked(value.color);
@@ -289,7 +288,7 @@ function ColorSelect({ IconChecked, setSelectOpen }) {
                     </Colors>
                 </form>
                 <Note>
-                    <img alt="선택한 쪽지 이미지" src={iconURL} />
+                    <img alt="선택한 쪽지 이미지" src={require(`../assets/icons/icon${value.color}.png`)} />
                 </Note>
             </Container>
         </Background>

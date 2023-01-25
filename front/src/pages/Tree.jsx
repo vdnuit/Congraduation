@@ -116,6 +116,7 @@ const Count = styled.p`
 
 const Treezone = styled.map`
     height: auto;
+    pointer-events: none;
 `;
 
 // myinfo랑 param id랑 비교
@@ -271,10 +272,11 @@ function Tree() {
                     setCount(response.data.message.length);
                     setLeaves(response.data.message);
                     setTimeout(() => setLoading(false), 500);
+                    console.log(response.data.message[2].paperImage);
                 }
             })
             .catch((err) => {
-                if (err.response.status === 400) {
+                if (err.response && err.response.status === 400) {
                     alert('존재하지 않는 트리입니다.');
                     navigate('/');
                 }
@@ -297,7 +299,7 @@ function Tree() {
                 <TreeSpinner />
             ) : (
                 <>
-                    <Container className="container">
+                    <Container>
                         {hours <= 16 && hours >= 9 ? (
                             <Count style={{ color: '#072A60' }}>
                                 {ownerName.nick}님의 나무에 {count}개의 메시지
@@ -307,22 +309,23 @@ function Tree() {
                                 {ownerName.nick}님의 나무에 {count}개의 메시지
                             </Count>
                         )}
-
-                        <Time />
-                        {Login.userId === userObjectId ? (
-                            <Link to={{ pathname: `/list/${ownerName._id}` }}>
-                                <Treezone name="treemap">
-                                    <area
-                                        aria-hidden="true"
-                                        onClick={() => clickHandler('tree')}
-                                        shape="poly"
-                                        alt="tree"
-                                        coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364"
-                                    />
-                                </Treezone>
-                            </Link>
-                        ) : null}
-                        <TreeComponent />
+                        <div className="container">
+                            <Time />
+                            {Login.userId === userObjectId ? (
+                                <Link to={{ pathname: `/list/${ownerName._id}` }}>
+                                    <Treezone name="treemap">
+                                        <area
+                                            aria-hidden="true"
+                                            onClick={() => clickHandler('tree')}
+                                            shape="poly"
+                                            alt="tree"
+                                            coords="855,403,747,409,618,587,524,696,409,982,333,1086,281,1204,231,1412,185,1577,271,1764,301,1905,442,2052,720,2170,705,2373,625,2370,599,2422,643,2482,744,2476,790,2447,858,2437,887,2476,937,2467,964,2443,890,2401,861,2276,853,2092,899,2109,1038,2037,1206,1900,1319,1752,1377,1594,1437,1182,1377,1008,1384,1004,1155,633,1328,673,1319,554,1242,464,1204,370,964,253,838,364"
+                                        />
+                                    </Treezone>
+                                </Link>
+                            ) : null}
+                            <TreeComponent />
+                        </div>
                     </Container>
                     <Button />
                 </>

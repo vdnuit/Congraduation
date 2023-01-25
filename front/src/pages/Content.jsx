@@ -14,7 +14,6 @@ import trash from '../assets/trash.png';
 const Container = styled.div`
     width: 100%;
     position: absolute;
-    min-height: 100vh;
     z-index: 10;
     top: 0px;
     left: 0px;
@@ -22,7 +21,7 @@ const Container = styled.div`
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: #f7f7f7;
     h3 {
         font-family: 'Jua';

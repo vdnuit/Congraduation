@@ -65,21 +65,6 @@ const Button = styled.button`
 `;
 
 function ModalOkay({ setModalOpen }) {
-    const closeModal = () => {
-        setModalOpen(false);
-    };
-    const onOkay = () => {
-        setModalOpen(false);
-    };
-
-    const clipboard = (event) => {
-         event.preventDefault();
-         navigator.clipboard.writeText(window.location.href);
-         alert('링크가 복사되었습니다.');
-         onOkay();
-     };
-
-
     const handleShare = async() => {
         const newFile = await toBlob(document.querySelector(".container"));
         const data = {
@@ -97,11 +82,26 @@ function ModalOkay({ setModalOpen }) {
                 alert("이미지를 공유할 수 없습니다.");
             }
             await navigator.share(data);
-            closeModal();
         } catch(err){
             console.error(err);
         }
     }
+
+    const closeModal = () => {
+        handleShare();
+        setModalOpen(false);
+    };
+    const onOkay = () => {
+        setModalOpen(false);
+    };
+
+    const clipboard = (event) => {
+         event.preventDefault();
+         navigator.clipboard.writeText(window.location.href);
+         alert('링크가 복사되었습니다.');
+         onOkay();
+     };
+
 
     console.log(document.querySelector(".container"));
 
@@ -127,7 +127,7 @@ function ModalOkay({ setModalOpen }) {
                             링크공유
                         </Button>
                         <Button
-                            onClick={handleShare}
+                            onClick={closeModal}
                             style={{
                                 borderRadius: '10px',
                                 margin: '5px',

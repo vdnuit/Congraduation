@@ -249,7 +249,7 @@ function Write() {
         const dict = {
             ...watch(),
             question: questions[index],
-            icon: `https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon${icon}.png?raw=true`
+            icon: require(`../assets/icons/icon${icon}.png`)
         };
         sendMessage(dict);
         return 1;

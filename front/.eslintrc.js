@@ -14,6 +14,8 @@ module.exports = {
         'no-console': 'off',
         'react/jsx-props-no-spreading': 'off',
         'import/no-unresolved': 'off',
-        'dot-notation': 'off'
+        'dot-notation': 'off',
+        'import/no-dynamic-require': 'off',
+        'global-require': 'off'
     }
 };
