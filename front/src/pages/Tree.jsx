@@ -106,7 +106,7 @@ const Count = styled.p`
     font-family: 'Jua';
     font-style: normal;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 25px;
     color: #f7f7f7;
     margin: 20px;
@@ -128,7 +128,7 @@ function Time() {
     useEffect(() => {
         ImageMap('img[usemap]');
     }, []);
-    
+
     if (Login.userId === userObjectId) {
         if (hours >= 20 || hours <= 5) {
             return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
@@ -258,6 +258,9 @@ function Tree() {
     const setCount = useSetRecoilState(countAtom);
     const setOwnerName = useSetRecoilState(ownerNameAtom);
     const setLeaves = useSetRecoilState(temporaryTreeAtom);
+
+    const today = new Date();
+    const hours = today.getHours();
     const getUser = async () => {
         setLoading(true);
         axios
@@ -295,9 +298,15 @@ function Tree() {
             ) : (
                 <>
                     <Container className="container">
-                        <Count>
-                            {ownerName.nick} 님의 나무에 {count}개의 메시지
-                        </Count>
+                        {hours <= 16 && hours >= 9 ? (
+                            <Count style={{ color: '#072A60' }}>
+                                {ownerName.nick}님의 나무에 {count}개의 메시지
+                            </Count>
+                        ) : (
+                            <Count>
+                                {ownerName.nick}님의 나무에 {count}개의 메시지
+                            </Count>
+                        )}
 
                         <Time />
                         {Login.userId === userObjectId ? (
