@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import CloseImg from '../assets/closeImg.png';
 
 const Background = styled.div`
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     width: 100%;
@@ -21,7 +21,7 @@ const Background = styled.div`
 const Container = styled.div`
     z-index: 999;
     position: absolute;
-    top: 20%;
+    top: 15%;
     left: 10%;
     padding: 5%;
     width: 70%;
@@ -290,7 +290,10 @@ function ColorSelect({ IconChecked, setSelectOpen }) {
                     </Colors>
                 </form>
                 <Note>
-                    <img alt="선택한 쪽지 이미지" src={require(`../assets/icons/icon${value.color}.png`)} />
+                    <img
+                        alt="선택한 쪽지 이미지"
+                        src={require(`../assets/icons/icon${value.color}.png`)}
+                    />
                 </Note>
             </Container>
         </Background>

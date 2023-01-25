@@ -13,6 +13,7 @@ import KakaoImg from '../assets/kakao_login_medium_narrow.png';
 const Container = styled.div`
     width: 100%;
     max-width: 500px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
