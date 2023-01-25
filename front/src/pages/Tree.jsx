@@ -34,7 +34,6 @@ const TreeBackground = styled.img`
     // position: absolute;
     margin-top: -63px;
     left: 0px;
-
     z-index: -1;
     width: 100%;
     max-width: 500px;
@@ -79,7 +78,6 @@ export const StyledLink = styled(Link)`
         font-size: 20px;
         line-height: 30px;
         /* identical to box height */
-
         text-align: center;
         padding: 0.6rem;
         margin: 1rem 3rem;
@@ -95,7 +93,6 @@ export const StyledLink = styled(Link)`
         font-size: 20px;
         line-height: 30px;
         /* identical to box height */
-
         text-align: center;
         padding: 0.6rem;
         margin: 0rem 3rem;
@@ -110,13 +107,12 @@ const Count = styled.p`
     line-height: 25px;
     color: #f7f7f7;
     margin: 20px;
-
+    z-index: 10;
     margin-top: 80px;
 `;
-
 const Treezone = styled.map`
+    point-events: none;
     height: auto;
-    pointer-events: none;
 `;
 
 // myinfo랑 param id랑 비교

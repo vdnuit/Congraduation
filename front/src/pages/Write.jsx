@@ -1,4 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 import { useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -248,8 +250,8 @@ function Write() {
         }
         const dict = {
             ...watch(),
-            question: questions[index]
-            // icon: require(`../assets/icons/icon${icon}.png`)
+            question: questions[index],
+            icon: require(`../assets/icons/icon${icon}.png`)
         };
         sendMessage(dict);
         return 1;
@@ -321,3 +323,4 @@ function Write() {
 }
 
 export default Write;
+/* eslint-disable global-require */
