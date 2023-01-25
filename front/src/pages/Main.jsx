@@ -32,7 +32,7 @@ const TreeBackground = styled.img`
 `;
 const Box = styled.div`
     background: rgba(255, 255, 255, 0.25);
-    border: 0.3px solid #ffffff;
+    border: 0.5px solid #ffffff;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(17.5px);
     border-radius: 10px;
@@ -99,11 +99,9 @@ const Snow = styled.img`
     max-width: 500px;
 `;
 
-
-
 function Button() {
     const Login = useRecoilValue(isLoginAtom);
-    if(Login.userId){
+    if (Login.userId) {
         return (
             <div>
                 <Cap src={CapImg} />
@@ -116,8 +114,9 @@ function Button() {
                     <p>@congraduation_skku</p>
                 </Insta>
             </div>
-        )
-    } return (
+        );
+    }
+    return (
         <div>
             <Cap src={CapImg} />
             <Logo src={LogoImg} />
@@ -132,34 +131,35 @@ function Button() {
                 <p>@congraduation_skku</p>
             </Insta>
         </div>
-    )
+    );
 }
 
 function Main() {
-    const [loading, setLoading]=useState(true);
+    const [loading, setLoading] = useState(true);
     const changeLoading = () => {
         setLoading(true);
-        setTimeout(()=>{
+        setTimeout(() => {
             setLoading(false);
         }, 100);
-    }
+    };
 
     useEffect(() => {
         changeLoading();
-    }, [])
+    }, []);
 
     return (
         <div>
-            {loading ? <TreeSpinner/>
-            :
-            <Container>
-                <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-                <Box>
-                    <Button />
-                </Box>
-                <Snow src={SnowImg} alt="눈 내리는 배경" />
-            </Container>
-            }
+            {loading ? (
+                <TreeSpinner />
+            ) : (
+                <Container>
+                    <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
+                    <Box>
+                        <Button />
+                    </Box>
+                    <Snow src={SnowImg} alt="눈 내리는 배경" />
+                </Container>
+            )}
         </div>
     );
 }
