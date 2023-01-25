@@ -121,12 +121,15 @@ function Time() {
     const hours = today.getHours();
     const Login = useRecoilValue(isLoginAtom);
     const userObjectId = useParams().id;
-
+    const date = useRecoilValue(dateAtom);
+    const dday = Math.round((today - date) / (24 * 60 * 60 * 1000));
     useEffect(() => {
         ImageMap('img[usemap]');
     }, []);
 
-    if (Login.userId === userObjectId) {
+    console.log(dday);
+
+    if (Login.userId === userObjectId && dday >= 0) {
         if (hours >= 20 || hours <= 5) {
             return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" useMap="#treemap" />;
         }
@@ -135,7 +138,7 @@ function Time() {
         }
         return <TreeBackground src={TreeSunset} alt="노을 배경 은행나무" useMap="#treemap" />;
     }
-    if (Login.userId !== userObjectId) {
+    if (Login.userId !== userObjectId || dday < 0) {
         if (hours >= 20 || hours <= 5) {
             return <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />;
         }
