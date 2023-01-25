@@ -106,7 +106,7 @@ const GreyBox = styled.div`
         width: 100%;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 10;
+        -webkit-line-clamp: 20;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
@@ -190,11 +190,11 @@ function InstaModal({ setModalOpen }) {
                                 </GreyBox>
                             </Div>
                             <GreyBox>
-                                <p style={{ fontSize: '0.7vh', lineHeight: '2.2vh' }}>
+                                <p style={{ fontSize: '0.7vh', lineHeight: '2.2vh'}}>
                                     {Leaf.content}
                                 </p>
                             </GreyBox>
-                            <h4 style={{ fontSize: '2.5vh' }}>From. {Leaf.senderNickName}</h4>
+                            <h4 style={{ width: "94%", fontSize: '2.5vh', display: "block", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>From. {Leaf.senderNickName}</h4>
                         </Box>
                     </Container>
                 </ModalDiv>

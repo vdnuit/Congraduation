@@ -49,6 +49,8 @@ const Container = styled.div`
         justify-content: space-between;
     }
     h4 {
+        width: 98%;
+        margin-left: 10px;
         font-family: 'Jua';
         font-style: normal;
         font-weight: 400;
@@ -59,8 +61,7 @@ const Container = styled.div`
         margin-right: 10px;
         margin-top: 5px;
         margin-bottom: 50px;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
+        display: block;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -104,7 +105,6 @@ const GreyBox = styled.div`
         font-weight: 400;
         font-size: 14px;
         line-height: 17px;
-        text-overflow: ellipsis;
         white-space: normal;
         word-break: break-all;
         color: #000000;
