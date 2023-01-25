@@ -4,8 +4,12 @@ const Token = require('../models/token');
 const User = require('../models/user');
 const axios = require('axios');
 
+const delCookie = (res) => {
+    res.clearCookie('refreshToken');
+    res.clearCookie('provider');
+}
+
 const auth = async (req, res, next) => {
-    console.log(req.body);
     console.log("[AUTH]");
     req.isLogin = false;
     let token = null;
@@ -25,15 +29,17 @@ const auth = async (req, res, next) => {
                     if(err){
                         if(err instanceof jwt.TokenExpiredError){ // 토큰 만료
                             console.log("TOKEN IS EXPIRED");
-                            return res.status(401).json({message: "Access token expired"});
+                            return next();
+                            // return res.status(401).json({message: "Access token expired"});
                         }
                         else if(err instanceof jwt.JsonWebTokenError){
                             console.log("NO TOKEN PROVIDED");
-                            return res.status(400).json({message: "Token is required"});
+                            return next();
+                            // return res.status(400).json({message: "Token is required"});
                         }
                         else{
                             console.log(err);
-                            return res.json({message: err});
+                            return next(err);
                         }
                     }
                     else{
@@ -48,7 +54,7 @@ const auth = async (req, res, next) => {
             }
             catch(err){
                 console.log(err);
-                return res.next(err);
+                return next(err);
             }
         }
         else if(req.cookies.provider === 'kakao'){
@@ -63,15 +69,18 @@ const auth = async (req, res, next) => {
                 }).catch((err) => {
                     if(err.response.status === 401){
                         console.log("access token 401");
-                        return res.status(401).json({message: "Token is expired"});
+                        return next();
+                        // return res.status(401).json({message: "Token is expired"});
                     }
                     else if(err.response.status === 400){
                         console.log("access token 400");
-                        return res.status(400).json({message: "Token does not exist"});
+                        return next();
+                        // return res.status(400).json({message: "Token does not exist"});
                     }
                     else{
                         console.log("Something is wrong with kakao token, please try again");
-                        return res.status(500).json({message: "Something is wrong with kakao token, please try again"})
+                        return next();
+                        // return res.status(500).json({message: "Something is wrong with kakao token, please try again"})
                     }
                 });
                 if(isValidAccessToken.status === 200 && isValidAccessToken.data){ // valid token
@@ -99,12 +108,14 @@ const auth = async (req, res, next) => {
             }
         }
         else{
-            return res.status(400).json({message: "Bad Request - Field \"provider\" must exist"});
+            delCookie(res);
+            return next();
+            // return res.status(401).json({message: "Field \"provider\" must exist"});
         }
     }
     else{
         console.log("UNAUTHORIZED DUE TO EMPTY TOKEN...");
-        return res.status(401).json({message: "Unauthorized"});
+        return next();
     }
 };
 
