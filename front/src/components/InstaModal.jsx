@@ -184,11 +184,15 @@ function InstaModal({ setModalOpen }) {
                         <Box>
                             <Div>
                                 <GreyBox>
-                                    <p style={{ fontSize: '0.7vh' }}>{Leaf.topic}</p>
+                                    <p style={{ fontSize: '0.7vh', lineHeight: '2.2vh' }}>
+                                        {Leaf.topic}
+                                    </p>
                                 </GreyBox>
                             </Div>
                             <GreyBox>
-                                <p style={{ fontSize: '0.7vh' }}>{Leaf.content}</p>
+                                <p style={{ fontSize: '0.7vh', lineHeight: '2.2vh' }}>
+                                    {Leaf.content}
+                                </p>
                             </GreyBox>
                             <h4 style={{ fontSize: '2.5vh' }}>From. {Leaf.senderNickName}</h4>
                         </Box>
