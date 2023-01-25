@@ -18,18 +18,18 @@ const Background = styled.div`
 `;
 
 const Modal = styled.div`
-  z-index: 999;
-  position: absolute;
-  top: 50vh;
-  left: 45%;
-  transform: translate(-50%, -50%);
-  border-radius: 10px;
-  margin: 5% 5%;
-  width: 80%;
-  height: 85%;
-  max-width: 400px;
-  text-align: center;
-`
+    z-index: 999;
+    position: absolute;
+    top: 50vh;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    margin: 5% 5%;
+    width: 40vh;
+    height: 60vh;
+    max-width: 400px;
+    text-align: center;
+`;
 
 const ModalDiv = styled.div`
     position: absolute;
@@ -39,7 +39,7 @@ const ModalDiv = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-`
+`;
 
 const TreeBackground = styled.img`
     position: absolute;
@@ -61,9 +61,9 @@ const Container = styled.div`
 `;
 
 const Box = styled.div`
-    border-radius: 20px;
+    border-radius: 1vh;
     position: absolute;
-    top: 10%;
+    // top: 10%;
     width: 99%;
     height: 95%;
     text-align: center;
@@ -74,17 +74,17 @@ const GreyBox = styled.div`
     padding: 8px;
     margin: 0 10px;
     border: 1px solid #c8c8c8;
-    border-radius: 10px;
-    p {
-        margin: 5px 0px;
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 13px;
-        line-height: 19px;
-        text-align: center;
-        color: #252525;
-    }
+    border-radius: 1vh;
+    // p {
+    //     margin: 5px 0px;
+    //     font-family: 'Inter';
+    //     font-style: normal;
+    //     font-weight: 500;
+    //     font-size: 0.7vh;
+    //     line-height: 19px;
+    //     text-align: center;
+    //     color: #252525;
+    // }
     input {
         border: none;
         font-family: 'Inter';
@@ -100,7 +100,7 @@ const GreyBox = styled.div`
         font-family: 'Inter';
         font-style: normal;
         font-weight: 400;
-        font-size: 13px;
+        font-size: 0.7vh;
         line-height: 17px;
         color: #000000;
         width: 100%;
@@ -115,8 +115,8 @@ const GreyBox = styled.div`
 `;
 
 const Div = styled.div`
-    margin-top: 3rem;
-    margin-bottom: 1rem;
+    // margin-top: 3rem;
+    margin-bottom: 0.5vh;
 `;
 
 const Buttons = styled.div`
@@ -138,7 +138,7 @@ const Button = styled.button`
     font-weight: 400;
     font-size: 20px;
     line-height: 25px;
-    width: 20%;
+    width: 30%;
     height: 40px;
     text-align: center;
     border: none;
@@ -146,37 +146,34 @@ const Button = styled.button`
     margin: 10px;
 `;
 
-
-
 function InstaModal({ setModalOpen }) {
     const Leaf = useRecoilValue(leafAtom);
     const closeModal = () => {
         setModalOpen(false);
     };
     const imageRef = useRef(null);
-    
 
-    const handleShare = async() => {
+    const handleShare = async () => {
         const newFile = await toBlob(imageRef.current);
         const data = {
             files: [
                 new File([newFile], 'image.png', {
-                    type: newFile.type,
-                }),
+                    type: newFile.type
+                })
             ],
             title: 'Image',
-            text: 'image',
+            text: 'image'
         };
 
         try {
-            if(!navigator.canShare(data)){
-                alert("이미지를 공유할 수 없습니다.");
+            if (!navigator.canShare(data)) {
+                alert('이미지를 공유할 수 없습니다.');
             }
             await navigator.share(data);
-        } catch(err){
+        } catch (err) {
             console.error(err);
         }
-    }
+    };
 
     return (
         <Background>
@@ -187,16 +184,16 @@ function InstaModal({ setModalOpen }) {
                         <Box>
                             <Div>
                                 <GreyBox>
-                                    <p>{Leaf.topic}</p>
+                                    <p style={{ fontSize: '0.7vh' }}>{Leaf.topic}</p>
                                 </GreyBox>
                             </Div>
                             <GreyBox>
-                                <p>{Leaf.content}</p>
+                                <p style={{ fontSize: '0.7vh' }}>{Leaf.content}</p>
                             </GreyBox>
-                            <h4>From. {Leaf.senderNickName}</h4>
+                            <h4 style={{ fontSize: '2.5vh' }}>From. {Leaf.senderNickName}</h4>
                         </Box>
                     </Container>
-                 </ModalDiv>
+                </ModalDiv>
                 <Buttons>
                     <Button onClick={handleShare}>저장</Button>
                     <Button
