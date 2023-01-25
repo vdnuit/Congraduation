@@ -1,10 +1,11 @@
-import { React, useRef } from 'react';
+import { React, useRef, useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { toBlob } from 'html-to-image';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { leafAtom } from '../Atom';
 import InstaStory from '../assets/InstaStory.png';
+import Spinner from '../assets/Spinner.gif';
 
 const Background = styled.div`
     position: fixed;
@@ -71,10 +72,11 @@ const Box = styled.div`
 
 const GreyBox = styled.div`
     background: #ffffff;
+    filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.25));
     padding: 8px;
     margin: 0 10px;
-    border: 1px solid #c8c8c8;
-    border-radius: 1vh;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
     // p {
     //     margin: 5px 0px;
     //     font-family: 'Inter';
@@ -147,10 +149,17 @@ const Button = styled.button`
 `;
 
 function InstaModal({ setModalOpen }) {
+    const [loading, setLoading] = useState(true);
     const Leaf = useRecoilValue(leafAtom);
     const closeModal = () => {
         setModalOpen(false);
     };
+    const changeLoading = () => {
+        setLoading(true);
+        setTimeout(()=>{
+            setLoading(false);
+        }, 300);
+    }
     const imageRef = useRef(null);
 
     const handleShare = async () => {
@@ -175,8 +184,13 @@ function InstaModal({ setModalOpen }) {
         }
     };
 
+    useEffect(() => {
+        changeLoading();
+    }, [])
+
     return (
         <Background>
+            {loading? <img src={Spinner} alt="Spinner" style={{ width: "20%", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}/> :
             <Modal>
                 <ModalDiv ref={imageRef}>
                     <TreeBackground src={InstaStory} alt="밤 배경 은행나무" />
@@ -194,7 +208,7 @@ function InstaModal({ setModalOpen }) {
                                     {Leaf.content}
                                 </p>
                             </GreyBox>
-                            <h4 style={{ width: "94%", fontSize: '2.5vh', display: "block", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>From. {Leaf.senderNickName}</h4>
+                            <h4 style={{ width: "60%", fontSize: '2.5vh', display: "block", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", textAlign: "right"}}>From. {Leaf.senderNickName}</h4>
                         </Box>
                     </Container>
                 </ModalDiv>
@@ -208,6 +222,7 @@ function InstaModal({ setModalOpen }) {
                     </Button>
                 </Buttons>
             </Modal>
+            }
         </Background>
     );
 }

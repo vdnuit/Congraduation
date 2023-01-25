@@ -135,7 +135,7 @@ function LogIn() {
                     <StyledLink onClick={handleSubmit(handleLogin)}>
                         <h2>로그인</h2>
                     </StyledLink>
-                    <Kakao href="http://localhost:8000/api/v1/auth/kakao">
+                    <Kakao href="/api/v1/auth/kakao">
                         <Img src={KakaoImg} alt="kakaoImg" />
                     </Kakao>
                 </Div>

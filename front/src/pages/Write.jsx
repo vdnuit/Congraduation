@@ -156,7 +156,7 @@ function Write() {
         console.log(dict);
         console.log(dict.writer);
         axios
-            .post(`http://localhost:8000/api/v1/messages/${userObjectId}`, {
+            .post(`/api/v1/messages/${userObjectId}`, {
                 withCredentials: true,
 
                 senderNickName: dict.writer,

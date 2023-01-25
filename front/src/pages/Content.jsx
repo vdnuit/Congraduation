@@ -49,8 +49,8 @@ const Container = styled.div`
         justify-content: space-between;
     }
     h4 {
-        width: 98%;
-        margin-left: 10px;
+        width: 60%;
+        margin-left: auto;
         font-family: 'Jua';
         font-style: normal;
         font-weight: 400;
