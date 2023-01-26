@@ -44,7 +44,7 @@ function ModalSide({ setModalOpen }) {
     };
     const onLogOut = () => {
         axios
-            .get('http://localhost:8000/api/v1/auth/logout', { withCredentials: true })
+            .get('/api/v1/auth/logout', { withCredentials: true })
             .then((response) => {
                 if (response.status === 200) {
                     closeModal(false);
@@ -84,7 +84,7 @@ function ModalSide({ setModalOpen }) {
                         navigate(`/`);
                         if (response.status === 200) {
                             axios
-                                .delete(`http://localhost:8000/api/v1/users/${isLogin.userId}`)
+                                .delete(`/api/v1/users/${isLogin.userId}`)
                                 .then((res) => {
                                     if (res.status === 200) {
                                         alert('회원탈퇴를 완료했습니다.');
