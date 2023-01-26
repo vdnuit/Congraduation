@@ -9,11 +9,10 @@ import List from './pages/List';
 import Content from './pages/Content';
 import Kakao from './pages/Kakao';
 import Header from './components/Header';
-// import Footer from './components/Footer';
 
 function Router() {
     return (
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL}>
             <Header />
             <Routes>
                 <Route path="/" element={<Main />} errorElement={<Main />} />
@@ -26,7 +25,6 @@ function Router() {
                 <Route path="/list/:id" element={<List />} errorElement={<Main />} />
                 <Route path="/content/:userid/:messageid" element={<Content />} errorElement={<Main />} />
             </Routes>
-            {/* <Footer /> */}
         </BrowserRouter>
     );
 }

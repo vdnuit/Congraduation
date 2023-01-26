@@ -10,8 +10,6 @@ import { StyledLink } from './Tree';
 import { isLoginAtom } from '../Atom';
 import KakaoImg from '../assets/kakao_login_medium_narrow.png';
 
-require("dotenv").config({path: "../../.env"});
-
 const Container = styled.div`
     width: 100%;
     max-width: 500px;
@@ -137,7 +135,7 @@ function LogIn() {
                     <StyledLink onClick={handleSubmit(handleLogin)}>
                         <h2>로그인</h2>
                     </StyledLink>
-                    <Kakao href={`${process.env.BASEURL}/api/v1/auth/kakao`}>
+                    <Kakao href={`${process.env.REACT_APP_BASEURL}/api/v1/auth/kakao`}>
                         <Img src={KakaoImg} alt="kakaoImg" />
                     </Kakao>
                 </Div>
