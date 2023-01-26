@@ -52,7 +52,8 @@ const Error = styled.span`
 
 const Input = styled.input`
     width: 100%;
-    height: 4rem;
+    height: 16vw;
+    max-height: 64px;
     box-sizing: border-box;
     background: #ffffff;
     border: 1px solid #c8c8c8;
@@ -75,7 +76,7 @@ const Kakao = styled.a`
 `;
 
 const Img = styled.img`
-    width: 200px;
+    width: 215px;
 `;
 
 function LogIn() {
