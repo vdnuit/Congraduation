@@ -75,8 +75,7 @@ const Kakao = styled.a`
 `;
 
 const Img = styled.img`
-    width: 46.8%;
-    max-width: 234px;
+    width: 200px;
 `;
 
 function LogIn() {

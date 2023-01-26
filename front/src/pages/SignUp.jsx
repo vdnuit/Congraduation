@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { StyledLink } from './Tree';
+import KakaoImg from '../assets/kakao_login_medium_narrow.png';
 
 const Container = styled.div`
     position: absolute;
@@ -11,9 +12,9 @@ const Container = styled.div`
     left: 0px;
     width: 100%;
     max-width: 500px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     background-color: #f5f5f5;
     padding-bottom: 50px;
@@ -60,7 +61,10 @@ const Input = styled.input`
 `;
 
 const Div = styled.div`
-    margin-top: 15%;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 `;
 
 const Warn = styled.div`
@@ -74,6 +78,15 @@ const Warn = styled.div`
     color: #ff6c0f;
 
     margin: 10% 10%;
+`;
+
+const Kakao = styled.a`
+    width: 100%;
+    text-align: center;
+`;
+
+const Img = styled.img`
+    width: 200px;
 `;
 
 function SignUp() {
@@ -175,6 +188,9 @@ function SignUp() {
                     <StyledLink type="button" onClick={handleSubmit(handleRegister)}>
                         <h2>가입 완료</h2>
                     </StyledLink>
+                    <Kakao href={`${process.env.REACT_APP_BASEURL}/api/v1/auth/kakao`}>
+                        <Img src={KakaoImg} alt="kakaoImg" />
+                    </Kakao>
                 </Div>
             </Form>
         </Container>
