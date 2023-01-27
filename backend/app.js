@@ -13,7 +13,7 @@ const notFoundError = require('./middleware/not-found');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3000', //http://www.congraduation-skku.com, http://congraduation-skku.com
     credentials: true,
 };
 app.use(cors(corsOptions));
