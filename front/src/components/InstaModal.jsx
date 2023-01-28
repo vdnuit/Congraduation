@@ -25,18 +25,17 @@ const Modal = styled.div`
     left: 45%;
     transform: translate(-50%, -50%);
     border-radius: 10px;
-    margin: 5% 5%;
+    margin: 6% 6%;
     width: 40vh;
-    height: 60vh;
+    height: 70vh;
     max-width: 400px;
     text-align: center;
 `;
 
 const ModalDiv = styled.div`
     position: absolute;
-    top: 1%;
-    width: 100%;
-    height: 93%;
+    width: 39vh;
+    height: 69vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -58,7 +57,7 @@ const Container = styled.div`
     width: 88%;
     height: 88%;
     position: absolute;
-    top: 5%;
+    top: 15%;
 `;
 
 const Box = styled.div`
@@ -216,7 +215,13 @@ function InstaModal({ setModalOpen }) {
                                     </GreyBox>
                                 </Div>
                                 <GreyBox>
-                                    <p style={{ fontSize: '14px', lineHeight: '18px' }}>
+                                    <p
+                                        style={{
+                                            textAlign: 'justify',
+                                            fontSize: '14px',
+                                            lineHeight: '18px'
+                                        }}
+                                    >
                                         {Leaf.content}
                                     </p>
                                 </GreyBox>
