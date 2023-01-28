@@ -213,7 +213,7 @@ function Content() {
                 <LeafSpinner />
             ) : (
                 <Container>
-                    <div style={{marginTop:"60px"}} ref={imageRef}>
+                    <div style={{ marginTop: '60px' }} ref={imageRef}>
                         <Div>
                             <GreyBox>
                                 <p>{Leaf.topic}</p>

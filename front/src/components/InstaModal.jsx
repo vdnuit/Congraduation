@@ -102,7 +102,7 @@ const GreyBox = styled.div`
         font-family: 'Inter';
         font-style: normal;
         font-weight: 400;
-        font-size: 0.7vh;
+        font-size: 14px;
         line-height: 17px;
         color: #000000;
         width: 100%;
@@ -156,10 +156,10 @@ function InstaModal({ setModalOpen }) {
     };
     const changeLoading = () => {
         setLoading(true);
-        setTimeout(()=>{
+        setTimeout(() => {
             setLoading(false);
         }, 300);
-    }
+    };
     const imageRef = useRef(null);
 
     const handleShare = async () => {
@@ -186,43 +186,67 @@ function InstaModal({ setModalOpen }) {
 
     useEffect(() => {
         changeLoading();
-    }, [])
+    }, []);
 
     return (
         <Background>
-            {loading? <img src={Spinner} alt="Spinner" style={{ width: "20%", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}/> :
-            <Modal>
-                <ModalDiv ref={imageRef}>
-                    <TreeBackground src={InstaStory} alt="밤 배경 은행나무" />
-                    <Container>
-                        <Box>
-                            <Div>
+            {loading ? (
+                <img
+                    src={Spinner}
+                    alt="Spinner"
+                    style={{
+                        width: '20%',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%,-50%)'
+                    }}
+                />
+            ) : (
+                <Modal>
+                    <ModalDiv ref={imageRef}>
+                        <TreeBackground src={InstaStory} alt="밤 배경 은행나무" />
+                        <Container>
+                            <Box>
+                                <Div>
+                                    <GreyBox>
+                                        <p style={{ fontSize: '14px', lineHeight: '18px' }}>
+                                            {Leaf.topic}
+                                        </p>
+                                    </GreyBox>
+                                </Div>
                                 <GreyBox>
-                                    <p style={{ fontSize: '0.7vh', lineHeight: '2.2vh' }}>
-                                        {Leaf.topic}
+                                    <p style={{ fontSize: '14px', lineHeight: '18px' }}>
+                                        {Leaf.content}
                                     </p>
                                 </GreyBox>
-                            </Div>
-                            <GreyBox>
-                                <p style={{ fontSize: '0.7vh', lineHeight: '2.2vh'}}>
-                                    {Leaf.content}
-                                </p>
-                            </GreyBox>
-                            <h4 style={{ width: "60%", fontSize: '2.5vh', display: "block", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", textAlign: "right"}}>From. {Leaf.senderNickName}</h4>
-                        </Box>
-                    </Container>
-                </ModalDiv>
-                <Buttons>
-                    <Button onClick={handleShare}>저장</Button>
-                    <Button
-                        style={{ backgroundColor: '#C8C8C8', color: '#252525' }}
-                        onClick={closeModal}
-                    >
-                        닫기
-                    </Button>
-                </Buttons>
-            </Modal>
-            }
+                                <h4
+                                    style={{
+                                        width: '60%',
+                                        fontSize: '2.5vh',
+                                        display: 'block',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        textAlign: 'right'
+                                    }}
+                                >
+                                    From. {Leaf.senderNickName}
+                                </h4>
+                            </Box>
+                        </Container>
+                    </ModalDiv>
+                    <Buttons>
+                        <Button onClick={handleShare}>저장</Button>
+                        <Button
+                            style={{ backgroundColor: '#C8C8C8', color: '#252525' }}
+                            onClick={closeModal}
+                        >
+                            닫기
+                        </Button>
+                    </Buttons>
+                </Modal>
+            )}
         </Background>
     );
 }
