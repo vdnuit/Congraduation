@@ -46,26 +46,54 @@ const Buttons = styled.div`
     text-align: center;
     width: 100%;
     max-width: 500px;
-    button {
-        border: none;
-        background: #072a60;
-        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        border-radius: 100px;
-        font-family: 'Jua';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 20px;
-        line-height: 30px;
-        /* identical to box height */
-        width: 80%;
-        max-width: 405px;
-        text-align: center;
-        padding: 0.6rem;
-        margin: 0 auto;
-        color: #ffffff;
-        margin-top: 10px;
+`;
+
+const Abutton = styled.button`
+    border: none;
+    background: #072a60;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 100px;
+    font-family: 'Jua';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+    /* identical to box height */
+    width: 80%;
+    max-width: 405px;
+    text-align: center;
+    padding: 0.6rem;
+    margin: 0 auto;
+    color: #ffffff;
+    margin-top: 10px;
+    &:hover {
+        background: #59749D;
     }
 `;
+
+const WButton = styled.button`
+    border: none;
+    background: #ffffff;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 100px;
+    font-family: 'Jua';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+    /* identical to box height */
+    width: 80%;
+    max-width: 405px;
+    text-align: center;
+    padding: 0.6rem;
+    margin: 0 auto;
+    color: #7c7c7c;
+    margin-top: 10px;
+    &:hover {
+        background: #E7E7E7;
+    }
+`;
+
 export const StyledLink = styled(Link)`
     text-decoration: none;
     color: white;
@@ -191,13 +219,13 @@ function Button() {
     if (Login.userId === userObjectId) {
         return (
             <Buttons>
-                <button type="button" onClick={memoList}>
+                <Abutton type="button" onClick={memoList}>
                     받은 쪽지 목록
-                </button>
+                </Abutton>
 
-                <button type="button" onClick={showModal}>
+                <Abutton type="button" onClick={showModal}>
                     공유하기
-                </button>
+                </Abutton>
                 {modalOpen ? <ModalOkay setModalOpen={setModalOpen} /> : null}
                 <Dday>{dday >= 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
             </Buttons>
@@ -206,18 +234,17 @@ function Button() {
     if (Login.userId && Login.userId !== userObjectId) {
         return (
             <Buttons>
-                <button type="button" onClick={writeNote}>
+                <Abutton type="button" onClick={writeNote}>
                     쪽지 남기기
-                </button>
-                <button
+                </Abutton>
+                <WButton
                     type="button"
                     onClick={() => {
                         navigate(`/tree/${Login.userId}`);
                     }}
-                    style={{ backgroundColor: '#ffffff', color: '#7c7c7c' }}
                 >
                     내 트리로 가기
-                </button>
+                </WButton>
                 <Dday>{dday > 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
             </Buttons>
         );
@@ -225,16 +252,15 @@ function Button() {
     if (!Login.userId) {
         return (
             <Buttons>
-                <button type="button" onClick={writeNote}>
+                <Abutton type="button" onClick={writeNote}>
                     쪽지 남기기
-                </button>
-                <button
+                </Abutton>
+                <WButton
                     type="button"
                     onClick={makeAccount}
-                    style={{ backgroundColor: '#ffffff', color: '#7c7c7c' }}
                 >
                     나도 계정 만들기
-                </button>
+                </WButton>
                 <Dday>{dday > 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
             </Buttons>
         );

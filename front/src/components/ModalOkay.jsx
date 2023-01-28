@@ -62,6 +62,9 @@ const Button = styled.button`
     border: none;
     color: #ffffff;
     margin: 10px;
+    &:hover {
+        background: #59749D;
+    }
 `;
 
 function ModalOkay({ setModalOpen }) {

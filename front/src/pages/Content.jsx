@@ -126,6 +126,9 @@ const StyledButton = styled.button`
     color: #ffffff;
     width: 67.5%;
     height: 3.5rem;
+    &:hover {
+        background: #59749D;
+    }
 `;
 
 const Div = styled.div`
@@ -161,6 +164,9 @@ const Button = styled.button`
     line-height: 18px;
     padding: 4px 12px;
     gap: 4px;
+    &:hover {
+        background: #59749D;
+    }
 `;
 
 function Content() {

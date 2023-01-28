@@ -124,6 +124,10 @@ export const StyledButton = styled.button`
     margin: 1rem 3rem;
     color: #ffffff;
     margin-bottom: 10vh;
+
+    &:hover {
+        background: #59749D;
+    }
 `;
 const Circle = styled.div`
     background: #ffffff;

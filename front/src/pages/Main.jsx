@@ -87,6 +87,9 @@ export const StyledLink = styled(Link)`
         padding: 0.6rem;
         margin: 6px 3rem;
         color: #ffffff;
+        &:hover {
+            background: #59749D;
+        }
     }
 `;
 const Snow = styled.img`
