@@ -216,6 +216,11 @@ function Write() {
         `${ownerName.nick}님에게 가장 전하고 싶었던 말은?`,
         `${ownerName.nick}님이 가장 잘하는/못하는 술게임은 무엇인가요?`,
         `${ownerName.nick}님의 이상형은 무엇인가요?`,
+        `${ownerName.nick}님이 아이돌로 데뷔한다면 포지션은?`,
+        `${ownerName.nick}님 이름으로 삼행시!`,
+        `${ownerName.nick}님이 남자/여자로 태어난다면?`,
+        `${ownerName.nick}님이 가장 좋아하는 학교 내 장소는?`,
+        `멀리서도 알아볼 수 있는 ${ownerName.nick}님만의 특징은?`,
         `학교 생활 중 ${ownerName.nick}님에게 일어난 신기한 일이 있다면?`,
         `${ownerName}님의 헌내기 시절은 어땠나요?`,
         `n년 간의 학교 생활 중, ${ownerName.nick}님에게 가장 고마웠던 일은?`,
@@ -224,7 +229,12 @@ function Write() {
         `${ownerName.nick}님의 학교생활을 단 한 줄로 요약하자면?`,
         `${ownerName.nick}님의 시간표에 대한 평가는?`,
         `${ownerName.nick}님의 첫인상은?`,
-        `${ownerName.nick}님의 의외의 귀여운 점은?`
+        `${ownerName.nick}님의 의외의 귀여운 점은?`,
+        `${ownerName.nick}님에게 가장 잘 어울리는 인생곡은?`,
+        `${ownerName.nick}님의 퍼스널 컬러를 예측하자면?`,
+        `${ownerName.nick}님의 MBTI는 이것일 것 같다!`,
+        `${ownerName.nick}님의 깻잎을 누군가 떼어준다면 내 반응은?`,
+        `${ownerName.nick}님과 가장 닮은 연예인은?`
     ];
     function randomNum(min, max) {
         const randNum = Math.floor(Math.random() * (max - min)) + min;

@@ -20,11 +20,15 @@ const Container = styled.div`
     right: 10px;
     padding-top: 10px;
     padding-left: 5px;
+    display: flex;
+    flex-direction: column;
 `;
 const Button = styled.button`
     border: 0;
     outline: 0;
+    text-align: left;
     margin: 8px;
+
     background-color: white;
     font-family: 'Inter';
     font-style: normal;
@@ -43,18 +47,16 @@ function ModalSide({ setModalOpen }) {
         setModalOpen(false);
     };
     const onLogOut = () => {
-        axios
-            .get('/api/v1/auth/logout', { withCredentials: true })
-            .then((response) => {
-                if (response.status === 200) {
-                    closeModal(false);
-                    setIsLogin({ userId: undefined, nick: undefined });
-                    alert('로그아웃 되었습니다.');
-                    navigate(`/`);
-                } else {
-                    alert(response.statusText);
-                }
-            });
+        axios.get('/api/v1/auth/logout', { withCredentials: true }).then((response) => {
+            if (response.status === 200) {
+                closeModal(false);
+                setIsLogin({ userId: undefined, nick: undefined });
+                alert('로그아웃 되었습니다.');
+                navigate(`/`);
+            } else {
+                alert(response.statusText);
+            }
+        });
     };
     const onLogIn = () => {
         navigate(`/login/*`);
@@ -83,26 +85,24 @@ function ModalSide({ setModalOpen }) {
                     .then((response) => {
                         navigate(`/`);
                         if (response.status === 200) {
-                            axios
-                                .delete(`/api/v1/users/${isLogin.userId}`)
-                                .then((res) => {
-                                    if (res.status === 200) {
-                                        alert('회원탈퇴를 완료했습니다.');
-                                        isLogin.userId = undefined;
-                                        isLogin.nick = undefined;
-
-                                        closeModal(false);
-                                        return 0;
-                                    }
-
-                                    alert('회원탈퇴에 실패했습니다.\n다시 시도해주세요.');
+                            axios.delete(`/api/v1/users/${isLogin.userId}`).then((res) => {
+                                if (res.status === 200) {
+                                    alert('회원탈퇴를 완료했습니다.');
                                     isLogin.userId = undefined;
                                     isLogin.nick = undefined;
-                                    navigate(`/`);
 
                                     closeModal(false);
                                     return 0;
-                                });
+                                }
+
+                                alert('회원탈퇴에 실패했습니다.\n다시 시도해주세요.');
+                                isLogin.userId = undefined;
+                                isLogin.nick = undefined;
+                                navigate(`/`);
+
+                                closeModal(false);
+                                return 0;
+                            });
                         }
                     })
                     .catch(() => {

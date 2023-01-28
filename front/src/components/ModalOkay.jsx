@@ -22,8 +22,8 @@ const Container = styled.div`
     z-index: 999;
 
     margin: 0 auto;
-    max-width: 290px;
-    max-height: 190px;
+    max-width: 280px;
+    max-height: 170px;
     width: 80vw;
     height: 50vw;
     background: #ffffff;
@@ -39,9 +39,9 @@ const Text = styled.p`
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
-    line-height: 30px;
-    margin: 0vw 3vw;
-
+    line-height: 20px;
+    margin: 7px 2vw;
+    margin-top: 15px;
     text-align: center;
 
     color: #000000;
@@ -65,27 +65,27 @@ const Button = styled.button`
 `;
 
 function ModalOkay({ setModalOpen }) {
-    const handleShare = async() => {
-        const newFile = await toBlob(document.querySelector(".container"));
+    const handleShare = async () => {
+        const newFile = await toBlob(document.querySelector('.container'));
         const data = {
             files: [
                 new File([newFile], 'image.png', {
-                    type: newFile.type,
-                }),
+                    type: newFile.type
+                })
             ],
             title: 'Image',
-            text: 'image',
+            text: 'image'
         };
 
         try {
-            if(!navigator.canShare(data)){
-                alert("이미지를 공유할 수 없습니다.");
+            if (!navigator.canShare(data)) {
+                alert('이미지를 공유할 수 없습니다.');
             }
             await navigator.share(data);
-        } catch(err){
+        } catch (err) {
             alert(err);
         }
-    }
+    };
 
     const closeModal = () => {
         handleShare();
@@ -96,11 +96,11 @@ function ModalOkay({ setModalOpen }) {
     };
 
     const clipboard = (event) => {
-         event.preventDefault();
-         navigator.clipboard.writeText(window.location.href);
-         alert('링크가 복사되었습니다.');
-         onOkay();
-     };
+        event.preventDefault();
+        navigator.clipboard.writeText(window.location.href);
+        alert('링크가 복사되었습니다.');
+        onOkay();
+    };
 
     return (
         <Background>
@@ -124,8 +124,7 @@ function ModalOkay({ setModalOpen }) {
                             링크공유
                         </Button>
                         <Button
-                            onClick={closeModal
-                            }
+                            onClick={closeModal}
                             style={{
                                 borderRadius: '10px',
                                 margin: '5px',
