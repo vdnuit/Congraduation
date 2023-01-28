@@ -85,7 +85,7 @@ export const StyledLink = styled(Link)`
 
         text-align: center;
         padding: 0.6rem;
-        margin: 1rem 3rem;
+        margin: 6px 3rem;
         color: #ffffff;
     }
 `;
