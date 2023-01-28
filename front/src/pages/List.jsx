@@ -110,7 +110,8 @@ const Grid = styled.div`
 function UI() {
     const count = useRecoilValue(countAtom);
     const leaves = useRecoilValue(temporaryTreeAtom);
-    const clip = () => {
+    const clip = (event) => {
+        event.preventDefault();
         navigator.clipboard.writeText(window.location.href);
         alert('링크가 복사되었습니다.');
     };

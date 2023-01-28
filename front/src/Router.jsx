@@ -12,7 +12,7 @@ import Header from './components/Header';
 
 function Router() {
     return (
-        <BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL}>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Header />
             <Routes>
                 <Route path="/" element={<Main />} errorElement={<Main />} />

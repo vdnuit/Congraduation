@@ -276,7 +276,7 @@ function Tree() {
 
     useEffect(() => {
         getUser();
-    }, []);
+    }, [userObjectId]);
 
     const clickHandler = (title) => {
         if (Login.userId === userObjectId) {
