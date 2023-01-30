@@ -175,20 +175,23 @@ function InstaModal({ setModalOpen }) {
         setModalOpen(false);
     };
     const imageRef = useRef(null);
+    const makeImage = async() => {
+        const newFile = await toBlob(imageRef.current);
+        const data = {
+            files: [
+                new File([newFile], 'image.png', {
+                    type: newFile.type
+                })
+            ],
+            title: 'Image',
+            text: 'image'
+        }
+        return data
+    }
 
     const handleShare = async () => {
-        const newFile = await toBlob(imageRef.current);
+        const data = await makeImage();
         try {
-            const data = {
-                files: [
-                    new File([newFile], 'image.png', {
-                        type: newFile.type
-                    })
-                ],
-                title: 'Image',
-                text: 'image'
-            };
-
             try {
                 if (!navigator.canShare(data)) {
                     alert('이미지를 공유할 수 없습니다.');

@@ -70,19 +70,22 @@ const Button = styled.button`
 `;
 
 function ModalOkay({ setModalOpen }) {
-    const handleShare = async () => {
+    const makeImage = async() => {
         const newFile = await toBlob(document.querySelector('.container'));
+        const data = {
+            files: [
+                new File([newFile], 'image.png', {
+                    type: newFile.type
+                })
+            ],
+            title: 'Image',
+            text: 'image'
+        };
+        return data
+    }
+    const handleShare = async () => {
+        const data = await makeImage();
         try {
-            const data = {
-                files: [
-                    new File([newFile], 'image.png', {
-                        type: newFile.type
-                    })
-                ],
-                title: 'Image',
-                text: 'image'
-            };
-
             try {
                 if (!navigator.canShare(data)) {
                     alert('이미지를 공유할 수 없습니다.');
