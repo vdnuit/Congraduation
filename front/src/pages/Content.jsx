@@ -69,7 +69,7 @@ const Container = styled.div`
 
 const GreyBox = styled.div`
     background: #ffffff;
-    padding: 10px;
+    padding: 10px 15px 10px 15px;
     margin: 10px;
     border: 1px solid #c8c8c8;
     border-radius: 10px;
@@ -234,7 +234,7 @@ function Content() {
                             </Button>
                         </h2>
                         <GreyBox>
-                            <p>{Leaf.content}</p>
+                            <p style={{textAlign:'justify'}}>{Leaf.content}</p>
                         </GreyBox>
                         <h4>From. {Leaf.senderNickName}</h4>
                     </div>

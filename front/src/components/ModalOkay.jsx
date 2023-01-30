@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import { React } from 'react';
 import { PropTypes } from 'prop-types';
 import { toBlob } from 'html-to-image';
@@ -69,24 +71,30 @@ const Button = styled.button`
 
 function ModalOkay({ setModalOpen }) {
     const handleShare = async () => {
-        const newFile = await toBlob(document.querySelector('.container'));
-        const data = {
-            files: [
-                new File([newFile], 'image.png', {
-                    type: newFile.type
-                })
-            ],
-            title: 'Image',
-            text: 'image'
-        };
-
         try {
-            if (!navigator.canShare(data)) {
-                alert('이미지를 공유할 수 없습니다.');
+            const newFile = await toBlob(document.querySelector('.container'));
+            const data = {
+                files: [
+                    new File([newFile], 'image.png', {
+                        type: newFile.type
+                    })
+                ],
+                title: 'Image',
+                text: 'image'
+            };
+
+            try {
+                if (!navigator.canShare(data)) {
+                    alert('이미지를 공유할 수 없습니다.');
+                }
+                await navigator.share(data);
+            } catch (err) {
+                alert("이미지 공유를 지원하지 않는 브라우저입니다.");
             }
-            await navigator.share(data);
-        } catch (err) {
-            alert(err);
+        }catch(e){
+            if(e.toString().includes('AbortError')){
+                const error =e.toString().includes('AbortError');
+            }
         }
     };
 
