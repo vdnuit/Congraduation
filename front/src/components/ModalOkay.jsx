@@ -71,8 +71,8 @@ const Button = styled.button`
 
 function ModalOkay({ setModalOpen }) {
     const handleShare = async () => {
+        const newFile = await toBlob(document.querySelector('.container'));
         try {
-            const newFile = await toBlob(document.querySelector('.container'));
             const data = {
                 files: [
                     new File([newFile], 'image.png', {

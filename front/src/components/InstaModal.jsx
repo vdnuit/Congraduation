@@ -177,8 +177,8 @@ function InstaModal({ setModalOpen }) {
     const imageRef = useRef(null);
 
     const handleShare = async () => {
+        const newFile = await toBlob(imageRef.current);
         try {
-            const newFile = await toBlob(imageRef.current);
             const data = {
                 files: [
                     new File([newFile], 'image.png', {
