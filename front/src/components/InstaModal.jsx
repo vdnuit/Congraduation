@@ -175,35 +175,27 @@ function InstaModal({ setModalOpen }) {
         setModalOpen(false);
     };
     const imageRef = useRef(null);
-    const makeImage = async() => {
-        const newFile = await toBlob(imageRef.current);
-        const data = {
-            files: [
-                new File([newFile], 'image.png', {
-                    type: newFile.type
-                })
-            ],
-            title: 'Image',
-            text: 'image'
-        }
-        return data
-    }
-
     const handleShare = async () => {
-        const data = await makeImage();
         try {
-            try {
-                if (!navigator.canShare(data)) {
-                    alert('이미지를 공유할 수 없습니다.');
-                }
-                await navigator.share(data);
-            } catch (err) {
-                alert("이미지 공유를 지원하지 않는 브라우저입니다.");
+            const newFile = await toBlob(imageRef.current);
+            const data = {
+                files: [
+                    new File([newFile], 'image.jpeg', {
+                        type: newFile.type
+                    })
+                ],
+                title: 'Image',
+                text: 'image'
             }
-        } catch(e){
-            if(e.toString().includes('AbortError')){
-                const error =e.toString().includes('AbortError');
+
+            if (!navigator.canShare(data)) {
+                alert('이미지를 공유할 수 없습니다.');
             }
+            await navigator.share(data);
+        } catch (err) {
+            if(err.toString().includes('AbortError')){
+                const error =err.toString().includes('AbortError');
+            }else{alert("이미지 공유를 지원하지 않는 브라우저입니다.")};
         }
     };
 
