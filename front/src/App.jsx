@@ -34,6 +34,7 @@ function App() {
     const getToken = () => {
         const cookies = new Cookies();
         const refreshToken = cookies.get("refreshToken");
+        console.log(refreshToken);
         axios.defaults.headers.common.Authorization = `Bearer ${refreshToken}`;
         axios
         .get("/api/v1/auth/refresh-token")
@@ -50,7 +51,6 @@ function App() {
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
-                console.log(err.response);
                 setLogin({userId: undefined, nick: undefined});
             }
         })
@@ -67,7 +67,6 @@ function App() {
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
-                console.log(err.response);
                 getToken();
             }
         })

@@ -3,7 +3,6 @@
 import { React, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Cookies } from "react-cookie";
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { isLoginAtom } from '../Atom';
@@ -45,9 +44,6 @@ const Announce = styled.div`
 
 function Kakao() {
     const setLogin = useSetRecoilState(isLoginAtom);
-    const cookies = new Cookies();
-    const setCookie = (name, value, option) => { cookies.set(name, value, { ...option });
-    };
     const params = new URL(window.location.href).searchParams;
     const code = params.get("code");
     const navigate = useNavigate()
@@ -58,12 +54,8 @@ function Kakao() {
             if(response.status === 200){
                 const { accessToken } = response.data;
                 axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-                const PROVIDER = "kakao";
-                const REFRESH_TOKEN = response.data.refreshToken;
                 const ID = response.data._id;
                 const NICK = response.data.nick;
-                setCookie('provider',PROVIDER, { path: "/", sameSite: "none", });
-                setCookie('refreshToken', REFRESH_TOKEN, { path: "/", sameSite: "none", });
                 setLogin({ userId: ID,  nick: NICK });
                 navigate(`/tree/${ID}`);
                 
