@@ -145,6 +145,28 @@ const Button = styled.button`
     border: none;
     color: #ffffff;
     margin: 10px;
+    &:hover {
+        background: #59749D;
+    }
+`;
+
+const WButton = styled.button`
+    background: #C8C8C8;
+    border-radius: 10px;
+    font-family: 'Jua';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 25px;
+    width: 30%;
+    height: 40px;
+    text-align: center;
+    border: none;
+    color: #252525;
+    margin: 10px;
+    &:hover {
+        background: #E7E7E7;
+    }
 `;
 
 function InstaModal({ setModalOpen }) {
@@ -225,30 +247,17 @@ function InstaModal({ setModalOpen }) {
                                         {Leaf.content}
                                     </p>
                                 </GreyBox>
-                                <h4
-                                    style={{
-                                        width: '60%',
-                                        fontSize: '2.5vh',
-                                        display: 'block',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        textAlign: 'right'
-                                    }}
-                                >
-                                    From. {Leaf.senderNickName}
-                                </h4>
+                                <h4 style={{ width: "60%", fontSize: '2.5vh', display: "block", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", textAlign: "right"}}>From. {Leaf.senderNickName}</h4>
                             </Box>
                         </Container>
                     </ModalDiv>
                     <Buttons>
                         <Button onClick={handleShare}>저장</Button>
-                        <Button
-                            style={{ backgroundColor: '#C8C8C8', color: '#252525' }}
+                        <WButton
                             onClick={closeModal}
                         >
                             닫기
-                        </Button>
+                        </WButton>
                     </Buttons>
                 </Modal>
             )}

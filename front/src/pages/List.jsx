@@ -1,14 +1,13 @@
 /* eslint no-underscore-dangle: 0 */
 
 import { React, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import axios from 'axios';
 import LeafSpinner from '../components/LeafSpinner';
 import { countAtom, temporaryTreeAtom, isLoginAtom } from '../Atom';
 import Leaf from '../components/Leaf';
-import { StyledLink } from './Main';
 
 const Container = styled.div`
     width: 100%;
@@ -59,6 +58,29 @@ const Announce = styled.div`
 
 const Div = styled.div`
     width: 80%;
+`;
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    h2 {
+        background: #072a60;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 100px;
+        font-family: 'Jua';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 30px;
+        /* identical to box height */
+
+        text-align: center;
+        padding: 0.6rem;
+        margin: 1rem 3rem;
+        color: #ffffff;
+        &:hover {
+            background: #59749D;
+        }
+    }
 `;
 
 const StyledGrid = styled.div`

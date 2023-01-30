@@ -1,14 +1,14 @@
 /* eslint no-underscore-dangle: 0 */
 
 import { React } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
-import { StyledLink } from './Tree';
 import { isLoginAtom } from '../Atom';
 import KakaoImg from '../assets/kakao_login_medium_narrow.png';
+
 
 const Container = styled.div`
     width: 100%;
@@ -68,6 +68,29 @@ const Div = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+`;
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    h2 {
+        background: #072a60;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 100px;
+        font-family: 'Jua';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 30px;
+        /* identical to box height */
+
+        text-align: center;
+        padding: 0.6rem;
+        margin: 1rem 3rem;
+        color: #ffffff;
+        &:hover {
+            background: #59749D;
+        }
+    }
 `;
 
 const Kakao = styled.a`
