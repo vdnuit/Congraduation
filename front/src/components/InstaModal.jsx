@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { React, useState, useRef, useEffect } from 'react';
+import { React, useRef } from 'react';
 import { PropTypes } from 'prop-types';
-import { toBlob } from 'html-to-image';
+import domtoimage from 'dom-to-image';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { leafAtom } from '../Atom';
@@ -171,46 +171,42 @@ const WButton = styled.button`
 
 function InstaModal({ setModalOpen }) {
     const Leaf = useRecoilValue(leafAtom);
-    const [data, setData ] = useState(null);
     const closeModal = () => {
         setModalOpen(false);
     };
     const imageRef = useRef(null);
-    const makeImage = async() => {
-        const newFile = await toBlob(imageRef.current);
-        const file = {
-            files: [
-                new File([newFile], 'image.jpeg', {
-                    type: newFile.type
-                })
-            ],
-            title: 'Image',
-            text: 'image'
-        }
-        setData(file);
-    }
-
     const handleShare = async () => {
-        try {
-            if (!navigator.canShare(data)) {
-                alert('이미지를 공유할 수 없습니다.');
+        domtoimage.toBlob(document.querySelector('.modal'))
+        .then((blob)=>{
+            const file = {
+                files: [
+                    new File([blob], 'image.jpeg', {
+                        type: blob.type
+                    })
+                ],
+                title: 'Image',
+                text: 'image'
             }
-            await navigator.share(data);
-        } catch (err) {
-            if(err.toString().includes('AbortError')){
-                const error =err.toString().includes('AbortError');
-            }else{alert("이미지 공유를 지원하지 않는 브라우저입니다.")};
-        }
+            try {
+                if (!navigator.canShare(file)) {
+                     alert('이미지를 공유할 수 없습니다.');
+                }
+                if (navigator.canShare(file)) {
+                    navigator.share(file);
+               }
+            } catch (err) {
+                if(err.toString().includes('AbortError')){
+                    const error = err.toString().includes('AbortError');
+                }else {alert("이미지 공유를 지원하지 않는 브라우저입니다.")};
+            }
+        })
     };
-
-    useEffect(() => {
-        makeImage();
-    }, [])
+    
 
     return (
         <Background>
                 <Modal>
-                    <ModalDiv ref={imageRef}>
+                    <ModalDiv className="modal">
                         <TreeBackground src={InstaStory} alt="밤 배경 은행나무" />
                         <Container>
                             <Box>
