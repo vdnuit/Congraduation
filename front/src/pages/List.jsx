@@ -132,11 +132,36 @@ const Grid = styled.div`
 function UI() {
     const count = useRecoilValue(countAtom);
     const leaves = useRecoilValue(temporaryTreeAtom);
-    const clip = (event) => {
-        event.preventDefault();
-        navigator.clipboard.writeText(window.location.href);
-        alert('링크가 복사되었습니다.');
-    };
+    const clipboard = () => {
+        if (navigator.clipboard) {
+          navigator.clipboard
+            .writeText(window.location.href)
+            .then(() => {
+              alert("링크가 복사되었습니다.");
+            })
+            .catch(() => {
+              alert("복사를 다시 시도해주세요.");
+            });
+        } else {
+          if (!document.queryCommandSupported("copy")) {
+            alert("복사하기가 지원되지 않는 브라우저입니다.");
+          }
+    
+          const textarea = document.createElement("textarea");
+          textarea.value = window.location.href;
+          textarea.style.top = 0;
+          textarea.style.left = 0;
+          textarea.style.position = "fixed";
+    
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+          alert("링크가 복사되었습니다.");
+        }
+      };
+      
     if (count === 0) {
         return (
             <Container>
@@ -148,7 +173,7 @@ function UI() {
                     </Announce>
                 </Empty>
                 <Div>
-                    <StyledLink onClick={clip}>
+                    <StyledLink onClick={clipboard}>
                         <h2>공유하기</h2>
                     </StyledLink>
                 </Div>
