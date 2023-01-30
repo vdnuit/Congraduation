@@ -209,7 +209,7 @@ function InstaModal({ setModalOpen }) {
                             <Box>
                                 <Div>
                                     <GreyBox>
-                                        <p style={{ fontSize: '14px', lineHeight: '18px' }}>
+                                        <p style={{ fontSize: '12px', lineHeight: '15px' }}>
                                             {Leaf.topic}
                                         </p>
                                     </GreyBox>
@@ -218,8 +218,8 @@ function InstaModal({ setModalOpen }) {
                                     <p
                                         style={{
                                             textAlign: 'justify',
-                                            fontSize: '14px',
-                                            lineHeight: '18px'
+                                            fontSize: '12px',
+                                            lineHeight: '15px'
                                         }}
                                     >
                                         {Leaf.content}
