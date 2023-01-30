@@ -43,8 +43,8 @@ const signin = (req, res, next) => {
                 const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
                 const refreshToken = createToken('RefreshKey');
                 Token.create({userId: user._id, token: refreshToken, createdAt: new Date(Date.now())});
-                res.cookie("provider", "local", {samesite: 'none'});
-                return res.cookie("refreshToken", refreshToken, {httpOnly: true, samesite: 'none'}).status(200).json({accessToken: accessToken, _id: user._id, nick: user.nick});
+                res.cookie("provider", "local", {samesite: 'none', secure: true});
+                return res.cookie("refreshToken", refreshToken, {httpOnly: true, samesite: 'none', secure: true}).status(200).json({accessToken: accessToken, _id: user._id, nick: user.nick});
             });
         })(req,res,next);
     }
@@ -136,10 +136,14 @@ const kakaoCallback = async(req, res, next) => {
                     nick: userInfo.data.kakao_account.profile.nickname,
                     provider: 'kakao',
                 }); // 카카오는, 액세스 토큰 쿠키 만들 필요 없음
+                res.cookie("refreshToken", refreshToken, {httpOnly: true, samesite: 'none', secure: true});
+                res.cookie("provider", "kakao", {samesite: 'none', secure: true});
                 return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', _id: newUser._id});
             }
             else{
-              return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', _id: exUser._id});
+                res.cookie("refreshToken", refreshToken, {httpOnly: true, samesite: 'none', secure: true});
+                res.cookie("provider", "kakao", {samesite: 'none', secure: true});
+                return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', _id: exUser._id});
             }
           }
           else{
