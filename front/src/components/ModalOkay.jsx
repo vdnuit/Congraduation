@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { React } from 'react';
+import { React, useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { toBlob } from 'html-to-image';
 import styled from 'styled-components';
@@ -70,18 +70,23 @@ const Button = styled.button`
 `;
 
 function ModalOkay({ setModalOpen }) {
+    const [data, setData ] = useState(null);
+    const makeImage = async() => {
+        const newFile = await toBlob(document.querySelector('.container'));
+        const file = {
+            files: [
+                new File([newFile], 'image.jpeg', {
+                    type: newFile.type
+                })
+            ],
+            title: 'Image',
+            text: 'image'
+        }
+        setData(file);
+    }
+
     const handleShare = async () => {
         try {
-            const newFile = await toBlob(document.querySelector('.container'));
-            const data = {
-                files: [
-                    new File([newFile], 'image.jpeg', {
-                        type: newFile.type
-                    })
-                ],
-                title: 'Image',
-                text: 'image'
-            };
             if (!navigator.canShare(data)) {
                  alert('이미지를 공유할 수 없습니다.');
             }
@@ -132,6 +137,10 @@ function ModalOkay({ setModalOpen }) {
         }
         onOkay();
       };
+
+    useEffect(() => {
+        makeImage();
+    }, [])
 
     return (
         <Background>

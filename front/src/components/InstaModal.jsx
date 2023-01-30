@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { React, useRef } from 'react';
+import { React, useState, useRef, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { toBlob } from 'html-to-image';
 import { useRecoilValue } from 'recoil';
@@ -171,23 +171,27 @@ const WButton = styled.button`
 
 function InstaModal({ setModalOpen }) {
     const Leaf = useRecoilValue(leafAtom);
+    const [data, setData ] = useState(null);
     const closeModal = () => {
         setModalOpen(false);
     };
     const imageRef = useRef(null);
+    const makeImage = async() => {
+        const newFile = await toBlob(imageRef.current);
+        const file = {
+            files: [
+                new File([newFile], 'image.jpeg', {
+                    type: newFile.type
+                })
+            ],
+            title: 'Image',
+            text: 'image'
+        }
+        setData(file);
+    }
+
     const handleShare = async () => {
         try {
-            const newFile = await toBlob(imageRef.current);
-            const data = {
-                files: [
-                    new File([newFile], 'image.jpeg', {
-                        type: newFile.type
-                    })
-                ],
-                title: 'Image',
-                text: 'image'
-            }
-
             if (!navigator.canShare(data)) {
                 alert('이미지를 공유할 수 없습니다.');
             }
@@ -198,6 +202,10 @@ function InstaModal({ setModalOpen }) {
             }else{alert("이미지 공유를 지원하지 않는 브라우저입니다.")};
         }
     };
+
+    useEffect(() => {
+        makeImage();
+    }, [])
 
     return (
         <Background>
