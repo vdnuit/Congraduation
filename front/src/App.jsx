@@ -50,6 +50,7 @@ function App() {
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
+                console.log(err.response);
                 setLogin({userId: undefined, nick: undefined});
             }
         })
@@ -66,6 +67,7 @@ function App() {
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
+                console.log(err.response);
                 getToken();
             }
         })
