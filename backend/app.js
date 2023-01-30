@@ -19,14 +19,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.all("/.*/", (req, res, next)=> {
-    let host = req.header('host');
-    console.log("HOST: ", host);
-    if(host.match("/^www\..*/i")) {
-        console.log("HOST:", host);
-        next();
-    }
-});
+
 // session
     // 아래 passport메서드가 이 세션에 의존하기 때문에 앞에 선언해야 함
 
