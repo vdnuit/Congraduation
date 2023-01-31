@@ -128,7 +128,7 @@ function LogIn() {
                     const { accessToken } = response.data;
                     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
                     setLogin({ userId: response.data._id, nick: response.data.nick });
-                    setProvider(response.data.provider);
+                    setProvider('local');
                     navigate(`/tree/${response.data._id}`);
                 } else {
                     alert(response.statusText);

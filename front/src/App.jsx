@@ -1,4 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
+/* eslint-disable prefer-template */
+/* eslint-disable no-restricted-globals */
 
 import { createGlobalStyle } from 'styled-components';
 import { React, useEffect } from 'react';
@@ -30,6 +32,23 @@ ${reset}
  `;
 
 function App() {
+    const checkUser = () => {
+        const UA = navigator.userAgent.toLowerCase();
+        if(UA.indexOf('android') > -1){
+            if(UA.indexOf('instagram') > -1 || UA.indexOf('naver') > -1 || UA.indexOf('everytimeapp') > -1 || UA.indexOf('kakaotalk')){
+                if(UA.includes('instagram')){
+                    location.href = 'instagram://inappbrowser/close';
+                } else if (UA.includes('naver')){
+                    location.href = 'naver://inappbrowser/close';
+                } else if(UA.includes('everytimeapp')){
+                    location.href = 'everytimeapp://inappbrowser/close';
+                } if(UA.includes('kakaotalk')){
+                    location.href = 'kakaotalk://inappbrowser/close';
+                }
+                location.href = "intent://" + location.href.replace(/https?:\/\//i, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+            }
+        }
+    }
     const setLogin = useSetRecoilState(isLoginAtom);
     const setProvider = useSetRecoilState(providerAtom);
     const getToken = () => {
@@ -74,8 +93,12 @@ function App() {
         })
     }
 
+    useEffect(() => {
+        checkUser();
+        }, [])
+    
 
-        useEffect(() => {
+    useEffect(() => {
         myInfo();
         }, [])
 
