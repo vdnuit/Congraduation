@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 // 로컬 유저 로그인
 const createToken = (type, bodyId='', bodyNick='', bodyProvider='') => {
     if(type === 'AccessKey'){
-        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "5m"});
+        const accessToken = jwt.sign({id: bodyId, nick: bodyNick, provider: bodyProvider}, process.env.JWTSecret, {expiresIn: "30m"});
         return accessToken;
     }
     else if(type === 'RefreshKey'){
