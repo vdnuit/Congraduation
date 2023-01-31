@@ -316,7 +316,7 @@ function Tree() {
                 <TreeSpinner />
             ) : (
                 <>
-                    <Container>
+                    <Container className="container">
                         {hours <= 16 && hours >= 9 ? (
                             <Count style={{ color: '#072A60' }}>
                                 {ownerName.nick}님의 나무에 {count}개의 메시지
@@ -326,7 +326,6 @@ function Tree() {
                                 {ownerName.nick}님의 나무에 {count}개의 메시지
                             </Count>
                         )}
-                        <div className="container">
                             <Time />
                             {Login.userId === userObjectId ? (
                                 <Link to={{ pathname: `/list/${ownerName._id}` }}>
@@ -342,7 +341,6 @@ function Tree() {
                                 </Link>
                             ) : null}
                             <TreeComponent />
-                        </div>
                     </Container>
                     <Button />
                 </>

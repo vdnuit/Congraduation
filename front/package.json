@@ -10,7 +10,7 @@
     "dom-to-image": "^2.6.0",
     "dotenv": "^16.0.3",
     "framer-motion": "^7.10.0",
-    "html-to-image": "^1.11.4",
+    "html-to-image": "^1.11.9",
     "html2canvas": "^1.4.1",
     "image-map": "^2.0.1",
     "prop-types": "^15.8.1",

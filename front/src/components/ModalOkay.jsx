@@ -2,6 +2,7 @@
 
 import { React } from 'react';
 import { PropTypes } from 'prop-types';
+import * as htmlToImage from 'html-to-image';
 import { toBlob } from 'html-to-image';
 import styled from 'styled-components';
 
@@ -72,34 +73,40 @@ const Button = styled.button`
 function ModalOkay({ setModalOpen }) {
 
     const handleShare = async () => {
-        const newFile = await toBlob(document.querySelector('.container'));
-        const data = {
-            files : [
-                new File([newFile], "Tree.png", {
-                    type: newFile.type
-                })
-            ],
-            title: "Tree",
-            text: "내 트리"
-        };
-            try {
-                if (!navigator.canShare(data)) {
-                     alert('이미지를 공유할 수 없습니다.');
+        htmlToImage
+        .toBlob(document.querySelector('.container'))
+        .then((blob1) => {
+            const data = {
+                files : [
+                    new File([blob1], "Tree.png", {
+                        type: blob1.type
+                    })
+                ],
+                title: "Tree",
+                text: "내 트리"
+            };
+            toBlob(document.querySelector('.container')).then((blob2) => {
+                const data2 = {
+                    files : [
+                        new File([blob2], "Tree.png", {
+                            type: blob2.type
+                        })
+                    ],
+                    title: "Tree",
+                    text: "내 트리"
+                };
+
+                if(navigator.canShare && navigator.canShare(data2)){
+                    try {
+                        navigator.share(data2);
+                    } catch (error) {
+                        alert('이미지를 공유할 수 없습니다.');
+                    }
+                } else {
+                    alert("이미지 공유를 지원하지 않는 브라우저입니다.");
                 }
-                if (navigator.canShare(data)) {
-                    await navigator.share({
-                        files : [
-                            new File([newFile], "Tree.png", {
-                                type: newFile.type
-                            })
-                        ],
-                        title: "Tree",
-                        text: "내 트리"
-                    });
-               }
-            } catch (err) {
-                alert("이미지 공유를 지원하지 않는 브라우저입니다.");
-            }
+            })
+        })
         }
 
     const closeModal = () => {
