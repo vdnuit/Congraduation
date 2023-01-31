@@ -57,7 +57,7 @@ function ModalSide({ setModalOpen }) {
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
-                navigate(`/`);
+                alert("새로고침 후 다시 시도하세요.");
             }
         })
 
