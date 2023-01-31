@@ -213,17 +213,29 @@ function InstaModal({ setModalOpen }) {
                         text: "소중한 쪽지"
                     };
 
-                if(navigator.canShare && navigator.canShare(data2)){
-                    try {
-                        navigator.share(data2);
-                    } catch (error) {
-                        alert('이미지를 공유할 수 없습니다.');
-                    }
-                } else {
-                    alert("이미지 공유를 지원하지 않는 브라우저입니다.");
-                }
+                    toBlob(document.querySelector('.modal')).then((blob3) => {
+                        const data3 = {
+                            files : [
+                                new File([blob3], "letter.png", {
+                                    type: blob3.type
+                                })
+                            ],
+                            title: "Letter",
+                            text: "소중한 쪽지"
+                        };
+
+                        if(navigator.canShare && navigator.canShare(data3)){
+                            try {
+                                navigator.share(data3);
+                            } catch (error) {
+                                alert('이미지를 공유할 수 없습니다.');
+                            }
+                        } else {
+                            alert("이미지 공유를 지원하지 않는 브라우저입니다.");
+                        }
+                    })   
+                })
             })
-        })
         })
         }
     
