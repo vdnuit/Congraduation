@@ -87,7 +87,15 @@ function ModalOkay({ setModalOpen }) {
                      alert('이미지를 공유할 수 없습니다.');
                 }
                 if (navigator.canShare(data)) {
-                    await navigator.share(data);
+                    await navigator.share({
+                        files : [
+                            new File([newFile], "Tree.png", {
+                                type: newFile.type
+                            })
+                        ],
+                        title: "Tree",
+                        text: "내 트리"
+                    });
                }
             } catch (err) {
                 alert("이미지 공유를 지원하지 않는 브라우저입니다.");
