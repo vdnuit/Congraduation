@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
-import { isLoginAtom } from '../Atom';
+import { isLoginAtom, providerAtom } from '../Atom';
 import KakaoImg from '../assets/kakao_login_medium_narrow.png';
 
 
@@ -104,6 +104,7 @@ const Img = styled.img`
 
 function LogIn() {
     const setLogin = useSetRecoilState(isLoginAtom);
+    const setProvider = useSetRecoilState(providerAtom);
     const navigate = useNavigate();
     const {
         register,
@@ -127,6 +128,7 @@ function LogIn() {
                     const { accessToken } = response.data;
                     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
                     setLogin({ userId: response.data._id, nick: response.data.nick });
+                    setProvider(response.data.provider);
                     navigate(`/tree/${response.data._id}`);
                 } else {
                     alert(response.statusText);

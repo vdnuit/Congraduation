@@ -179,8 +179,9 @@ function InstaModal({ setModalOpen }) {
     };
     const imageRef = useRef(null);
     const handleShare = async () => {
+        const fontEmbedCss = await htmlToImage.getFontEmbedCSS(document.querySelector('.element1'));
         htmlToImage
-        .toBlob(document.querySelector('.modal'))
+        .toBlob(document.querySelector('.modal'), {fontEmbedCss})
         .then((blob) => {
             const data = {
                 files : [
@@ -191,7 +192,7 @@ function InstaModal({ setModalOpen }) {
                 title: "Letter",
                 text: "소중한 쪽지"
             };
-            toBlob(document.querySelector('.modal')).then((blob1) => {
+            toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob1) => {
                 const data1 = {
                     files : [
                         new File([blob1], "letter.png", {
@@ -202,7 +203,7 @@ function InstaModal({ setModalOpen }) {
                     text: "소중한 쪽지"
                 };
 
-                toBlob(document.querySelector('.modal')).then((blob2) => {
+                toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob2) => {
                     const data2 = {
                         files : [
                             new File([blob2], "letter.png", {
@@ -213,7 +214,7 @@ function InstaModal({ setModalOpen }) {
                         text: "소중한 쪽지"
                     };
 
-                    toBlob(document.querySelector('.modal')).then((blob3) => {
+                    toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob3) => {
                         const data3 = {
                             files : [
                                 new File([blob3], "letter.png", {
@@ -224,7 +225,7 @@ function InstaModal({ setModalOpen }) {
                             text: "소중한 쪽지"
                         };
 
-                        toBlob(document.querySelector('.modal')).then((blob4) => {
+                        toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob4) => {
                             const data4 = {
                                 files : [
                                     new File([blob4], "letter.png", {
@@ -262,13 +263,13 @@ function InstaModal({ setModalOpen }) {
                             <Box>
                                 <Div>
                                     <GreyBox>
-                                        <p style={{ fontSize: '12px', lineHeight: '15px' }}>
+                                        <p className="element1" style={{ fontSize: '12px', lineHeight: '15px' }}>
                                             {Leaf.topic}
                                         </p>
                                     </GreyBox>
                                 </Div>
                                 <GreyBox>
-                                    <p
+                                    <p className="element2"
                                         style={{
                                             textAlign: 'justify',
                                             fontSize: '12px',

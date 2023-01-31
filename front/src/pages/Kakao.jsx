@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
-import { isLoginAtom } from '../Atom';
+import { isLoginAtom, providerAtom } from '../Atom';
 
 const Container = styled.div`
     width: 100%;
@@ -44,6 +44,7 @@ const Announce = styled.div`
 
 function Kakao() {
     const setLogin = useSetRecoilState(isLoginAtom);
+    const setProvider = useSetRecoilState(providerAtom);
     const params = new URL(window.location.href).searchParams;
     const code = params.get("code");
     const navigate = useNavigate()
@@ -58,6 +59,7 @@ function Kakao() {
                 const NICK = response.data.nick;
                 setLogin({ userId: ID,  nick: NICK });
                 navigate(`/tree/${ID}`);
+                setProvider(response.data.provider);
                 
             } else {
                 alert(response.statusText);
