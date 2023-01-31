@@ -3,7 +3,8 @@
 
 import { React, useRef } from 'react';
 import { PropTypes } from 'prop-types';
-import { toBlob } from "html-to-image";
+import * as htmlToImage from 'html-to-image';
+import { toBlob } from 'html-to-image';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { leafAtom } from '../Atom';
@@ -178,28 +179,54 @@ function InstaModal({ setModalOpen }) {
     };
     const imageRef = useRef(null);
     const handleShare = async () => {
-        const newFile = await toBlob(document.querySelector('.modal'));
-        const data = {
-            files : [
-                new File([newFile], "letter.png", {
-                    type: newFile.type
-                })
-            ],
-            title: "Letter",
-            text: "소중한 쪽지"
-        };
+        htmlToImage
+        .toBlob(document.querySelector('.modal'))
+        .then((blob) => {
+            const data = {
+                files : [
+                    new File([blob], "letter.png", {
+                        type: blob.type
+                    })
+                ],
+                title: "Letter",
+                text: "소중한 쪽지"
+            };
+            toBlob(document.querySelector('.modal')).then((blob1) => {
+                const data1 = {
+                    files : [
+                        new File([blob1], "letter.png", {
+                            type: blob1.type
+                        })
+                    ],
+                    title: "Letter",
+                    text: "소중한 쪽지"
+                };
 
-            try {
-                if (!navigator.canShare(data)) {
-                     alert('이미지를 공유할 수 없습니다.');
+                toBlob(document.querySelector('.modal')).then((blob2) => {
+                    const data2 = {
+                        files : [
+                            new File([blob2], "letter.png", {
+                                type: blob2.type
+                            })
+                        ],
+                        title: "Letter",
+                        text: "소중한 쪽지"
+                    };
+
+                if(navigator.canShare && navigator.canShare(data2)){
+                    try {
+                        navigator.share(data2);
+                    } catch (error) {
+                        alert('이미지를 공유할 수 없습니다.');
+                    }
+                } else {
+                    alert("이미지 공유를 지원하지 않는 브라우저입니다.");
                 }
-                if (navigator.canShare(data)) {
-                    await navigator.share(data);
-               }
-            } catch (err) {
-                alert("이미지 공유를 지원하지 않는 브라우저입니다.");
-            }
+            })
+        })
+        })
         }
+    
     
 
     return (

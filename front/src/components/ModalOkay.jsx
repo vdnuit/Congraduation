@@ -75,26 +75,37 @@ function ModalOkay({ setModalOpen }) {
     const handleShare = async () => {
         htmlToImage
         .toBlob(document.querySelector('.container'))
-        .then((blob1) => {
+        .then((blob) => {
             const data = {
                 files : [
-                    new File([blob1], "Tree.png", {
-                        type: blob1.type
+                    new File([blob], "Tree.png", {
+                        type: blob.type
                     })
                 ],
                 title: "Tree",
                 text: "내 트리"
             };
-            toBlob(document.querySelector('.container')).then((blob2) => {
-                const data2 = {
+            toBlob(document.querySelector('.container')).then((blob1) => {
+                const data1 = {
                     files : [
-                        new File([blob2], "Tree.png", {
-                            type: blob2.type
+                        new File([blob1], "Tree.png", {
+                            type: blob1.type
                         })
                     ],
                     title: "Tree",
                     text: "내 트리"
                 };
+
+                toBlob(document.querySelector('.container')).then((blob2) => {
+                    const data2 = {
+                        files : [
+                            new File([blob2], "Tree.png", {
+                                type: blob2.type
+                            })
+                        ],
+                        title: "Tree",
+                        text: "내 트리"
+                    };
 
                 if(navigator.canShare && navigator.canShare(data2)){
                     try {
@@ -106,6 +117,7 @@ function ModalOkay({ setModalOpen }) {
                     alert("이미지 공유를 지원하지 않는 브라우저입니다.");
                 }
             })
+        })
         })
         }
 
