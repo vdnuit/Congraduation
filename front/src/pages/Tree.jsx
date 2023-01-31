@@ -319,11 +319,11 @@ function Tree() {
                     <Container className="container">
                         {hours <= 16 && hours >= 9 ? (
                             <Count style={{ color: '#072A60' }}>
-                                {ownerName.nick}님의 나무에 {count}개의 메시지
+                                {ownerName.nick}님의 나무에 {count}개의 쪽지
                             </Count>
                         ) : (
                             <Count>
-                                {ownerName.nick}님의 나무에 {count}개의 메시지
+                                {ownerName.nick}님의 나무에 {count}개의 쪽지
                             </Count>
                         )}
                             <Time />
