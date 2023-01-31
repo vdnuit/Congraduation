@@ -3,7 +3,7 @@
 
 import { React, useRef } from 'react';
 import { PropTypes } from 'prop-types';
-import domtoimage from 'dom-to-image';
+import { toBlob } from "html-to-image";
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { leafAtom } from '../Atom';
@@ -178,38 +178,28 @@ function InstaModal({ setModalOpen }) {
     };
     const imageRef = useRef(null);
     const handleShare = async () => {
-        const image = document.querySelector('.modal');
-        const scale = 2;
-        domtoimage.toBlob(image, {
-            width: image.clientWidth * scale,
-            height: image.clientHeight * scale,
-            style: {
-                transform: 'scale(' + scale +')',
-                transformOrigin: 'top left'
-            }
-        })
-        .then((blob)=>{
-            const file = {
-                files: [
-                    new File([blob], 'image.png', {
-                        type: blob.type
-                    })
-                ],
-                title: 'Image',
-                text: 'image'
-            }
+        const newFile = await toBlob(document.querySelector('.modal'));
+        const data = {
+            files : [
+                new File([newFile], "letter.png", {
+                    type: newFile.type
+                })
+            ],
+            title: "Letter",
+            text: "소중한 쪽지"
+        };
+
             try {
-                if (!navigator.canShare(file)) {
+                if (!navigator.canShare(data)) {
                      alert('이미지를 공유할 수 없습니다.');
                 }
-                if (navigator.canShare(file)) {
-                    navigator.share(file);
+                if (navigator.canShare(data)) {
+                    await navigator.share(data);
                }
             } catch (err) {
                 alert("이미지 공유를 지원하지 않는 브라우저입니다.");
             }
-        })
-    };
+        }
     
 
     return (
