@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable prefer-template */
+
 import { React, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 import domtoimage from 'dom-to-image';
@@ -176,7 +178,16 @@ function InstaModal({ setModalOpen }) {
     };
     const imageRef = useRef(null);
     const handleShare = async () => {
-        domtoimage.toBlob(document.querySelector('.modal'))
+        const image = document.querySelector('.modal');
+        const scale = 2;
+        domtoimage.toBlob(image, {
+            width: image.clientWidth * scale,
+            height: image.clientHeight * scale,
+            style: {
+                transform: 'scale(' + scale +')',
+                transformOrigin: 'top left'
+            }
+        })
         .then((blob)=>{
             const file = {
                 files: [
