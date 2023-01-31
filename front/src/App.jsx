@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Cookies } from 'react-cookie';
 import reset from 'styled-reset';
 import { useSetRecoilState } from 'recoil';
-import { isLoginAtom } from './Atom';
+import { isLoginAtom, providerAtom } from './Atom';
 import Router from './Router';
 
 import InterTTF from './assets/Inter.ttf';
@@ -31,6 +31,7 @@ ${reset}
 
 function App() {
     const setLogin = useSetRecoilState(isLoginAtom);
+    const setProvider = useSetRecoilState(providerAtom);
     const getToken = () => {
         const cookies = new Cookies();
         const refreshToken = cookies.get("refreshToken");
@@ -45,6 +46,7 @@ function App() {
                 .get(`/api/v1/users/myInfo`)
                 .then((res) => {
                     setLogin({userId: res.data.userId, nick: res.data.nick });
+                    setProvider(res.data.provider);
                 })
             }
         })
@@ -62,6 +64,7 @@ function App() {
         .then((response) => {
             if(response.status === 200){
                 setLogin({userId: response.data.userId, nick: response.data.nick });
+                setProvider(response.data.provider);
             }
         })
         .catch((err) => {

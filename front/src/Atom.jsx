@@ -36,7 +36,7 @@ export const dateAtom = atom({
     default: new Date('2023-01-15')
 });
 
-export const ImageAtom = atom({
-    key: 'Image',
+export const providerAtom = atom({
+    key: 'provider',
     default: null
 });
