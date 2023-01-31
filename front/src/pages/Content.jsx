@@ -227,7 +227,7 @@ function Content() {
                         </Div>
 
                         <h2>
-                            <p>To. {ownerName.nick}</p>
+                            <h4 style={{textAlign:'left', margin: '10px 100px 0px 10px'}}>To. {ownerName.nick}</h4>
                             <Button type="button" onClick={deleteMessage}>
                                 <Img src={trash} alt="trash" />
                                 삭제
