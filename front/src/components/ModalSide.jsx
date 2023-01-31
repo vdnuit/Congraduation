@@ -57,7 +57,8 @@ function ModalSide({ setModalOpen }) {
         })
         .catch((err) => {
             if(err.response && err.response.status === 401){
-                alert("새로고침 후 다시 시도하세요.");
+                alert("토큰이 만료되어 로그아웃 됩니다.");
+                window.location.replace('/');
             }
         })
 
