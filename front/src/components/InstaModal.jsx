@@ -180,7 +180,7 @@ function InstaModal({ setModalOpen }) {
         .then((blob)=>{
             const file = {
                 files: [
-                    new File([blob], 'image.jpeg', {
+                    new File([blob], 'image.png', {
                         type: blob.type
                     })
                 ],
@@ -195,9 +195,7 @@ function InstaModal({ setModalOpen }) {
                     navigator.share(file);
                }
             } catch (err) {
-                if(err.toString().includes('AbortError')){
-                    const error = err.toString().includes('AbortError');
-                }else {alert("이미지 공유를 지원하지 않는 브라우저입니다.")};
+                alert("이미지 공유를 지원하지 않는 브라우저입니다.");
             }
         })
     };
