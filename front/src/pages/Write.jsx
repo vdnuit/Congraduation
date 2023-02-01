@@ -89,7 +89,6 @@ const GreyBox = styled.div`
         font-weight: 400;
         font-size: 14px;
         line-height: 17px;
-
         color: #000000;
         width: 100%;
         height: 10rem;
@@ -301,7 +300,7 @@ function Write() {
                 <GreyBox>
                     <textarea
                         {...register('message')}
-                        placeholder="졸업을 축하하는 말과 함께 질문에 대한 답변과 그 이유를 입력해주세요."
+                        placeholder="질문에 대한 답변과 그 이유를 입력해주세요."
                     />
                 </GreyBox>
 
