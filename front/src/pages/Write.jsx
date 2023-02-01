@@ -5,7 +5,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import axios from 'axios';
 import { ownerNameAtom } from '../Atom';
@@ -155,8 +155,24 @@ const Circle = styled.div`
 function Write() {
     const params = useParams();
     const userObjectId = params.id;
-
     const navigate = useNavigate();
+    const setOwnerName = useSetRecoilState(ownerNameAtom);
+    const getUser = async () => {
+        axios
+            .get(`/api/v1/users/${userObjectId}`, { withCredentials: true })
+            .then((response) => {
+                if (response.status === 200) {
+                    setOwnerName({ _id: response.data.userId, nick: response.data.nick });
+                }
+            })
+            .catch((err) => {
+                if (err.response && err.response.status === 400) {
+                    alert('존재하지 않는 트리입니다.');
+                    navigate('/');
+                }
+            });
+    };
+
     const sendMessage = (dict) => {
         axios
             .post(`/api/v1/messages/${userObjectId}`, {
@@ -262,6 +278,10 @@ function Write() {
     const showSelect = () => {
         setSelectOpen(true);
     };
+
+    useEffect(() => {
+        getUser();
+    }, []);
 
     return (
         <Container>

@@ -10,11 +10,9 @@ const delCookie = (res) => {
 }
 
 const auth = async (req, res, next) => {
-    console.log("[AUTH]");
     req.isLogin = false;
     let token = null;
     if(req.headers.authorization){
-        console.log("SUCCESSFULLY GET AUTHORIZATION HEADER");
         token = req.headers.authorization.split(' ')[1];
     }
     else{
@@ -23,7 +21,6 @@ const auth = async (req, res, next) => {
     if(token){
         console.log("VERIFYING TOKEN:", token);
         if(req.cookies.provider === 'local'){
-            console.log("[LOCAL]");
             try{
                 jwt.verify(token, process.env.JWTSecret, async(err, decoded) => {
                     if(err){
@@ -59,7 +56,6 @@ const auth = async (req, res, next) => {
         }
         else if(req.cookies.provider === 'kakao'){
             try{
-                console.log("[KAKAO]");
                 const accessToken = token;
                 console.log("VERIFYING TOKEN:", accessToken);
                 const isValidAccessToken = await axios.get('https://kapi.kakao.com/v1/user/access_token_info', { // check accessToken
@@ -84,7 +80,6 @@ const auth = async (req, res, next) => {
                     }
                 });
                 if(isValidAccessToken.status === 200 && isValidAccessToken.data){ // valid token
-                    console.log("TOKEN VERIFIED!");
                     const userInfo = await axios({ // get user
                         method:'get',
                         url:'https://kapi.kakao.com/v2/user/me',
