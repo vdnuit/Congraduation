@@ -2,7 +2,6 @@ const User = require('../models/user');
 const Message = require('../models/message');
 const bcrypt = require('bcrypt');
 const { Types } = require('mongoose');
-const { default: axios } = require('axios');
 
 const delCookie = (res) => {
     res.clearCookie('provider');
@@ -36,18 +35,15 @@ const signup = async(req, res, next) => {
 
 const getMyInfo = async(req, res, next) => {
     try{
-        console.log("[GET MY INFO]");
         if(req.isLogin === false) {
             return res.status(401).json({message: "Unauthorized"});
         }
         else {
             const user = await User.findOne({_id: req.userId});
             if(user) {
-                console.log("AUTHORIZED USER INFO HAS BEEN RETURNED SUCCESSFULLY!");
                 res.status(200).json({userId: user._id, selfId: user.userId, nick: user.nick, provider: user.provider});
             }
             else {
-                console.log("FAIELD TO RETURN AUTHORIZED USER INFO");
                 res.status(401).json({message: "Unauthorized"});
             }
         }
@@ -60,7 +56,6 @@ const getMyInfo = async(req, res, next) => {
 
 const getUserById = async(req, res, next) => {
     try{
-        console.log("GET USER ID");
         if(Types.ObjectId.isValid(req.params.userId)){
             await User.findOne({_id: req.params.userId}).lean().populate('message', '_id paperImage').exec((err, data) => {
                 if(err){
@@ -76,7 +71,6 @@ const getUserById = async(req, res, next) => {
             });
         }
         else {
-            console.log("USER ID NOT VALID");
             return res.status(400).json({message: "Bad Request"});
         }
     }
@@ -93,7 +87,7 @@ const deleteUser = async(req, res, next) => {
         }
         else {
             if(Types.ObjectId.isValid(req.params.userId)){
-                if(req.provider === 'local') {
+                if(req.provider === 'local'){
                     const user = await User.findOne({_id: req.params.userId});
                     if(user._id.equals(req.userId)){
                             await User.deleteOne({_id: user.id});
@@ -123,8 +117,16 @@ const deleteUser = async(req, res, next) => {
                     })
                     .then((response) => {
                         if (response.status === 200) {
-                            console.log("HERE IS DELETED USER!");
-                            console.log(response);
+                            const user = await User.findOne({_id: req.params.userId});
+                            if(user._id.equals(req.userId)){
+                                    await User.deleteOne({_id: user.id});
+                                    await Message.deleteMany({receiverId: user.id});
+                                    delCookie(res);
+                                    return res.status(200).json({message: "Successfully deleted"});
+                            }
+                            else{
+                                return res.status(401).json({message: "Unauthorized"});
+                            }
                         }
                     })
                 }
