@@ -4,83 +4,102 @@ const Token = require('../models/token');
 const User = require('../models/user');
 const axios = require('axios');
 
+const delCookie = (res) => {
+    res.clearCookie('refreshToken');
+    res.clearCookie('provider');
+}
+
 const auth = async (req, res, next) => {
-    const token = req.cookies.accessToken;
-    if(req.cookies.refreshToken){
+    console.log("[AUTH]");
+    req.isLogin = false;
+    let token = null;
+    if(req.headers.authorization){
+        console.log("SUCCESSFULLY GET AUTHORIZATION HEADER");
+        token = req.headers.authorization.split(' ')[1];
+    }
+    else{
+        console.log("FAILED TO GET AUTHORIZATION HEADER");
+    }
+    if(token){
+        console.log("VERIFYING TOKEN:", token);
         if(req.cookies.provider === 'local'){
+            console.log("[LOCAL]");
             try{
                 jwt.verify(token, process.env.JWTSecret, async(err, decoded) => {
                     if(err){
-                        if(err instanceof jwt.TokenExpiredError){
-                            const refreshToken = await Token.findOne({token: req.cookies.refreshToken});
-                            if(refreshToken){
-                                const user = await User.findOne({_id: refreshToken.userId});
-                                const accessToken = jwt.sign({id: user._id, nick: user.nick, provider: user.provider}, process.env.JWTSecret, {expiresIn: "10s"});
-                                res.cookie("accessToken", accessToken, {httpOnly: true});
-                                req.userId = user._id;
-                                req.nick = user.nick;
-                                req.provider = user.provider;
-                                req.isLogin = true;
-                            }
-                            else{
-                                res.clearCookie('accessToken');
-                                res.clearCookie('refreshToken');
-                                res.clearCookie('provider');
-                                req.isLogin = false;
-                            }
+                        if(err instanceof jwt.TokenExpiredError){ // 토큰 만료
+                            console.log("TOKEN IS EXPIRED");
                             return next();
+                            // return res.status(401).json({message: "Access token expired"});
                         }
                         else if(err instanceof jwt.JsonWebTokenError){
-                            req.isLogin = false;
+                            console.log("NO TOKEN PROVIDED");
                             return next();
+                            // return res.status(400).json({message: "Token is required"});
+                        }
+                        else{
+                            console.log(err);
+                            return next(err);
                         }
                     }
                     else{
+                        console.log("TOKEN VERIFIED!");
                         req.userId = decoded.id;
                         req.nick = decoded.nick;
                         req.provider = decoded.provider;
                         req.isLogin = true;
                         return next();
                     }
-                })
+                });
             }
             catch(err){
-                res.clearCookie("accessToken");
-                return res.redirect('/');
+                console.log(err);
+                return next(err);
             }
         }
         else if(req.cookies.provider === 'kakao'){
             try{
-                console.log(req.cookies.accessToken);
-                const accessToken = req.cookies.accessToken;
-                const refreshToken = req.cookies.refreshToken;
-                const accessTokenInfo = await axios({
-                    method:'get',
-                    url:'https://kapi.kakao.com/v1/user/access_token_info',
+                console.log("[KAKAO]");
+                const accessToken = token;
+                console.log("VERIFYING TOKEN:", accessToken);
+                const isValidAccessToken = await axios.get('https://kapi.kakao.com/v1/user/access_token_info', { // check accessToken
                     headers:{
-                      'Authorization': `Bearer ${accessToken}`
+                        'Authorization': `Bearer ${accessToken}`
+                      }
+                }).catch((err) => {
+                    if(err.response.status === 401){
+                        console.log("access token 401");
+                        return next();
+                        // return res.status(401).json({message: "Token is expired"});
+                    }
+                    else if(err.response.status === 400){
+                        console.log("access token 400");
+                        return next();
+                        // return res.status(400).json({message: "Token does not exist"});
+                    }
+                    else{
+                        console.log("Something is wrong with kakao token, please try again");
+                        return next();
+                        // return res.status(500).json({message: "Something is wrong with kakao token, please try again"})
                     }
                 });
-                // const refreshTokenInfo = await axios({
-                //     method:'post',
-                //     url:'https://kauth.kakao.com/oauth/token/',
-                //     headers:{
-                //       'Content-Type': "application/x-www-form-urlencoded"
-                //     },
-                //     params:{
-                //         grant_type:'refresh_token',
-                //         client_id: process.env.KAKAO_ID,
-                //         refresh_token: refreshToken
-                //     }
-                // });
-                // console.log("HERE:", refreshTokenInfo.data);
-                if(accessTokenInfo.data){
+                if(isValidAccessToken.status === 200 && isValidAccessToken.data){ // valid token
+                    console.log("TOKEN VERIFIED!");
+                    const userInfo = await axios({ // get user
+                        method:'get',
+                        url:'https://kapi.kakao.com/v2/user/me',
+                        headers:{
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+                    const user = await User.findOne({userId: userInfo.data.id});
+                    req.userId = user._id;
+                    req.selfId = user.userId;
+                    req.nick = user.nick;
+                    req.provider = 'kakao';
+                    req.accessToken = accessToken;
                     req.isLogin = true;
-                    return next();
-                }
-                else{
-                    req.isLogin = false;
-                    return next();
+                    return next(); // successfully access
                 }
             }
             catch(err){
@@ -88,9 +107,15 @@ const auth = async (req, res, next) => {
                 return next(err);
             }
         }
+        else{
+            delCookie(res);
+            return next();
+            // return res.status(401).json({message: "Field \"provider\" must exist"});
+        }
     }
     else{
-        res.status(401).json({message: "Unauthorized"});
+        console.log("UNAUTHORIZED DUE TO EMPTY TOKEN...");
+        return next();
     }
 };
 

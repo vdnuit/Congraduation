@@ -1,10 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
+/* eslint-disable no-unused-vars */
+import { useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { ownerNameAtom, temporaryTreeAtom, countAtom } from '../Atom';
+import axios from 'axios';
+import { ownerNameAtom } from '../Atom';
 import ColorSelect from '../components/ColorSelect';
 import ShuffleImg from '../assets/shuffle.png';
 
@@ -51,6 +55,7 @@ const Container = styled.div`
     }
 `;
 const GreyBox = styled.div`
+    overflow: hidden;
     background: #ffffff;
     padding: 10px;
     margin: 10px;
@@ -120,6 +125,10 @@ export const StyledButton = styled.button`
     margin: 1rem 3rem;
     color: #ffffff;
     margin-bottom: 10vh;
+
+    &:hover {
+        background: #59749d;
+    }
 `;
 const Circle = styled.div`
     background: #ffffff;
@@ -145,20 +154,32 @@ const Circle = styled.div`
 `;
 
 function Write() {
+    const params = useParams();
+    const userObjectId = params.id;
+
+    const navigate = useNavigate();
+    const sendMessage = (dict) => {
+        axios
+            .post(`/api/v1/messages/${userObjectId}`, {
+                withCredentials: true,
+
+                senderNickName: dict.writer,
+                content: dict.message,
+                topic: dict.question,
+                paperImage: dict.icon
+            })
+            .then((response) => {
+                navigate(`/tree/${userObjectId}`);
+            });
+    };
     const [icon, setIcon] = useState();
 
     const [selectOpen, setSelectOpen] = useState(true);
     const { register, watch } = useForm();
-    const navigate = useNavigate();
     const IconChecked = (current) => {
         setIcon(current);
     };
     const ownerName = useRecoilValue(ownerNameAtom);
-    useEffect(() => {
-        console.log(icon);
-    }, [icon]);
-    const [temporaryTree, setTree] = useRecoilState(temporaryTreeAtom);
-    const [count, setCount] = useRecoilState(countAtom);
     const questions = [
         `${ownerName.nick}님이 좋아하는 것은?`,
         `${ownerName.nick}님과 함께한 가장 즐거웠던 추억은?`,
@@ -200,15 +221,25 @@ function Write() {
         `${ownerName.nick}님에게 가장 전하고 싶었던 말은?`,
         `${ownerName.nick}님이 가장 잘하는/못하는 술게임은 무엇인가요?`,
         `${ownerName.nick}님의 이상형은 무엇인가요?`,
-        `학교 생활 중 ${ownerName.nick}님에게 일어난 신기한 일이 있다면?`,
-        `${ownerName}님의 헌내기 시절은 어땠나요?`,
-        `n년 간의 학교 생활 중, ${ownerName.nick}님에게 가장 고마웠던 일은?`,
+        `${ownerName.nick}님이 아이돌로 데뷔한다면 포지션은?`,
+        `${ownerName.nick}님 이름으로 삼행시!`,
+        `${ownerName.nick}님이 남자/여자로 태어난다면?`,
+        `${ownerName.nick}님이 가장 좋아하는 학교 내 장소는?`,
+        `멀리서도 알아볼 수 있는 ${ownerName.nick}님만의 특징은?`,
+        `학교생활 중 ${ownerName.nick}님에게 일어난 신기한 일이 있다면?`,
+        `${ownerName.nick}님의 헌내기 시절은 어땠나요?`,
+        `n년 간의 학교생활 중, ${ownerName.nick}님에게 가장 고마웠던 일은?`,
         `${ownerName.nick}님의 선배미를 볼 수 있는 일화를 알려주세요!`,
         `${ownerName.nick}님과 가장 닮은 연예인/캐릭터는?`,
         `${ownerName.nick}님의 학교생활을 단 한 줄로 요약하자면?`,
         `${ownerName.nick}님의 시간표에 대한 평가는?`,
         `${ownerName.nick}님의 첫인상은?`,
-        `${ownerName.nick}님의 의외의 귀여운 점은?`
+        `${ownerName.nick}님의 의외의 귀여운 점은?`,
+        `${ownerName.nick}님에게 가장 잘 어울리는 인생곡은?`,
+        `${ownerName.nick}님의 퍼스널 컬러를 예측하자면?`,
+        `${ownerName.nick}님의 MBTI는 이것일 것 같다!`,
+        `${ownerName.nick}님의 깻잎을 누군가 떼어준다면 내 반응은?`,
+        `${ownerName.nick}님과 가장 닮은 연예인은?`
     ];
     function randomNum(min, max) {
         const randNum = Math.floor(Math.random() * (max - min)) + min;
@@ -218,21 +249,15 @@ function Write() {
 
     const SubmitEvent = () => {
         if (watch().message === '' || watch().writer === '') {
+            alert('편지와 작성자 분의 성함을 모두 적어주세요!');
             return 0;
         }
         const dict = {
             ...watch(),
             question: questions[index],
-            icon: `https://github.com/vdnuit/Congraduation/blob/vdnuit/front/src/assets/icons/icon${icon}.png?raw=true`
+            icon: require(`../assets/icons/icon${icon}.png`)
         };
-        const copy = JSON.parse(JSON.stringify(temporaryTree));
-        copy.push(dict);
-        setTree(copy);
-
-        console.log(copy);
-        setCount(count + 1);
-        console.log(temporaryTree);
-        navigate(`/tree/*`);
+        sendMessage(dict);
         return 1;
     };
     const showSelect = () => {
@@ -272,7 +297,7 @@ function Write() {
             </GreyBox>
 
             <form>
-                <h2>TO. {ownerName}</h2>
+                <h2>TO. {ownerName.nick}</h2>
                 <GreyBox>
                     <textarea
                         {...register('message')}
@@ -282,7 +307,11 @@ function Write() {
 
                 <h2>From.</h2>
                 <GreyBox>
-                    <input {...register('writer')} placeholder="닉네임을 입력하세요" />
+                    <input
+                        {...register('writer')}
+                        placeholder="작성자 분의 이름을
+                     입력하세요"
+                    />
                 </GreyBox>
             </form>
             <StyledButton
@@ -298,3 +327,4 @@ function Write() {
 }
 
 export default Write;
+/* eslint-disable global-require */

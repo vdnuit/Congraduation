@@ -1,16 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import axios from "axios";
 import './index.css';
 import { RecoilRoot } from 'recoil';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+
+axios.defaults.baseURL = `${process.env.REACT_APP_BASEURL}`;
+axios.defaults.withCredentials = true;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <RecoilRoot>
-        <React.StrictMode>
             <App />
-        </React.StrictMode>
     </RecoilRoot>
 );
 

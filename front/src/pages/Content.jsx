@@ -1,18 +1,26 @@
-import React, { useRef } from 'react';
-// import { useForm } from 'react-hook-form';
+/* eslint no-underscore-dangle: 0 */
 
-import { toBlob } from 'html-to-image';
-import { useRecoilValue } from 'recoil';
+import { React, useRef, useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { ownerNameAtom, temporaryTreeAtom } from '../Atom';
+import LeafSpinner from '../components/LeafSpinner';
+import InstaModal from '../components/InstaModal';
+import { leafAtom, ownerNameAtom, isLoginAtom } from '../Atom';
 import trash from '../assets/trash.png';
 
 const Container = styled.div`
     width: 100%;
+    position: absolute;
+    z-index: 10;
+    top: 0px;
+    left: 0px;
     max-width: 500px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: #f7f7f7;
     h3 {
         font-family: 'Jua';
@@ -40,6 +48,8 @@ const Container = styled.div`
         justify-content: space-between;
     }
     h4 {
+        width: 60%;
+        margin-left: auto;
         font-family: 'Jua';
         font-style: normal;
         font-weight: 400;
@@ -50,11 +60,16 @@ const Container = styled.div`
         margin-right: 10px;
         margin-top: 5px;
         margin-bottom: 50px;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 `;
+
 const GreyBox = styled.div`
     background: #ffffff;
-    padding: 10px;
+    padding: 10px 15px 10px 15px;
     margin: 10px;
     border: 1px solid #c8c8c8;
     border-radius: 10px;
@@ -79,12 +94,18 @@ const GreyBox = styled.div`
         width: 100%;
     }
     p {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 10;
+        overflow: hidden;
         border: none;
         font-family: 'Inter';
         font-style: normal;
         font-weight: 400;
         font-size: 14px;
         line-height: 17px;
+        white-space: normal;
+        word-break: break-all;
         color: #000000;
         width: 100%;
     }
@@ -105,23 +126,9 @@ const StyledButton = styled.button`
     color: #ffffff;
     width: 67.5%;
     height: 3.5rem;
-`;
-
-const StyledBtn = styled.button`
-    text-decoration: none;
-    border: none;
-    background: #ffffff;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 100px;
-    font-family: 'Jua';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 30px;
-    text-align: center;
-    color: #7c7c7c;
-    width: 67.5%;
-    height: 3.5rem;
+    &:hover {
+        background: #59749D;
+    }
 `;
 
 const Div = styled.div`
@@ -136,7 +143,7 @@ const ButtonDiv = styled.div`
     align-items: center;
     margin-bottom: 50px;
     height: 7.5rem;
-`
+`;
 
 const Img = styled.img`
     width: 23%;
@@ -144,11 +151,11 @@ const Img = styled.img`
 `;
 
 const Button = styled.button`
-    background: #072A60;
-    border-color: #072A60;
+    background: #072a60;
+    border-color: #072a60;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
     border-radius: 300px;
-    color: #FFFFFF;
+    color: #ffffff;
     font-family: 'Jua';
     font-style: normal;
     font-size: 14px;
@@ -157,57 +164,89 @@ const Button = styled.button`
     line-height: 18px;
     padding: 4px 12px;
     gap: 4px;
-    `
-    
-function Content() {
-    const ownerName = useRecoilValue(ownerNameAtom);
-    const leaves = useRecoilValue(temporaryTreeAtom);
-    const imageRef = useRef(null);
-    const handleShare = async() => {
-        const newFile = await toBlob(imageRef.current);
-        const data = {
-            files: [
-                new File([newFile], 'image.png', {
-                    type: newFile.type,
-                }),
-            ],
-            title: 'Image',
-            text: 'image',
-        };
-
-        try {
-            if(!navigator.canShare(data)){
-                alert("이미지를 공유할 수 없습니다.");
-            }
-            await navigator.share(data);
-        } catch(err){
-            console.error(err);
-        }
+    &:hover {
+        background: #59749D;
     }
+`;
+
+function Content() {
+    const [loading, setLoading] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
+    const ownerName = useRecoilValue(ownerNameAtom);
+    const Login = useRecoilValue(isLoginAtom);
+    const setLeaf = useSetRecoilState(leafAtom);
+    const Leaf = useRecoilValue(leafAtom);
+    const imageRef = useRef(null);
+    const params = useParams();
+    const userObjectId = params.userid;
+    const messageId = params.messageid;
+    const navigate = useNavigate();
+    const getMessage = () => {
+        if (Login.userId === userObjectId) {
+            setLoading(true);
+            axios
+                .get(`api/v1/messages/${userObjectId}/${messageId}`)
+                .then((response) => {
+                    setLeaf(response.data);
+                })
+                .then(setLoading(false));
+        }
+        if (Login.userId !== userObjectId) {
+            navigate('/');
+        }
+    };
+
+    const deleteMessage = () => {
+        axios.delete(`api/v1/messages/${messageId}`).then((response) => {
+            if (response.status === 200) {
+                alert('삭제되었습니다.');
+                navigate(`/list/${userObjectId}`);
+            }
+        });
+    };
+
+    const showModal = () => {
+        setModalOpen(true);
+    };
+
+    useEffect(() => {
+        setTimeout(getMessage, 500);
+    }, []);
 
     return (
-        <Container>
-            <div ref={imageRef}>
-                <Div>
-                    <GreyBox>
-                        <p>{leaves[0].question}</p>
-                    </GreyBox>
-                </Div>
+        <div>
+            {loading ? (
+                <LeafSpinner />
+            ) : (
+                <Container>
+                    <div style={{ marginTop: '60px' }} ref={imageRef}>
+                        <Div>
+                            <GreyBox>
+                                <p>{Leaf.topic}</p>
+                            </GreyBox>
+                        </Div>
 
-                <h2>
-                    <p>To. {ownerName.nick}</p>
-                    <Button type="button"><Img src={trash} alt="trash"/>삭제</Button>
-                </h2>
-                <GreyBox>
-                    <p>{leaves[0].message}</p>
-                </GreyBox>
-                <h4>From. {leaves[0].writer}</h4>
-            </div>
-            <ButtonDiv>
-                <StyledButton type="button" onClick={handleShare}>스토리 공유하기</StyledButton>
-                <StyledBtn type="button">이미지 다운로드</StyledBtn>
-            </ButtonDiv>
-        </Container>
+                        <h2>
+                            <h4 style={{textAlign:'left', margin: '10px 100px 0px 10px'}}>To. {ownerName.nick}</h4>
+                            <Button type="button" onClick={deleteMessage}>
+                                <Img src={trash} alt="trash" />
+                                삭제
+                            </Button>
+                        </h2>
+                        <GreyBox>
+                            <p style={{textAlign:'justify'}}>{Leaf.content}</p>
+                        </GreyBox>
+                        <h4>From. {Leaf.senderNickName}</h4>
+                    </div>
+                    <ButtonDiv>
+                        <StyledButton type="button" onClick={showModal}>
+                            스토리 공유하기
+                        </StyledButton>
+                        {modalOpen && <InstaModal setModalOpen={setModalOpen} />}
+                    </ButtonDiv>
+                </Container>
+            )}
+        </div>
     );
 }
 

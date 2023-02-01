@@ -2,23 +2,19 @@ const express = require('express');
 const authRouter = express.Router();
 const passport = require('passport');
 const passportConfig = require('../passport');
-const {signin, signout, kakaoAuth} = require('../controllers/auth');
-const { isLoggedIn, isNotLoggedIn } = require('../middleware/isLogin');
+const {signin, signout, kakaoCallback, kakaoLogin, getRefreshToken, checkPassword} = require('../controllers/auth');
 const auth = require('../middleware/auth');
+const axios = require('axios');
+const User = require('../models/user');
+const Token = require('../models/token');
 
 passportConfig();
 authRouter.post('/login', signin);
 authRouter.get('/logout', auth, signout);
-authRouter.get('/kakao', passport.authenticate('kakao'));
-authRouter.get('/kakao/callback', passport.authenticate('kakao', {failureRedirect: '/', session: false}), (req, res) => {
-  res.cookie('provider', 'kakao', {httpOnly: true});
-  res.cookie('accessToken', req.user.accessToken, {httpOnly: true});
-  res.cookie('refreshToken', req.user.refreshToken, {httpOnly: true});
-  res.redirect('/');
-}); // redirect URI (Access token) [fail, success]
-
-authRouter.get('/test', auth, (req, res) => {
-  res.send(req.userId);
-})
+// authRouter.get('/kakao', passport.authenticate('kakao'));
+authRouter.get('/kakao', kakaoLogin);
+authRouter.get('/kakao/callback', kakaoCallback);
+authRouter.get('/refresh-token', getRefreshToken);
+authRouter.post('/check-password', auth, checkPassword);
 
 module.exports = authRouter;

@@ -25,7 +25,10 @@ const Container = styled.div`
 `;
 
 const Text = styled.p``;
-const Button = styled.button``;
+const Button = styled.button`
+    &:hover {
+        background: #59749D;
+}`;
 
 function ModalCheck({ setCheckOpen, text }) {
     const closeModal = () => {

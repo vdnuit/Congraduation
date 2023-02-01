@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { isLoginAtom, ownerNameAtom } from '../Atom';
-import ModalOkay from './ModalOkay';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isLoginAtom, providerAtom } from '../Atom';
 
 const Container = styled.div`
     width: 197px;
@@ -20,11 +19,15 @@ const Container = styled.div`
     right: 10px;
     padding-top: 10px;
     padding-left: 5px;
+    display: flex;
+    flex-direction: column;
 `;
 const Button = styled.button`
     border: 0;
     outline: 0;
+    text-align: left;
     margin: 8px;
+
     background-color: white;
     font-family: 'Inter';
     font-style: normal;
@@ -36,61 +39,102 @@ const Button = styled.button`
 `;
 
 function ModalSide({ setModalOpen }) {
-    const [okayOpen, setOkayOpen] = useState(false);
-    const [okay, setOkay] = useState(false);
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
-    const setOwnerName = useSetRecoilState(ownerNameAtom);
+    const provider = useRecoilValue(providerAtom);
     const closeModal = () => {
-        console.log(okay);
         setModalOpen(false);
     };
     const onLogOut = () => {
-        axios
-        .get("http://localhost:8000/api/v1/auth/logout")
-        .then((response)=>{
-            if(response.status === 200){
+        axios.get('/api/v1/auth/logout', { withCredentials: true })
+        .then((response) => {
+            if (response.status === 200) {
                 closeModal(false);
-                setOwnerName({ _id: "",  nick: "" });
-                setIsLogin(false);
-                alert("로그아웃 되었습니다.");
+                setIsLogin({ userId: undefined, nick: undefined });
+                alert('로그아웃 되었습니다.');
                 navigate(`/`);
-                console.log(isLogin);
-            } else {
-                alert(response.statusText);
             }
         })
+        .catch((err) => {
+            if(err.response && err.response.status === 401){
+                alert("토큰이 만료되어 로그아웃 됩니다.");
+                window.location.replace('/');
+            }
+        })
+
     };
     const onLogIn = () => {
         navigate(`/login/*`);
         closeModal(false);
     };
-    const onDelete = () => {
-        setOkayOpen(!okayOpen);
-    };
+
     const onCreate = () => {
         navigate(`/signup/*`);
         closeModal(false);
     };
+    const onPrompt = () => {
+        if (provider === 'kakao') {
+            alert(
+                '카카오 로그인 회원탈퇴는 카카오톡>설정>카카오계정>연결된 서비스 관리에서 탈퇴해주세요!'
+            );
+            isLogin.userId = undefined;
+            isLogin.nick = undefined;
+            navigate(`/`);
+            closeModal(false);
+        } else if (provider === 'local') {
+            const pinput = prompt('회원 탈퇴를 위해 비밀번호를 입력해주세요.');
 
+            if (pinput != null) {
+                axios
+                    .post('/api/v1/auth/check-password', { password: pinput })
+                    .then((response) => {
+                        navigate(`/`);
+                        if (response.status === 200) {
+                            axios.delete(`/api/v1/users/${isLogin.userId}`).then((res) => {
+                                if (res.status === 200) {
+                                    alert('회원탈퇴를 완료했습니다.');
+                                    isLogin.userId = undefined;
+                                    isLogin.nick = undefined;
+
+                                    closeModal(false);
+                                    return 0;
+                                }
+
+                                alert('회원탈퇴에 실패했습니다.\n다시 시도해주세요.');
+                                isLogin.userId = undefined;
+                                isLogin.nick = undefined;
+                                navigate(`/`);
+
+                                closeModal(false);
+                                return 0;
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        alert('비밀번호가 일치하지 않습니다.\n다시 시도해주세요!');
+
+                        closeModal(false);
+
+                        return 0;
+                    });
+                return 0;
+            }
+        } else {
+            setIsLogin({ userId: undefined, nick: undefined });
+            alert('잘못된 접근입니다. 다시 로그인해주세요.');
+            navigate(`/login/*`);
+        }
+        return 0;
+    };
     return (
         <Container>
-            {isLogin ? (
+            {isLogin.userId ? (
                 <Button onClick={onLogOut}>로그아웃</Button>
             ) : (
                 <Button onClick={onLogIn}>로그인</Button>
             )}
-            {isLogin ? (
-                <>
-                    <Button onClick={onDelete}>계정삭제</Button>
-                    {okayOpen && (
-                        <ModalOkay
-                            setOkayOpen={setOkayOpen}
-                            setOkay={setOkay}
-                            text="정말로 계정을 삭제하시겠습니까?"
-                        />
-                    )}
-                </>
+            {isLogin.userId ? (
+                <Button onClick={onPrompt}>계정삭제</Button>
             ) : (
                 <Button onClick={onCreate}>계정 만들기</Button>
             )}

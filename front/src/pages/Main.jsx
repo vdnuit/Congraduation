@@ -1,6 +1,8 @@
+/* eslint no-underscore-dangle: 0 */
+
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import React from 'react';
+import { React, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import TreeNight from '../assets/treenight.png';
 import LogoImg from '../assets/logoImg.png';
@@ -8,6 +10,7 @@ import CapImg from '../assets/capImg.png';
 import SnowImg from '../assets/snowbackground.png';
 import InstaImg from '../assets/instaImg.png';
 import { isLoginAtom } from '../Atom';
+import TreeSpinner from '../components/TreeSpinner';
 
 const Container = styled.div`
     z-index: -1;
@@ -29,7 +32,7 @@ const TreeBackground = styled.img`
 `;
 const Box = styled.div`
     background: rgba(255, 255, 255, 0.25);
-    border: 0.3px solid #ffffff;
+    border: 0.5px solid #ffffff;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(17.5px);
     border-radius: 10px;
@@ -82,8 +85,11 @@ export const StyledLink = styled(Link)`
 
         text-align: center;
         padding: 0.6rem;
-        margin: 1rem 3rem;
+        margin: 6px 3rem;
         color: #ffffff;
+        &:hover {
+            background: #59749D;
+        }
     }
 `;
 const Snow = styled.img`
@@ -98,22 +104,23 @@ const Snow = styled.img`
 
 function Button() {
     const Login = useRecoilValue(isLoginAtom);
-    if(Login){
+    if (Login.userId) {
         return (
-            <Box>
+            <div>
                 <Cap src={CapImg} />
                 <Logo src={LogoImg} />
-                <StyledLink to={{ pathname: `/tree/*` }}>
+                <StyledLink to={{ pathname: `/tree/${Login.userId}` }}>
                     <h2>트리로 이동</h2>
                 </StyledLink>
                 <Insta>
                     <img src={InstaImg} alt="인스타그램 로고" />
                     <p>@congraduation_skku</p>
                 </Insta>
-            </Box>
-        )
-    } return (
-        <Box>
+            </div>
+        );
+    }
+    return (
+        <div>
             <Cap src={CapImg} />
             <Logo src={LogoImg} />
             <StyledLink to={{ pathname: `/login/*` }}>
@@ -126,17 +133,37 @@ function Button() {
                 <img src={InstaImg} alt="인스타그램 로고" />
                 <p>@congraduation_skku</p>
             </Insta>
-        </Box>
-    )
+        </div>
+    );
 }
 
 function Main() {
+    const [loading, setLoading] = useState(true);
+    const changeLoading = () => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 100);
+    };
+
+    useEffect(() => {
+        changeLoading();
+    }, []);
+
     return (
-        <Container>
-            <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
-            <Button />
-            <Snow src={SnowImg} alt="눈 내리는 배경" />
-        </Container>
+        <div>
+            {loading ? (
+                <TreeSpinner />
+            ) : (
+                <Container>
+                    <TreeBackground src={TreeNight} alt="밤 배경 은행나무" />
+                    <Box>
+                        <Button />
+                    </Box>
+                    <Snow src={SnowImg} alt="눈 내리는 배경" />
+                </Container>
+            )}
+        </div>
     );
 }
 
