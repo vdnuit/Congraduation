@@ -55,6 +55,7 @@ const Container = styled.div`
     }
 `;
 const GreyBox = styled.div`
+    overflow: hidden;
     background: #ffffff;
     padding: 10px;
     margin: 10px;
