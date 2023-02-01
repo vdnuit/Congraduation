@@ -100,7 +100,7 @@ const deleteUser = async(req, res, next) => {
                     }
                 }
                 else if(req.provider === 'kakao') {
-                    axios.post("https://kapi.kakao.com/v1/user/unlink",
+                    await axios.post("https://kapi.kakao.com/v1/user/unlink",
                     {
                         headers: {
                             Authorization: `Bearer ${req.accessToken}`
@@ -115,7 +115,7 @@ const deleteUser = async(req, res, next) => {
                             return res.status(500).json({message: "Something is wrong with Kakao API"});
                         }
                     })
-                    .then((response) => {
+                    .then(async(response) => {
                         if (response.status === 200) {
                             const user = await User.findOne({_id: req.params.userId});
                             if(user._id.equals(req.userId)){
