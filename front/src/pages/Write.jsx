@@ -126,7 +126,7 @@ export const StyledButton = styled.button`
     margin-bottom: 10vh;
 
     &:hover {
-        background: #59749D;
+        background: #59749d;
     }
 `;
 const Circle = styled.div`
@@ -225,9 +225,9 @@ function Write() {
         `${ownerName.nick}님이 남자/여자로 태어난다면?`,
         `${ownerName.nick}님이 가장 좋아하는 학교 내 장소는?`,
         `멀리서도 알아볼 수 있는 ${ownerName.nick}님만의 특징은?`,
-        `학교 생활 중 ${ownerName.nick}님에게 일어난 신기한 일이 있다면?`,
-        `${ownerName}님의 헌내기 시절은 어땠나요?`,
-        `n년 간의 학교 생활 중, ${ownerName.nick}님에게 가장 고마웠던 일은?`,
+        `학교생활 중 ${ownerName.nick}님에게 일어난 신기한 일이 있다면?`,
+        `${ownerName.nick}님의 헌내기 시절은 어땠나요?`,
+        `n년 간의 학교생활 중, ${ownerName.nick}님에게 가장 고마웠던 일은?`,
         `${ownerName.nick}님의 선배미를 볼 수 있는 일화를 알려주세요!`,
         `${ownerName.nick}님과 가장 닮은 연예인/캐릭터는?`,
         `${ownerName.nick}님의 학교생활을 단 한 줄로 요약하자면?`,
