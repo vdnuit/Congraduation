@@ -105,7 +105,6 @@ const kakaoLogin = async(req, res, next) => {
 }
 
 const kakaoCallback = async(req, res, next) => {
-    console.log("[KAKAO CALLBACK]");
     if(req.query.code){
       try{
         const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
@@ -118,7 +117,6 @@ const kakaoCallback = async(req, res, next) => {
         });
         const accessToken = tokenInfo.data.access_token;
         const refreshToken = tokenInfo.data.refresh_token;
-        console.log("YOUR REFRESHTOKEN:", refreshToken);
         if(accessToken){
           const userInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
             headers: {
@@ -166,16 +164,11 @@ const kakaoCallback = async(req, res, next) => {
 
 const getRefreshToken = async(req, res, next) => {
     try{
-        console.log("[REFRESH TOKEN]");
         if(req.cookies.refreshToken) {
-            console.log("CHECKING REFRESH TOKEN IN COOKIE...");
             const refreshToken = req.cookies.refreshToken;
             if(req.cookies.provider === 'local'){
-                console.log("[LOCAL]")
                 const token = await Token.findOne({token: refreshToken});
-                console.log("CHECKING IF THERE IS REFRESH TOKEN...");
                 if(token){ // 리프레쉬 토큰 존재 -> 재발급
-                    console.log("NEW ACCESS TOKEN PROVIDED!");
                     const user = await User.findOne({_id: token.userId});
                     const accessToken = createToken('AccessKey', user._id, user.nick, user.provider);
                     res.status(200).json({accessToken: accessToken});
@@ -186,8 +179,6 @@ const getRefreshToken = async(req, res, next) => {
                 }
             }
             else if(req.cookies.provider === 'kakao'){
-                console.log("[KAKAO]")
-                console.log("CHECKING IF THERE IS REFRESH TOKEN...");
                 const tokenInfo = await axios.get('https://kauth.kakao.com/oauth/token', {
                         params: {
                             grant_type: 'refresh_token',
@@ -207,7 +198,6 @@ const getRefreshToken = async(req, res, next) => {
                     }
                 });
                 if(tokenInfo.status === 200) {
-                    console.log("NEW ACCESS TOKEN PROVIDED!");
                     return res.status(200).json({accessToken: tokenInfo.data.access_token});
                 }
             }
@@ -217,7 +207,6 @@ const getRefreshToken = async(req, res, next) => {
             }
         }
         else{
-            console.log("NO REFRESH TOKEN IN COOKIE");
             delCookie(res);
             res.status(401).json({message: "The refresh token is empty"});
         }
