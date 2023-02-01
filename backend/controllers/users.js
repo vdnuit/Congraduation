@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Message = require('../models/message');
 const bcrypt = require('bcrypt');
 const { Types } = require('mongoose');
+const { default: axios } = require('axios');
 
 const delCookie = (res) => {
     res.clearCookie('provider');
@@ -92,7 +93,7 @@ const deleteUser = async(req, res, next) => {
         }
         else {
             if(Types.ObjectId.isValid(req.params.userId)){
-                if(req.provider === 'local'){
+                if(req.provider === 'local') {
                     const user = await User.findOne({_id: req.params.userId});
                     if(user._id.equals(req.userId)){
                             await User.deleteOne({_id: user.id});
@@ -103,6 +104,29 @@ const deleteUser = async(req, res, next) => {
                     else{
                         return res.status(401).json({message: "Unauthorized"});
                     }
+                }
+                else if(req.provider === 'kakao') {
+                    axios.post("https://kapi.kakao.com/v1/user/unlink",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${req.accessToken}`
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 401 || err.response.status === 400) {
+                            delCookie(res);
+                            return res.status(401).json({message: "Failed to delete the user"});
+                        }
+                        else {
+                            return res.status(500).json({message: "Something is wrong with Kakao API"});
+                        }
+                    })
+                    .then((response) => {
+                        if (response.status === 200) {
+                            console.log("HERE IS DELETED USER!");
+                            console.log(response);
+                        }
+                    })
                 }
                 else{
                     return res.status(401).json({message: "Provider field is required"});
