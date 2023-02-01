@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Main from './pages/Main';
 import SignUp from './pages/SignUp';
 import LogIn from './pages/LogIn';
@@ -12,7 +12,7 @@ import Header from './components/Header';
 
 function Router() {
     return (
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <>
             <Header />
             <Routes>
                 <Route path="/" element={<Main />} errorElement={<Main />} />
@@ -25,7 +25,7 @@ function Router() {
                 <Route path="/list/:id" element={<List />} errorElement={<Main />} />
                 <Route path="/content/:userid/:messageid" element={<Content />} errorElement={<Main />} />
             </Routes>
-        </BrowserRouter>
+        </>
     );
 }
 export default Router;

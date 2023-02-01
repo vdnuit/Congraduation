@@ -10,6 +10,7 @@ import reset from 'styled-reset';
 import { useSetRecoilState } from 'recoil';
 import { isLoginAtom, providerAtom } from './Atom';
 import Router from './Router';
+import RouterChangeTracker from './components/RouterChangeTracker';
 
 import InterTTF from './assets/Inter.ttf';
 import JuaTTF from './assets/Jua.ttf';
@@ -49,6 +50,9 @@ function App() {
             }
         }
     }
+
+    RouterChangeTracker();
+    
     const setLogin = useSetRecoilState(isLoginAtom);
     const setProvider = useSetRecoilState(providerAtom);
     const getToken = () => {
