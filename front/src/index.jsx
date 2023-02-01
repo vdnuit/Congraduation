@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import axios from "axios";
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import './index.css';
 import { RecoilRoot } from 'recoil';
 import App from './App';
