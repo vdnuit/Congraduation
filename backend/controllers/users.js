@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Message = require('../models/message');
 const bcrypt = require('bcrypt');
 const { Types } = require('mongoose');
+const axios = require('axios');
 
 const delCookie = (res) => {
     res.clearCookie('provider');
@@ -100,18 +101,23 @@ const deleteUser = async(req, res, next) => {
                     }
                 }
                 else if(req.provider === 'kakao') {
-                    await axios.post("https://kapi.kakao.com/v1/user/unlink",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${req.accessToken}`
+                    console.log("HERE");
+                    console.log(req.accessToken);
+                    await axios({
+                        method:'post',
+                        url:'https://kapi.kakao.com/v1/user/unlink',
+                        headers:{
+                          'Authorization': `Bearer ${req.accessToken}`
                         }
                     })
                     .catch((err) => {
+                        console.log((err.response));
                         if (err.response.status === 401 || err.response.status === 400) {
                             delCookie(res);
                             return res.status(401).json({message: "Failed to delete the user"});
                         }
                         else {
+                            console.log("HERE4");
                             return res.status(500).json({message: "Something is wrong with Kakao API"});
                         }
                     })
