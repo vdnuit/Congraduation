@@ -4,14 +4,16 @@ import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { isLoginAtom, providerAtom } from '../Atom';
+import { isLoginAtom, providerAtom, ownerNameAtom } from '../Atom';
 
 const Container = styled.div`
     width: 197px;
     height: 96px;
+
     background: #ffffff;
     box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.2);
     z-index: 900;
+
     position: absolute;
     top: 60px;
     right: 10px;
@@ -25,17 +27,21 @@ const Button = styled.button`
     outline: 0;
     text-align: left;
     margin: 8px;
+
     background-color: white;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
+
     color: #252525;
 `;
 
 function ModalSide({ setModalOpen }) {
     const navigate = useNavigate();
+
+    const ownerName = useRecoilValue(ownerNameAtom);
     const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
     const provider = useRecoilValue(providerAtom);
     const closeModal = () => {
@@ -70,13 +76,23 @@ function ModalSide({ setModalOpen }) {
     };
     const onPrompt = () => {
         if (provider === 'kakao') {
-            alert(
-                '카카오 로그인 회원탈퇴는 카카오톡>설정>카카오계정>연결된 서비스 관리에서 탈퇴해주세요!'
-            );
-            isLogin.userId = undefined;
-            isLogin.nick = undefined;
-            navigate(`/`);
-            closeModal(false);
+            const ninput = prompt('회원 탈퇴를 위해 닉네임을 입력해주세요.');
+            if (ninput === ownerName.nick) {
+                axios.delete(`/api/v1/users/${isLogin.userId}`).then((res) => {
+                    if (res.status === 200) {
+                        alert('회원탈퇴를 완료했습니다.');
+                        isLogin.userId = undefined;
+                        isLogin.nick = undefined;
+
+                        closeModal(false);
+                        return 0;
+                    }
+                    return 0;
+                });
+            } else {
+                alert('닉네임이 일치하지 않습니다.\n다시 시도해주세요!');
+                closeModal(false);
+            }
         } else if (provider === 'local') {
             const pinput = prompt('회원 탈퇴를 위해 비밀번호를 입력해주세요.');
 
