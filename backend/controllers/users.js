@@ -35,18 +35,15 @@ const signup = async(req, res, next) => {
 
 const getMyInfo = async(req, res, next) => {
     try{
-        console.log("[GET MY INFO]");
         if(req.isLogin === false) {
             return res.status(401).json({message: "Unauthorized"});
         }
         else {
             const user = await User.findOne({_id: req.userId});
             if(user) {
-                console.log("AUTHORIZED USER INFO HAS BEEN RETURNED SUCCESSFULLY!");
                 res.status(200).json({userId: user._id, selfId: user.userId, nick: user.nick, provider: user.provider});
             }
             else {
-                console.log("FAIELD TO RETURN AUTHORIZED USER INFO");
                 res.status(401).json({message: "Unauthorized"});
             }
         }
@@ -59,7 +56,6 @@ const getMyInfo = async(req, res, next) => {
 
 const getUserById = async(req, res, next) => {
     try{
-        console.log("GET USER ID");
         if(Types.ObjectId.isValid(req.params.userId)){
             await User.findOne({_id: req.params.userId}).lean().populate('message', '_id paperImage').exec((err, data) => {
                 if(err){
@@ -75,7 +71,6 @@ const getUserById = async(req, res, next) => {
             });
         }
         else {
-            console.log("USER ID NOT VALID");
             return res.status(400).json({message: "Bad Request"});
         }
     }
@@ -103,6 +98,37 @@ const deleteUser = async(req, res, next) => {
                     else{
                         return res.status(401).json({message: "Unauthorized"});
                     }
+                }
+                else if(req.provider === 'kakao') {
+                    await axios.post("https://kapi.kakao.com/v1/user/unlink",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${req.accessToken}`
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 401 || err.response.status === 400) {
+                            delCookie(res);
+                            return res.status(401).json({message: "Failed to delete the user"});
+                        }
+                        else {
+                            return res.status(500).json({message: "Something is wrong with Kakao API"});
+                        }
+                    })
+                    .then(async(response) => {
+                        if (response.status === 200) {
+                            const user = await User.findOne({_id: req.params.userId});
+                            if(user._id.equals(req.userId)){
+                                    await User.deleteOne({_id: user.id});
+                                    await Message.deleteMany({receiverId: user.id});
+                                    delCookie(res);
+                                    return res.status(200).json({message: "Successfully deleted"});
+                            }
+                            else{
+                                return res.status(401).json({message: "Unauthorized"});
+                            }
+                        }
+                    })
                 }
                 else{
                     return res.status(401).json({message: "Provider field is required"});
