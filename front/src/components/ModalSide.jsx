@@ -9,11 +9,9 @@ import { isLoginAtom, providerAtom } from '../Atom';
 const Container = styled.div`
     width: 197px;
     height: 96px;
-
     background: #ffffff;
     box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.2);
     z-index: 900;
-
     position: absolute;
     top: 60px;
     right: 10px;
@@ -27,14 +25,12 @@ const Button = styled.button`
     outline: 0;
     text-align: left;
     margin: 8px;
-
     background-color: white;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
-
     color: #252525;
 `;
 
@@ -46,22 +42,22 @@ function ModalSide({ setModalOpen }) {
         setModalOpen(false);
     };
     const onLogOut = () => {
-        axios.get('/api/v1/auth/logout', { withCredentials: true })
-        .then((response) => {
-            if (response.status === 200) {
-                closeModal(false);
-                setIsLogin({ userId: undefined, nick: undefined });
-                alert('로그아웃 되었습니다.');
-                navigate(`/`);
-            }
-        })
-        .catch((err) => {
-            if(err.response && err.response.status === 401){
-                alert("토큰이 만료되어 로그아웃 됩니다.");
-                window.location.replace('/');
-            }
-        })
-
+        axios
+            .get('/api/v1/auth/logout', { withCredentials: true })
+            .then((response) => {
+                if (response.status === 200) {
+                    closeModal(false);
+                    setIsLogin({ userId: undefined, nick: undefined });
+                    alert('로그아웃 되었습니다.');
+                    navigate(`/`);
+                }
+            })
+            .catch((err) => {
+                if (err.response && err.response.status === 401) {
+                    alert('토큰이 만료되어 로그아웃 됩니다.');
+                    window.location.replace('/');
+                }
+            });
     };
     const onLogIn = () => {
         navigate(`/login/*`);
