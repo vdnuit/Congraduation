@@ -46,7 +46,7 @@ app.use(notFoundError); // page not found
 
 const run = async() => {
     try{
-        await connectDB(process.env.MONGO_URI);
+        await connectDB(process.env.MONGO_DEV_URI);
         app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
     }
     catch(err){
