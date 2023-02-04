@@ -145,6 +145,8 @@ const kakaoCallback = async(req, res, next) => {
                 return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', _id: newUser._id});
             }
             else{
+                let kakaoNickname = userInfo.data.kakao_account.profile.nickname;
+                await User.updateOne({_id: exUser._id}, {$set: {nick: kakaoNickname}});
                 res.cookie("refreshToken", refreshToken, {httpOnly: true, samesite: 'none', secure: true});
                 res.cookie("provider", "kakao", {samesite: 'none'});
                 return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken, provider: 'kakao', _id: exUser._id});
