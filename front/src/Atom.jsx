@@ -33,7 +33,7 @@ export const countAtom = atom({
 
 export const dateAtom = atom({
     key: 'date',
-    default: new Date('2023-02-15')
+    default: new Date('2023-02-06')
 });
 
 export const providerAtom = atom({

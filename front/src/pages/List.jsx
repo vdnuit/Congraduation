@@ -187,7 +187,7 @@ function UI() {
             <Flex>
                 <Grid>
                     {leaves.map((leaf) => (
-                        <Leaf key={leaf._id} id={leaf._id} icon={leaf.paperImage} />
+                        <Leaf key={leaf._id} id={leaf._id} icon={leaf.paperImage} visit={leaf.visit ? "#E7E7E7" : "#ffffff"} />
                     ))}
                 </Grid>
             </Flex>

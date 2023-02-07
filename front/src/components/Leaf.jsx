@@ -11,7 +11,7 @@ const GLink = styled(Link)`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #ffffff;
+    background-color: ${props => props.color};
     /* stroke */
     border: 1px solid #c8c8c8;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -39,18 +39,20 @@ const Img = styled.img`
     max-width: 85px;
 `;
 
-function Leaf({ id, icon }) {
+function Leaf({ id, icon, visit }) {
     const params = useParams();
+    console.log(visit);
     return (
-        <GLink to={`/content/${params.id}/${id}`}>
-            <Img src={icon} alt={id} key={id} />
+        <GLink to={`/content/${params.id}/${id}`} color={visit}>
+            <Img src={icon} alt={id} key={id}/>
         </GLink>
     );
 }
 
 Leaf.propTypes = {
     id: PropTypes.string.isRequired,
-    icon: PropTypes.string.isRequired
+    icon: PropTypes.string.isRequired,
+    visit: PropTypes.bool.isRequired
 };
 
 export default Leaf;
