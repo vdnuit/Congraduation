@@ -83,14 +83,16 @@ function ModalSide({ setModalOpen }) {
                         alert('회원탈퇴를 완료했습니다.');
                         isLogin.userId = undefined;
                         isLogin.nick = undefined;
-
+                        navigate(`/`);
                         closeModal(false);
                         return 0;
                     }
                     return 0;
                 });
-            } else {
+            } else if (ninput != null) {
                 alert('닉네임이 일치하지 않습니다.\n다시 시도해주세요!');
+                closeModal(false);
+            } else {
                 closeModal(false);
             }
         } else if (provider === 'local') {
