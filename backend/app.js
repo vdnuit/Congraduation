@@ -16,28 +16,12 @@ const corsOptions = {
     origin: 'http://localhost:3000', //http://www.congraduation-skku.com, http://congraduation-skku.com
     credentials: true,
 };
+
 app.use(cors(corsOptions));
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
-// session
-    // 아래 passport메서드가 이 세션에 의존하기 때문에 앞에 선언해야 함
-
-// app.use(session({
-//     resave: false,
-//     saveUninitialized: false,
-//     secret: process.env.COOKIE_SECRET,
-//     cookie: {
-//         httpOnly: true,
-//         secure: false,
-//     },
-// }));
-
 app.use(express.json()); // body-parser
-
-// passport
-// app.use(passport.initialize()); //session을 초기화 (req에 passport 설정을 심음)
-// app.use(passport.session()); //deserializeUser 호출
 
 app.use('/', routes); // 모듈명을 명시하지 않으면 routes/index.js를 로드
 
@@ -46,7 +30,7 @@ app.use(notFoundError); // page not found
 
 const run = async() => {
     try{
-        await connectDB(process.env.MONGO_DEV_URI);
+        await connectDB(process.env.MONGO_URI);
         app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
     }
     catch(err){
