@@ -144,6 +144,7 @@ const Treezone = styled.map`
     height: auto;
 `;
 
+
 function Time() {
     const today = new Date();
     const hours = today.getHours();
@@ -152,7 +153,7 @@ function Time() {
     const date = useRecoilValue(dateAtom);
     const dday = Math.round((today - date) / (24 * 60 * 60 * 1000));
     useEffect(() => {
-        ImageMap('img[usemap]',0);
+        ImageMap('img[usemap]');
     }, []);
 
     if (Login.userId === userObjectId && dday >= 0) {
