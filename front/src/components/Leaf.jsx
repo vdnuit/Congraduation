@@ -41,7 +41,6 @@ const Img = styled.img`
 
 function Leaf({ id, icon, visit }) {
     const params = useParams();
-    console.log(visit);
     return (
         <GLink to={`/content/${params.id}/${id}`} color={visit}>
             <Img src={icon} alt={id} key={id}/>
