@@ -246,7 +246,7 @@ function Button() {
                 >
                     내 트리로 가기
                 </WButton>
-                <Dday>{dday > 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
+                <Dday>{dday >= 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
             </Buttons>
         );
     }
@@ -262,7 +262,7 @@ function Button() {
                 >
                     나도 계정 만들기
                 </WButton>
-                <Dday>{dday > 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
+                <Dday>{dday >= 0 ? `쪽지 오픈 D+${dday}` : `쪽지 오픈 D${dday}`}</Dday>
             </Buttons>
         );
     }

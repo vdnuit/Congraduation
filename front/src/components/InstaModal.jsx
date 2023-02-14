@@ -77,6 +77,7 @@ const GreyBox = styled.div`
     padding: 8px 12px 8px 12px;
     margin: 0 10px;
     border-radius: 5px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
     // p {
     //     margin: 5px 0px;
     //     font-family: 'Inter';
@@ -145,12 +146,12 @@ const Button = styled.button`
     color: #ffffff;
     margin: 10px;
     &:hover {
-        background: #59749D;
+        background: #59749d;
     }
 `;
 
 const WButton = styled.button`
-    background: #C8C8C8;
+    background: #c8c8c8;
     border-radius: 10px;
     font-family: 'Jua';
     font-style: normal;
@@ -164,7 +165,7 @@ const WButton = styled.button`
     color: #252525;
     margin: 10px;
     &:hover {
-        background: #E7E7E7;
+        background: #e7e7e7;
     }
 `;
 
@@ -175,82 +176,80 @@ function InstaModal({ setModalOpen }) {
     };
 
     const handleShare = async () => {
-        htmlToImage
-        .toBlob(document.querySelector('.modal'))
-        .then((blob) => {
+        htmlToImage.toBlob(document.querySelector('.modal')).then((blob) => {
             const data = {
-                files : [
-                    new File([blob], "letter.png", {
+                files: [
+                    new File([blob], 'letter.png', {
                         type: blob.type
                     })
                 ],
-                title: "Letter",
-                text: "소중한 쪽지"
+                title: 'Letter',
+                text: '소중한 쪽지'
             };
             toBlob(document.querySelector('.modal')).then((blob1) => {
                 const data1 = {
-                    files : [
-                        new File([blob1], "letter.png", {
+                    files: [
+                        new File([blob1], 'letter.png', {
                             type: blob1.type
                         })
                     ],
-                    title: "Letter",
-                    text: "소중한 쪽지"
+                    title: 'Letter',
+                    text: '소중한 쪽지'
                 };
 
                 toBlob(document.querySelector('.modal')).then((blob2) => {
                     const data2 = {
-                        files : [
-                            new File([blob2], "letter.png", {
+                        files: [
+                            new File([blob2], 'letter.png', {
                                 type: blob2.type
                             })
                         ],
-                        title: "Letter",
-                        text: "소중한 쪽지"
+                        title: 'Letter',
+                        text: '소중한 쪽지'
                     };
 
                     toBlob(document.querySelector('.modal')).then((blob3) => {
                         const data3 = {
-                            files : [
-                                new File([blob3], "letter.png", {
+                            files: [
+                                new File([blob3], 'letter.png', {
                                     type: blob3.type
                                 })
                             ],
-                            title: "Letter",
-                            text: "소중한 쪽지"
+                            title: 'Letter',
+                            text: '소중한 쪽지'
                         };
 
                         toBlob(document.querySelector('.modal')).then((blob4) => {
                             const data4 = {
-                                files : [
-                                    new File([blob4], "letter.png", {
+                                files: [
+                                    new File([blob4], 'letter.png', {
                                         type: blob4.type
                                     })
                                 ],
-                                title: "Letter",
-                                text: "소중한 쪽지"
+                                title: 'Letter',
+                                text: '소중한 쪽지'
                             };
 
                             toBlob(document.querySelector('.modal')).then((blob5) => {
                                 const data5 = {
-                                    files : [
-                                        new File([blob5], "letter.png", {
+                                    files: [
+                                        new File([blob5], 'letter.png', {
                                             type: blob5.type
                                         })
                                     ],
-                                    title: "Letter",
-                                    text: "소중한 쪽지"
+                                    title: 'Letter',
+                                    text: '소중한 쪽지'
                                 };
 
                                 toBlob(document.querySelector('.modal')).then((blob6) => {
                                     const data6 = {
-                                        files : [
-                                            new File([blob6], "letter.png", {
+                                        files: [
+                                            new File([blob6], 'letter.png', {
                                                 type: blob6.type
                                             })
                                         ],
-                                        title: "Letter",
-                                        text: "소중한 쪽지"
+                                        title: 'Letter',
+                                        text: '소중한 쪽지'
                                     };
 
                                     toBlob(document.querySelector('.modal')).then((blob7) => {
@@ -287,45 +286,57 @@ function InstaModal({ setModalOpen }) {
 
     return (
         <Background>
-                <Modal>
-                    <ModalDiv className="modal">
-                        <TreeBackground src={InstaStory} alt="밤 배경 은행나무" />
-                        <Container>
-                            <Box>
-                                <Div>
-                                    <GreyBox>
-                                        <p className="element1" style={{ fontSize: '1.5vh', lineHeight: '1.8vh' }}>
-                                            {Leaf.topic}
-                                        </p>
-                                    </GreyBox>
-                                </Div>
+            <Modal>
+                <ModalDiv className="modal">
+                    <TreeBackground src={InstaStory} alt="밤 배경 은행나무" />
+                    <Container>
+                        <Box>
+                            <Div>
                                 <GreyBox>
-                                    <p className="element2"
-                                        style={{
-                                            textAlign: 'justify',
-                                            fontSize: '1.5vh',
-                                            lineHeight: '1.8vh'
-                                        }}
+                                    <p
+                                        className="element1"
+                                        style={{ fontSize: '1.5vh', lineHeight: '1.8vh' }}
                                     >
-                                        {Leaf.content}
+                                        {Leaf.topic}
                                     </p>
                                 </GreyBox>
-                                <h4 style={{ width: "60%", fontSize: '2.5vh', display: "block", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", textAlign: "right"}}>From. {Leaf.senderNickName}</h4>
-                            </Box>
-                        </Container>
-                    </ModalDiv>
-                    <Buttons>
-                        <Button onClick={handleShare}>저장</Button>
-                        <WButton
-                            onClick={closeModal}
-                        >
-                            닫기
-                        </WButton>
-                    </Buttons>
-                </Modal>
+                            </Div>
+                            <GreyBox>
+                                <p
+                                    className="element2"
+                                    style={{
+                                        textAlign: 'justify',
+                                        fontSize: '1.5vh',
+                                        lineHeight: '1.8vh'
+                                    }}
+                                >
+                                    {Leaf.content}
+                                </p>
+                            </GreyBox>
+                            <h4
+                                style={{
+                                    width: '60%',
+                                    fontSize: '2.5vh',
+                                    display: 'block',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    textAlign: 'right'
+                                }}
+                            >
+                                From. {Leaf.senderNickName}
+                            </h4>
+                        </Box>
+                    </Container>
+                </ModalDiv>
+                <Buttons>
+                    <Button onClick={handleShare}>저장</Button>
+                    <WButton onClick={closeModal}>닫기</WButton>
+                </Buttons>
+            </Modal>
             )
         </Background>
-    )
+    );
 }
 
 InstaModal.propTypes = {
