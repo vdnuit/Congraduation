@@ -93,7 +93,6 @@ function ModalSide({ setModalOpen }) {
                 alert('닉네임이 일치하지 않습니다.\n다시 시도해주세요!');
                 closeModal(false);
             } else {
-                alert('취소되었습니다');
                 closeModal(false);
             }
         } else if (provider === 'local') {
