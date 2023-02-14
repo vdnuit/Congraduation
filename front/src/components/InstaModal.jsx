@@ -173,7 +173,7 @@ function InstaModal({ setModalOpen }) {
     const closeModal = () => {
         setModalOpen(false);
     };
-    const imageRef = useRef(null);
+
     const handleShare = async () => {
         htmlToImage
         .toBlob(document.querySelector('.modal'))
@@ -253,17 +253,29 @@ function InstaModal({ setModalOpen }) {
                                         text: "소중한 쪽지"
                                     };
 
-                                if(navigator.canShare && navigator.canShare(data6)){
-                                    try {
-                                        navigator.share(data6);
-                                    } catch (error) {
-                                        alert('이미지를 공유할 수 없습니다.');
-                                    }
-                                } else {
-                                    alert("이미지 공유를 지원하지 않는 브라우저입니다.");
-                                }
+                                    toBlob(document.querySelector('.modal')).then((blob7) => {
+                                        const data7 = {
+                                            files : [
+                                                new File([blob7], "letter.png", {
+                                                    type: blob7.type
+                                                })
+                                            ],
+                                            title: "Letter",
+                                            text: "소중한 쪽지"
+                                        };
+
+                                        if(navigator.canShare && navigator.canShare(data7)){
+                                            try {
+                                                navigator.share(data7);
+                                            } catch (error) {
+                                                alert('이미지를 공유할 수 없습니다.');
+                                            }
+                                        } else {
+                                            alert("이미지 공유를 지원하지 않는 브라우저입니다.");
+                                        }
+                                    })
+                                })
                             })
-                        })
                         })
                     })   
                 })
