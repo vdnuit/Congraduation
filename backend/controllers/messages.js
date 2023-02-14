@@ -23,7 +23,7 @@ const getMessages = async (req, res, next) => {
 const getMessagesByUserId = async(req, res, next) => {
     try{
         if(Types.ObjectId.isValid(req.params.userId)){
-            await User.findOne({_id: req.params.userId}).lean().populate('message', '_id paperImage').exec((err, data) => {
+            await User.findOne({_id: req.params.userId}).lean().populate('message', '_id paperImage visit').exec((err, data) => {
                 if(err){
                     console.log(err);
                     return next(err);
@@ -52,23 +52,30 @@ const getMessageByMessageId = async(req, res, next) => {
             return res.status(401).json({message: "Unauthorized"});
         }
         else {
-            await Message.findOne({_id: req.params.messageId}).exec((err, data) => {
-                if(err){
-                    console.log(err);
-                    return next(err);
-                }
-                else if(data === null){
-                    return res.status(400).json({message: "The message does not exist"}); // 처리 필요
-                }
-                else{
-                    if(data.receiverId.equals(req.userId)){
-                        return res.status(200).json(data);
+            if(Types.ObjectId.isValid(req.params.userId) && Types.ObjectId.isValid(req.params.messageId)) {
+                const message = await Message.findOne({_id: req.params.messageId});
+                if(message) {
+                    if(message.receiverId.equals(req.userId)){
+                        await Message.updateOne({_id: req.params.messageId}, {$set: {visit: true}});
+                        message.visit = true;
+                        return res.status(200).json(message);
                     }
                     else{
                         return res.status(401).json({message: "Unauthorized"});
                     }
                 }
-            });
+                else {
+                    return res.status(400).json({message: "The message does not exist"}); // 처리 필요
+                }
+            }
+            else {
+                if(!Types.ObjectId.isValid(req.params.userId)) {
+                    return res.status(400).json({message: "The user does not exist"});
+                }
+                if(!Types.ObjectId.isValid(req.params.messageId)) {
+                    return res.status(400).json({message: "The message does not exist"});
+                }
+            }
         }
     }
     catch(err) {
