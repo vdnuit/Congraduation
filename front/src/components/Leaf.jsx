@@ -11,7 +11,7 @@ const GLink = styled(Link)`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: ${props => props.color};
+    background-color: ${(props) => props.color};
     /* stroke */
     border: 1px solid #c8c8c8;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -32,8 +32,8 @@ const GLink = styled(Link)`
 
 const Img = styled.img`
     margin-top: 10px;
-    margin-left:5px;
-    margin-bottom:3px;
+    margin-left: 5px;
+    margin-bottom: 3px;
     width: 55.31%;
     // height: 70.31%;
     max-width: 85px;
@@ -41,10 +41,9 @@ const Img = styled.img`
 
 function Leaf({ id, icon, visit }) {
     const params = useParams();
-    console.log(visit);
     return (
         <GLink to={`/content/${params.id}/${id}`} color={visit}>
-            <Img src={icon} alt={id} key={id}/>
+            <Img src={icon} alt={id} key={id} />
         </GLink>
     );
 }
