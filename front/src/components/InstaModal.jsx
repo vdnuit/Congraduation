@@ -104,8 +104,6 @@ const GreyBox = styled.div`
         font-family: 'Inter';
         font-style: normal;
         font-weight: 400;
-        font-size: 14px;
-        line-height: 17px;
         color: #000000;
         width: 100%;
         display: -webkit-box;
