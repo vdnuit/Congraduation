@@ -177,9 +177,8 @@ function InstaModal({ setModalOpen }) {
     };
     const imageRef = useRef(null);
     const handleShare = async () => {
-        const fontEmbedCss = await htmlToImage.getFontEmbedCSS(document.querySelector('.modal'));
         htmlToImage
-        .toBlob(document.querySelector('.modal'), {fontEmbedCss})
+        .toBlob(document.querySelector('.modal'))
         .then((blob) => {
             const data = {
                 files : [
@@ -190,7 +189,7 @@ function InstaModal({ setModalOpen }) {
                 title: "Letter",
                 text: "소중한 쪽지"
             };
-            toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob1) => {
+            toBlob(document.querySelector('.modal')).then((blob1) => {
                 const data1 = {
                     files : [
                         new File([blob1], "letter.png", {
@@ -201,7 +200,7 @@ function InstaModal({ setModalOpen }) {
                     text: "소중한 쪽지"
                 };
 
-                toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob2) => {
+                toBlob(document.querySelector('.modal')).then((blob2) => {
                     const data2 = {
                         files : [
                             new File([blob2], "letter.png", {
@@ -212,7 +211,7 @@ function InstaModal({ setModalOpen }) {
                         text: "소중한 쪽지"
                     };
 
-                    toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob3) => {
+                    toBlob(document.querySelector('.modal')).then((blob3) => {
                         const data3 = {
                             files : [
                                 new File([blob3], "letter.png", {
@@ -223,7 +222,7 @@ function InstaModal({ setModalOpen }) {
                             text: "소중한 쪽지"
                         };
 
-                        toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob4) => {
+                        toBlob(document.querySelector('.modal')).then((blob4) => {
                             const data4 = {
                                 files : [
                                     new File([blob4], "letter.png", {
@@ -234,7 +233,7 @@ function InstaModal({ setModalOpen }) {
                                 text: "소중한 쪽지"
                             };
 
-                            toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob5) => {
+                            toBlob(document.querySelector('.modal')).then((blob5) => {
                                 const data5 = {
                                     files : [
                                         new File([blob5], "letter.png", {
@@ -245,7 +244,7 @@ function InstaModal({ setModalOpen }) {
                                     text: "소중한 쪽지"
                                 };
 
-                                toBlob(document.querySelector('.modal'), {fontEmbedCss}).then((blob6) => {
+                                toBlob(document.querySelector('.modal')).then((blob6) => {
                                     const data6 = {
                                         files : [
                                             new File([blob6], "letter.png", {

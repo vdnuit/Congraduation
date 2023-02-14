@@ -152,7 +152,7 @@ function Time() {
     const date = useRecoilValue(dateAtom);
     const dday = Math.round((today - date) / (24 * 60 * 60 * 1000));
     useEffect(() => {
-        ImageMap('img[usemap]');
+        ImageMap('img[usemap]',0);
     }, []);
 
     if (Login.userId === userObjectId && dday >= 0) {
@@ -304,8 +304,10 @@ function Tree() {
         getUser();
     }, [userObjectId]);
 
+
     const clickHandler = (title) => {
         if (Login.userId === userObjectId) {
+            console.log("title");
             const name = title;
         }
     };
