@@ -235,15 +235,27 @@ function InstaModal({ setModalOpen }) {
                                 text: "소중한 쪽지"
                             };
 
-                            if(navigator.canShare && navigator.canShare(data4)){
-                                try {
-                                    navigator.share(data4);
-                                } catch (error) {
-                                    alert('이미지를 공유할 수 없습니다.');
+                            toBlob(document.querySelector('.modal')).then((blob5) => {
+                                const data5 = {
+                                    files : [
+                                        new File([blob5], "letter.png", {
+                                            type: blob5.type
+                                        })
+                                    ],
+                                    title: "Letter",
+                                    text: "소중한 쪽지"
+                                };
+
+                                if(navigator.canShare && navigator.canShare(data5)){
+                                    try {
+                                        navigator.share(data5);
+                                    } catch (error) {
+                                        alert('이미지를 공유할 수 없습니다.');
+                                    }
+                                } else {
+                                    alert("이미지 공유를 지원하지 않는 브라우저입니다.");
                                 }
-                            } else {
-                                alert("이미지 공유를 지원하지 않는 브라우저입니다.");
-                            }
+                            })
                         })
                     })   
                 })
