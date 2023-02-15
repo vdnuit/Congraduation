@@ -176,112 +176,26 @@ function InstaModal({ setModalOpen }) {
     };
 
     const handleShare = async () => {
-        const UA = navigator.userAgent.toLowerCase();
-        if(UA.indexOf('android') > -1){
-            htmlToImage.toBlob(document.querySelector('.modal')).then((blob) => {
+        htmlToImage.toBlob(document.querySelector('.modal')).then((blob) => {
             const data = {
+                title: 'Letter',
                 files: [
                     new File([blob], 'letter.png', {
                         type: blob.type
                     })
                 ],
-                title: 'Letter',
-                text: '소중한 쪽지'
             };
 
-                if(navigator.canShare && navigator.canShare(data)){
-                    try {
-                        navigator.share(data);
-                    } catch (error) {
-                        alert('이미지를 공유할 수 없습니다.');
-                    }
-                } else {
-                    alert("이미지 공유를 지원하지 않는 브라우저입니다.");
+            if(navigator.canShare && navigator.canShare(data)){
+                try {
+                    navigator.share(data);
+                } catch (error) {
+                    alert('이미지를 공유할 수 없습니다.');
                 }
-            })
-        }
-        if(UA.indexOf('iphone')>-1){
-            htmlToImage.toBlob(document.querySelector('.modal')).then((blob) => {
-                const data = {
-                    files: [
-                        new File([blob], 'letter.png', {
-                            type: blob.type
-                        })
-                    ],
-                    title: 'Letter',
-                    text: '소중한 쪽지'
-                };
-                toBlob(document.querySelector('.modal')).then((blob1) => {
-                    const data1 = {
-                        files: [
-                            new File([blob1], 'letter.png', {
-                                type: blob1.type
-                            })
-                        ],
-                        title: 'Letter',
-                        text: '소중한 쪽지'
-                    };
-    
-                    toBlob(document.querySelector('.modal')).then((blob2) => {
-                        const data2 = {
-                            files: [
-                                new File([blob2], 'letter.png', {
-                                    type: blob2.type
-                                })
-                            ],
-                            title: 'Letter',
-                            text: '소중한 쪽지'
-                        };
-    
-                        toBlob(document.querySelector('.modal')).then((blob3) => {
-                            const data3 = {
-                                files: [
-                                    new File([blob3], 'letter.png', {
-                                        type: blob3.type
-                                    })
-                                ],
-                                title: 'Letter',
-                                text: '소중한 쪽지'
-                            };
-    
-                            toBlob(document.querySelector('.modal')).then((blob4) => {
-                                const data4 = {
-                                    files: [
-                                        new File([blob4], 'letter.png', {
-                                            type: blob4.type
-                                        })
-                                    ],
-                                    title: 'Letter',
-                                    text: '소중한 쪽지'
-                                };
-    
-                                toBlob(document.querySelector('.modal')).then((blob5) => {
-                                    const data5 = {
-                                        files: [
-                                            new File([blob5], 'letter.png', {
-                                                type: blob5.type
-                                            })
-                                        ],
-                                        title: 'Letter',
-                                        text: '소중한 쪽지'
-                                    };
-    
-                                    if(navigator.canShare && navigator.canShare(data5)){
-                                        try {
-                                             navigator.share(data5);
-                                        } catch (error) {
-                                            alert('이미지를 공유할 수 없습니다.');
-                                        }
-                                    } else {
-                                        alert("이미지 공유를 지원하지 않는 브라우저입니다.");
-                                    }
-                                })
-                            })
-                        })   
-                    })
-                })
-            })
-        }
+            } else {
+                alert("이미지 공유를 지원하지 않는 브라우저입니다.");
+            }
+        })
     }
     
     
