@@ -176,25 +176,36 @@ function InstaModal({ setModalOpen }) {
     };
 
     const handleShare = async () => {
-        htmlToImage.toBlob(document.querySelector('.modal')).then((blob) => {
-            const data = {
+        htmlToImage.toBlob(document.querySelector('.modal')).then((blob1) => {
+            const data1 = {
                 title: 'Letter',
                 files: [
-                    new File([blob], 'letter.png', {
-                        type: blob.type
+                    new File([blob1], 'letter.png', {
+                        type: blob1.type
                     })
                 ],
             };
 
-            if(navigator.canShare && navigator.canShare(data)){
-                try {
-                    navigator.share(data);
-                } catch (error) {
-                    alert('이미지를 공유할 수 없습니다.');
+            toBlob(document.querySelector('.modal')).then((blob2) => {
+                const data2 = {
+                    title: 'Letter',
+                    files: [
+                        new File([blob2], 'letter.png', {
+                            type: blob2.type
+                        })
+                    ],
+                };
+
+                if(navigator.canShare && navigator.canShare(data2)){
+                    try {
+                        navigator.share(data2);
+                    } catch (error) {
+                        alert('이미지를 공유할 수 없습니다.');
+                    }
+                } else {
+                    alert("이미지 공유를 지원하지 않는 브라우저입니다.");
                 }
-            } else {
-                alert("이미지 공유를 지원하지 않는 브라우저입니다.");
-            }
+            })
         })
     }
     
