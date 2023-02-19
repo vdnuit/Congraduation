@@ -52,6 +52,7 @@ const TreeBackground = styled.img`
     z-index: -1;
     width: 100%;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 `;
 
 const Container = styled.div`
@@ -321,7 +322,7 @@ function InstaModal({ setModalOpen }) {
                             </GreyBox>
                             <h4
                                 style={{
-                                    width: '60%',
+                                    width: '93%',
                                     fontSize: '2.5vh',
                                     display: 'block',
                                     overflow: 'hidden',

@@ -48,8 +48,8 @@ const Container = styled.div`
         justify-content: space-between;
     }
     h4 {
-        width: 80%;
-        margin-left: auto;
+        width: auto;
+        margin-left: 10px;
         font-family: 'Jua';
         font-style: normal;
         font-weight: 400;
