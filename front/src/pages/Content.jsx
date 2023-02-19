@@ -48,7 +48,7 @@ const Container = styled.div`
         justify-content: space-between;
     }
     h4 {
-        width: 60%;
+        width: 80%;
         margin-left: auto;
         font-family: 'Jua';
         font-style: normal;
@@ -61,9 +61,6 @@ const Container = styled.div`
         margin-top: 5px;
         margin-bottom: 50px;
         display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 `;
 
@@ -94,10 +91,6 @@ const GreyBox = styled.div`
         width: 100%;
     }
     p {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 10;
-        overflow: hidden;
         border: none;
         font-family: 'Inter';
         font-style: normal;
