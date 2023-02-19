@@ -52,7 +52,6 @@ const TreeBackground = styled.img`
     z-index: -1;
     width: 100%;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
 `;
 
 const Container = styled.div`
